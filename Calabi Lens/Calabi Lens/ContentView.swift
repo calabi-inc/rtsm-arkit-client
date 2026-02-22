@@ -372,6 +372,8 @@ private struct BottomOverlayView: View {
             badgeView(text: "Reconnecting\u{2026} (\(attempt)/3)", color: .yellow)
         case .permissionError:
             badgeView(text: "\u{25CF} Error", color: .red)
+        case .failed:
+            badgeView(text: "\u{25CF} Failed", color: .red)
         }
     }
 

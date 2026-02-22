@@ -2,21 +2,23 @@ import Foundation
 
 enum RGBFormat: String, CaseIterable {
     case jpeg
-    case hevc
+    case png
+    case rawBGRA
 }
 
 enum DepthInclusion: String, CaseIterable {
-    case none
-    case withRGB
-    case separate
+    case auto
+    case on
+    case off
 }
 
 enum DepthFormat: String, CaseIterable {
-    case float32
-    case float16
+    case uint16mm
+    case float32m
+    case pngUint16
 }
 
 enum PoseFormat: String, CaseIterable {
     case matrix4x4
-    case quaternion
+    case quatTranslation
 }

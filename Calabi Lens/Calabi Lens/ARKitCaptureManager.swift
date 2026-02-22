@@ -1,10 +1,3 @@
-//
-//  ARKitCaptureManager.swift
-//  Calabi Lens
-//
-//  Created by Chi Feng Chang on 2/19/26.
-//
-
 import ARKit
 import Combine
 
@@ -17,31 +10,36 @@ final class ARKitCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
 
     // MARK: - Callbacks
 
-    var onFrameCaptured: ((ARFrame) -> Void)?
-    var onDepthCaptured: ((ARDepthData) -> Void)?
-    var onTrackingStateChanged: ((ARCamera.TrackingState) -> Void)?
+    var onFrame: ((ARFrame) -> Void)?
+    var onTrackingStateChange: ((ARCamera.TrackingState) -> Void)?
 
-    // MARK: - Session
+    // MARK: - Depth Availability
 
-    let session = ARSession()
+    private(set) var isDepthAvailable = false
 
-    // MARK: - Hz Gating
+    // MARK: - Session Reference
 
-    var targetFrameRate: Double = 30.0
-    private var lastFrameTimestamp: TimeInterval = 0
+    private weak var sceneView: ARSCNView?
 
-    // MARK: - Init
+    // MARK: - Streaming State
 
-    override init() {
-        super.init()
-        session.delegate = self
+    private var isStreaming = false
+    private var sessionSettings: SessionSettings?
+    private var lastSentTimestamp: TimeInterval = 0
+
+    // MARK: - Attach
+
+    func attach(sceneView: ARSCNView) {
+        self.sceneView = sceneView
+        sceneView.session.delegate = self
     }
 
     // MARK: - Lifecycle
 
-    func run() {
-        let configuration = ARWorldTrackingConfiguration()
+    func startSession() {
+        guard let session = sceneView?.session else { return }
 
+        let configuration = ARWorldTrackingConfiguration()
         if ARWorldTrackingConfiguration.supportsFrameSemantics(.sceneDepth) {
             configuration.frameSemantics.insert(.sceneDepth)
         }
@@ -50,28 +48,42 @@ final class ARKitCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
         isRunning = true
     }
 
-    func pause() {
-        session.pause()
+    func stopSession() {
+        sceneView?.session.pause()
         isRunning = false
+    }
+
+    // MARK: - Streaming Control
+
+    func setStreaming(enabled: Bool, sessionSettings: SessionSettings?) {
+        isStreaming = enabled
+        self.sessionSettings = sessionSettings
+        if enabled {
+            lastSentTimestamp = 0
+        }
     }
 
     // MARK: - ARSessionDelegate
 
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        let interval = 1.0 / targetFrameRate
-        guard frame.timestamp - lastFrameTimestamp >= interval else { return }
-        lastFrameTimestamp = frame.timestamp
-
-        onFrameCaptured?(frame)
-
-        if let depthData = frame.sceneDepth {
-            onDepthCaptured?(depthData)
+        // Always check depth availability
+        if !isDepthAvailable && frame.sceneDepth != nil {
+            isDepthAvailable = true
         }
+
+        // Hz gating only when streaming
+        guard isStreaming, let settings = sessionSettings else { return }
+
+        let interval = 1.0 / settings.captureRate
+        guard frame.timestamp - lastSentTimestamp >= interval else { return }
+        lastSentTimestamp = frame.timestamp
+
+        onFrame?(frame)
     }
 
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         trackingState = camera.trackingState
-        onTrackingStateChanged?(camera.trackingState)
+        onTrackingStateChange?(camera.trackingState)
     }
 
     func session(_ session: ARSession, didFailWithError error: Error) {
@@ -83,6 +95,6 @@ final class ARKitCaptureManager: NSObject, ObservableObject, ARSessionDelegate {
     }
 
     func sessionInterruptionEnded(_ session: ARSession) {
-        run()
+        startSession()
     }
 }

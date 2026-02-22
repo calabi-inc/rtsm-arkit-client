@@ -97,7 +97,7 @@ final class AppViewModel: ObservableObject {
                 appState = .connected
             }
 
-        case .disconnected:
+        case .disconnected(let error):
             if case .reconnecting(_, _) = appState {
                 // Max retries exceeded
                 captureManager.setStreaming(enabled: false, sessionSettings: nil)
@@ -105,7 +105,11 @@ final class AppViewModel: ObservableObject {
                 currentSessionSettings = nil
                 appState = .idle
             } else if !appState.isRecording {
-                appState = .idle
+                if error != nil {
+                    appState = .failed(error)
+                } else {
+                    appState = .idle
+                }
             }
         }
     }

@@ -1,17 +1,29 @@
 import Foundation
 
 struct SessionSettings {
-    var rgbFormat: RGBFormat
-    var depthInclusion: DepthInclusion
-    var depthFormat: DepthFormat
-    var poseFormat: PoseFormat
+    let sessionID: UUID
+    let captureRate: Double
+    let rgbFormat: RGBFormat
+    let jpegQuality: Double
+    let depthInclusion: DepthInclusion
+    let depthFormat: DepthFormat
+    let poseFormat: PoseFormat
 
-    var depthScale: Float {
+    var depthScale: Double {
         switch depthFormat {
-        case .float32:
-            return 1.0
-        case .float16:
-            return 1000.0
+        case .uint16mm: return 0.001
+        case .float32m: return 1.0
+        case .pngUint16: return 0.001
         }
+    }
+
+    init(from settings: AppSettings) {
+        self.sessionID = UUID()
+        self.captureRate = settings.captureRate
+        self.rgbFormat = settings.rgbFormat
+        self.jpegQuality = settings.jpegQuality
+        self.depthInclusion = settings.depthInclusion
+        self.depthFormat = settings.depthFormat
+        self.poseFormat = settings.poseFormat
     }
 }

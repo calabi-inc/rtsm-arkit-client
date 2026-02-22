@@ -1,17 +1,12 @@
-//
-//  Calabi_LensApp.swift
-//  Calabi Lens
-//
-//  Created by Chi Feng Chang on 2/19/26.
-//
-
 import SwiftUI
 
 @main
 struct Calabi_LensApp: App {
+    @StateObject private var viewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: viewModel)
         }
     }
 }
