@@ -11,6 +11,8 @@
 		59C0175E2F483DC400A64702 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0175D2F483DC400A64702 /* ContentView.swift */; };
 		59C017602F483DC500A64702 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59C0175F2F483DC500A64702 /* Assets.xcassets */; };
 		59C017632F483DC500A64702 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59C017622F483DC500A64702 /* Preview Assets.xcassets */; };
+		59C017722F483DC500A64702 /* ARKitCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017702F483DC500A64702 /* ARKitCaptureManager.swift */; };
+		59C017732F483DC500A64702 /* ARSCNViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017712F483DC500A64702 /* ARSCNViewRepresentable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +21,8 @@
 		59C0175D2F483DC400A64702 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		59C0175F2F483DC500A64702 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		59C017622F483DC500A64702 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		59C017702F483DC500A64702 /* ARKitCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARKitCaptureManager.swift; sourceTree = "<group>"; };
+		59C017712F483DC500A64702 /* ARSCNViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSCNViewRepresentable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +57,8 @@
 			children = (
 				59C0175B2F483DC400A64702 /* Calabi_LensApp.swift */,
 				59C0175D2F483DC400A64702 /* ContentView.swift */,
+				59C017702F483DC500A64702 /* ARKitCaptureManager.swift */,
+				59C017712F483DC500A64702 /* ARSCNViewRepresentable.swift */,
 				59C0175F2F483DC500A64702 /* Assets.xcassets */,
 				59C017612F483DC500A64702 /* Preview Content */,
 			);
@@ -139,6 +145,8 @@
 			files = (
 				59C0175E2F483DC400A64702 /* ContentView.swift in Sources */,
 				59C0175C2F483DC400A64702 /* Calabi_LensApp.swift in Sources */,
+				59C017722F483DC500A64702 /* ARKitCaptureManager.swift in Sources */,
+				59C017732F483DC500A64702 /* ARSCNViewRepresentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,6 +282,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens requires camera access for AR capture.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,6 +311,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens requires camera access for AR capture.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
