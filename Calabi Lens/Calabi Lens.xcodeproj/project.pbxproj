@@ -13,6 +13,11 @@
 		59C017632F483DC500A64702 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59C017622F483DC500A64702 /* Preview Assets.xcassets */; };
 		59C017722F483DC500A64702 /* ARKitCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017702F483DC500A64702 /* ARKitCaptureManager.swift */; };
 		59C017732F483DC500A64702 /* ARSCNViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017712F483DC500A64702 /* ARSCNViewRepresentable.swift */; };
+		59C017752F483DC500A64702 /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59C017742F483DC500A64702 /* ARKit.framework */; };
+		59C017772F483DC500A64702 /* SettingsEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017762F483DC500A64702 /* SettingsEnums.swift */; };
+		59C017792F483DC500A64702 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017782F483DC500A64702 /* AppSettings.swift */; };
+		59C0177B2F483DC500A64702 /* SessionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0177A2F483DC500A64702 /* SessionSettings.swift */; };
+		59C0177D2F483DC500A64702 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0177C2F483DC500A64702 /* AppState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,6 +28,11 @@
 		59C017622F483DC500A64702 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		59C017702F483DC500A64702 /* ARKitCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARKitCaptureManager.swift; sourceTree = "<group>"; };
 		59C017712F483DC500A64702 /* ARSCNViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSCNViewRepresentable.swift; sourceTree = "<group>"; };
+		59C017742F483DC500A64702 /* ARKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ARKit.framework; path = System/Library/Frameworks/ARKit.framework; sourceTree = SDKROOT; };
+		59C017762F483DC500A64702 /* SettingsEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEnums.swift; sourceTree = "<group>"; };
+		59C017782F483DC500A64702 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		59C0177A2F483DC500A64702 /* SessionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSettings.swift; sourceTree = "<group>"; };
+		59C0177C2F483DC500A64702 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59C017752F483DC500A64702 /* ARKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				59C0175A2F483DC400A64702 /* Calabi Lens */,
+				59C017852F483DC500A64702 /* Frameworks */,
 				59C017592F483DC400A64702 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,6 +67,13 @@
 		59C0175A2F483DC400A64702 /* Calabi Lens */ = {
 			isa = PBXGroup;
 			children = (
+				59C0177E2F483DC500A64702 /* App */,
+				59C0177F2F483DC500A64702 /* Capture */,
+				59C017802F483DC500A64702 /* Encoding */,
+				59C017822F483DC500A64702 /* Metrics */,
+				59C017812F483DC500A64702 /* Networking */,
+				59C017832F483DC500A64702 /* Settings */,
+				59C017842F483DC500A64702 /* UI */,
 				59C0175B2F483DC400A64702 /* Calabi_LensApp.swift */,
 				59C0175D2F483DC400A64702 /* ContentView.swift */,
 				59C017702F483DC500A64702 /* ARKitCaptureManager.swift */,
@@ -71,6 +90,67 @@
 				59C017622F483DC500A64702 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		59C0177E2F483DC500A64702 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				59C0177C2F483DC500A64702 /* AppState.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		59C0177F2F483DC500A64702 /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		59C017802F483DC500A64702 /* Encoding */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Encoding;
+			sourceTree = "<group>";
+		};
+		59C017812F483DC500A64702 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		59C017822F483DC500A64702 /* Metrics */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Metrics;
+			sourceTree = "<group>";
+		};
+		59C017832F483DC500A64702 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				59C017782F483DC500A64702 /* AppSettings.swift */,
+				59C0177A2F483DC500A64702 /* SessionSettings.swift */,
+				59C017762F483DC500A64702 /* SettingsEnums.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		59C017842F483DC500A64702 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		59C017852F483DC500A64702 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				59C017742F483DC500A64702 /* ARKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -147,6 +227,10 @@
 				59C0175C2F483DC400A64702 /* Calabi_LensApp.swift in Sources */,
 				59C017722F483DC500A64702 /* ARKitCaptureManager.swift in Sources */,
 				59C017732F483DC500A64702 /* ARSCNViewRepresentable.swift in Sources */,
+				59C017772F483DC500A64702 /* SettingsEnums.swift in Sources */,
+				59C017792F483DC500A64702 /* AppSettings.swift in Sources */,
+				59C0177B2F483DC500A64702 /* SessionSettings.swift in Sources */,
+				59C0177D2F483DC500A64702 /* AppState.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,11 +366,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens requires camera access for AR capture.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens uses the camera for ARKit world tracking and sensor streaming.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -297,7 +380,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 			};
 			name = Debug;
 		};
@@ -311,11 +394,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens requires camera access for AR capture.";
+				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens uses the camera for ARKit world tracking and sensor streaming.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -326,7 +408,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1";
 			};
 			name = Release;
 		};
