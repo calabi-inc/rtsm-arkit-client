@@ -18,6 +18,9 @@
 		59C017792F483DC500A64702 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017782F483DC500A64702 /* AppSettings.swift */; };
 		59C0177B2F483DC500A64702 /* SessionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0177A2F483DC500A64702 /* SessionSettings.swift */; };
 		59C0177D2F483DC500A64702 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0177C2F483DC500A64702 /* AppState.swift */; };
+		59C017892F4A000100A64702 /* ConnectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017862F4A000100A64702 /* ConnectionState.swift */; };
+		59C0178A2F4A000100A64702 /* WebSocketStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017872F4A000100A64702 /* WebSocketStreamer.swift */; };
+		59C0178B2F4A000100A64702 /* MetricsTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017882F4A000100A64702 /* MetricsTracker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +36,9 @@
 		59C017782F483DC500A64702 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		59C0177A2F483DC500A64702 /* SessionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSettings.swift; sourceTree = "<group>"; };
 		59C0177C2F483DC500A64702 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		59C017862F4A000100A64702 /* ConnectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionState.swift; sourceTree = "<group>"; };
+		59C017872F4A000100A64702 /* WebSocketStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketStreamer.swift; sourceTree = "<group>"; };
+		59C017882F4A000100A64702 /* MetricsTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricsTracker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +123,8 @@
 		59C017812F483DC500A64702 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				59C017862F4A000100A64702 /* ConnectionState.swift */,
+				59C017872F4A000100A64702 /* WebSocketStreamer.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -124,6 +132,7 @@
 		59C017822F483DC500A64702 /* Metrics */ = {
 			isa = PBXGroup;
 			children = (
+				59C017882F4A000100A64702 /* MetricsTracker.swift */,
 			);
 			path = Metrics;
 			sourceTree = "<group>";
@@ -231,6 +240,9 @@
 				59C017792F483DC500A64702 /* AppSettings.swift in Sources */,
 				59C0177B2F483DC500A64702 /* SessionSettings.swift in Sources */,
 				59C0177D2F483DC500A64702 /* AppState.swift in Sources */,
+				59C017892F4A000100A64702 /* ConnectionState.swift in Sources */,
+				59C0178A2F4A000100A64702 /* WebSocketStreamer.swift in Sources */,
+				59C0178B2F4A000100A64702 /* MetricsTracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
