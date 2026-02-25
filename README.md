@@ -158,17 +158,26 @@ The Health & Telemetry panel on the main screen shows live metrics during stream
 
 Metrics freeze at their last values when recording stops, so you can review session stats.
 
-## Receiver Stub
+## Receiver Stubs
 
-A minimal Python receiver is included at `receiver_stub.py` for testing and development.
+Two minimal Python receiver utilities are included for testing and development:
+
+- `receiver_server_stub.py` runs a WebSocket **server** that accepts connections from Calabi Lens.
+- `receiver_stub.py` runs a WebSocket **client** that connects to an existing stream endpoint.
 
 ```bash
 pip install websockets
-python receiver_stub.py                              # default: ws://0.0.0.0:8765/stream
-python receiver_stub.py ws://0.0.0.0:9000/stream     # custom address
+
+# Server mode (accepts app connection)
+python receiver_server_stub.py
+python receiver_server_stub.py --host 0.0.0.0 --port 8765 --path /stream
+
+# Client mode (connects to an existing server endpoint)
+python receiver_stub.py                                # default: ws://192.168.1.100:8765/stream
+python receiver_stub.py ws://192.168.1.100:9000/stream
 ```
 
-The stub starts a WebSocket **server**, accepts connections from Calabi Lens, parses each binary frame, and prints frame metadata (frame ID, timestamp, tracking state, RGB size, depth size). A summary line with throughput stats is printed every 5 seconds.
+Both scripts parse the same binary frame format and print frame metadata (frame ID, timestamp, tracking state, RGB size, depth size), with periodic throughput summaries.
 
 ## Future Extensions
 
