@@ -1,5 +1,7 @@
 # Calabi Lens
 
+This repository (`rtsm-arkit-client`) contains the client app for Calabi Lens.
+
 ARKit sensor streaming app for the RTSM ecosystem. Calabi Lens captures RGB frames, LiDAR depth (optional), camera pose, and intrinsics from an iPhone and streams them in real time over WebSocket to a server on the local network.
 
 **Streams:** RGB image, depth map (optional), 6-DoF camera pose (T\_wc), camera intrinsics, and ARKit tracking state.
