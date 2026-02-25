@@ -5,3 +5,8 @@
 # Common macOS/Xcode noise
 .DS_Store
 DerivedData/
+
+# Python cache/bytecode
+__pycache__/
+*.py[cod]
+*.cpython-*
