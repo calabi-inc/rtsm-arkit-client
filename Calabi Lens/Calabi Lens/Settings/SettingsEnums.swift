@@ -22,3 +22,8 @@ enum PoseFormat: String, CaseIterable {
     case matrix4x4
     case quatTranslation
 }
+
+enum RGBResolution: String, CaseIterable {
+    case original
+    case downscaled
+}

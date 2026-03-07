@@ -8,4 +8,5 @@ final class AppSettings: ObservableObject {
     @AppStorage("depthInclusion") var depthInclusion = DepthInclusion.auto
     @AppStorage("depthFormat") var depthFormat = DepthFormat.uint16mm
     @AppStorage("poseFormat") var poseFormat = PoseFormat.matrix4x4
+    @AppStorage("rgbResolution") var rgbResolution = RGBResolution.downscaled
 }

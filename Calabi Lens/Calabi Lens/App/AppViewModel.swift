@@ -1,5 +1,6 @@
 import ARKit
 import Combine
+import UIKit
 
 final class AppViewModel: ObservableObject {
 
@@ -73,6 +74,11 @@ final class AppViewModel: ObservableObject {
 
     private func handleConnectionStateChange(_ state: ConnectionState) {
         switch state {
+        case .handshaking:
+            if !appState.isRecording {
+                appState = .connecting
+            }
+
         case .connecting:
             if case .recording(let sessionID) = appState {
                 // First reconnect attempt during recording
@@ -119,6 +125,8 @@ final class AppViewModel: ObservableObject {
     func connect() {
         guard let url = URL(string: settings.serverURL) else { return }
         appState = .connecting
+        streamer.sessionID = UUID().uuidString
+        streamer.deviceName = UIDevice.current.model
         streamer.connect(to: url)
     }
 

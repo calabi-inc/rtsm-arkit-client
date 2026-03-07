@@ -3,6 +3,9 @@ import UIKit
 
 final class FrameEncoder {
 
+    private static let targetRGBWidth = 640
+    private static let targetRGBHeight = 480
+
     private var frameID: UInt64 = 0
     private let ciContext = CIContext()
 
@@ -34,55 +37,55 @@ final class FrameEncoder {
     // MARK: - RGB Encoding
 
     private func encodeRGB(pixelBuffer: CVPixelBuffer, settings: SessionSettings) -> Data {
+        let ciImage = ciImageForRGB(pixelBuffer: pixelBuffer, settings: settings)
+
         switch settings.rgbFormat {
         case .jpeg:
-            return encodeJPEG(pixelBuffer: pixelBuffer, quality: settings.jpegQuality / 100.0)
+            return encodeJPEG(ciImage: ciImage, quality: settings.jpegQuality / 100.0)
         case .png:
-            return encodePNG(pixelBuffer: pixelBuffer)
+            return encodePNG(ciImage: ciImage)
         case .rawBGRA:
-            return encodeRawBGRA(pixelBuffer: pixelBuffer)
+            return encodeRawBGRA(ciImage: ciImage)
         }
     }
 
-    private func encodeJPEG(pixelBuffer: CVPixelBuffer, quality: Double) -> Data {
+    private func ciImageForRGB(pixelBuffer: CVPixelBuffer, settings: SessionSettings) -> CIImage {
         let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        guard settings.rgbResolution == .downscaled else { return ciImage }
+
+        let scaleX = CGFloat(Self.targetRGBWidth) / ciImage.extent.width
+        let scaleY = CGFloat(Self.targetRGBHeight) / ciImage.extent.height
+        return ciImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
+    }
+
+    private func encodeJPEG(ciImage: CIImage, quality: Double) -> Data {
         guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
             return Data()
         }
         return UIImage(cgImage: cgImage).jpegData(compressionQuality: CGFloat(quality)) ?? Data()
     }
 
-    private func encodePNG(pixelBuffer: CVPixelBuffer) -> Data {
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+    private func encodePNG(ciImage: CIImage) -> Data {
         guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
             return Data()
         }
         return UIImage(cgImage: cgImage).pngData() ?? Data()
     }
 
-    private func encodeRawBGRA(pixelBuffer: CVPixelBuffer) -> Data {
-        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
-        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
-
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        let bytesPerRow = CVPixelBufferGetBytesPerRow(pixelBuffer)
-
-        guard let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer) else {
-            return Data()
+    private func encodeRawBGRA(ciImage: CIImage) -> Data {
+        let width = Int(ciImage.extent.width)
+        let height = Int(ciImage.extent.height)
+        let rowBytes = width * 4
+        var buffer = [UInt8](repeating: 0, count: height * rowBytes)
+        buffer.withUnsafeMutableBytes { ptr in
+            ciContext.render(ciImage,
+                            toBitmap: ptr.baseAddress!,
+                            rowBytes: rowBytes,
+                            bounds: ciImage.extent,
+                            format: .BGRA8,
+                            colorSpace: CGColorSpaceCreateDeviceRGB())
         }
-
-        let expectedBytesPerRow = width * 4
-        if bytesPerRow == expectedBytesPerRow {
-            return Data(bytes: baseAddress, count: height * bytesPerRow)
-        }
-
-        var data = Data(capacity: height * expectedBytesPerRow)
-        for row in 0..<height {
-            let rowPtr = baseAddress + row * bytesPerRow
-            data.append(Data(bytes: rowPtr, count: expectedBytesPerRow))
-        }
-        return data
+        return Data(buffer)
     }
 
     // MARK: - Depth Encoding
@@ -251,26 +254,58 @@ final class FrameEncoder {
         let depthWidth: Int? = depthMap.map { CVPixelBufferGetWidth($0) }
         let depthHeight: Int? = depthMap.map { CVPixelBufferGetHeight($0) }
 
+        // RGB dimensions and intrinsics scaling
+        let rgbWidth: Int
+        let rgbHeight: Int
+        let scaledFx: Double
+        let scaledFy: Double
+        let scaledCx: Double
+        let scaledCy: Double
+        let reportedIntrinsicsWidth: Int
+        let reportedIntrinsicsHeight: Int
+
+        if settings.rgbResolution == .downscaled {
+            rgbWidth = Self.targetRGBWidth
+            rgbHeight = Self.targetRGBHeight
+            let intrinsicsScaleX = Double(Self.targetRGBWidth) / Double(imageResolution.width)
+            let intrinsicsScaleY = Double(Self.targetRGBHeight) / Double(imageResolution.height)
+            scaledFx = Double(intrinsics[0][0]) * intrinsicsScaleX
+            scaledFy = Double(intrinsics[1][1]) * intrinsicsScaleY
+            scaledCx = Double(intrinsics[2][0]) * intrinsicsScaleX
+            scaledCy = Double(intrinsics[2][1]) * intrinsicsScaleY
+            reportedIntrinsicsWidth = Self.targetRGBWidth
+            reportedIntrinsicsHeight = Self.targetRGBHeight
+        } else {
+            rgbWidth = CVPixelBufferGetWidth(pixelBuffer)
+            rgbHeight = CVPixelBufferGetHeight(pixelBuffer)
+            scaledFx = Double(intrinsics[0][0])
+            scaledFy = Double(intrinsics[1][1])
+            scaledCx = Double(intrinsics[2][0])
+            scaledCy = Double(intrinsics[2][1])
+            reportedIntrinsicsWidth = Int(imageResolution.width)
+            reportedIntrinsicsHeight = Int(imageResolution.height)
+        }
+
         return FrameHeader(
             session_id: settings.sessionID.uuidString,
             frame_id: frameID,
             timestamp_ns: UInt64(frame.timestamp * 1e9),
             unix_timestamp: Date().timeIntervalSince1970,
             rgb_format: settings.rgbFormat.wireString,
-            rgb_width: CVPixelBufferGetWidth(pixelBuffer),
-            rgb_height: CVPixelBufferGetHeight(pixelBuffer),
+            rgb_width: rgbWidth,
+            rgb_height: rgbHeight,
             image_orientation: "landscapeRight",
             jpeg_quality: settings.rgbFormat == .jpeg ? settings.jpegQuality : nil,
             depth_format: hasDepth ? settings.depthFormat.wireString : nil,
             depth_width: depthWidth,
             depth_height: depthHeight,
             depth_scale: hasDepth ? settings.depthScale : nil,
-            fx: Double(intrinsics[0][0]),
-            fy: Double(intrinsics[1][1]),
-            cx: Double(intrinsics[2][0]),
-            cy: Double(intrinsics[2][1]),
-            intrinsics_width: Int(imageResolution.width),
-            intrinsics_height: Int(imageResolution.height),
+            fx: scaledFx,
+            fy: scaledFy,
+            cx: scaledCx,
+            cy: scaledCy,
+            intrinsics_width: reportedIntrinsicsWidth,
+            intrinsics_height: reportedIntrinsicsHeight,
             pose_format: settings.poseFormat.wireString,
             T_wc: twc,
             tracking_state: trackingStateStr,

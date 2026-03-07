@@ -8,6 +8,7 @@ struct SessionSettings {
     let depthInclusion: DepthInclusion
     let depthFormat: DepthFormat
     let poseFormat: PoseFormat
+    let rgbResolution: RGBResolution
 
     var depthScale: Double {
         switch depthFormat {
@@ -25,5 +26,6 @@ struct SessionSettings {
         self.depthInclusion = settings.depthInclusion
         self.depthFormat = settings.depthFormat
         self.poseFormat = settings.poseFormat
+        self.rgbResolution = settings.rgbResolution
     }
 }

@@ -69,6 +69,14 @@ struct StreamingSettingsSheet: View {
                                 Text("95").font(.system(size: 10)).foregroundColor(.secondary)
                             }
                         }
+
+                        // RGB Resolution
+                        Picker("Resolution", selection: $settings.rgbResolution) {
+                            Text("640\u{00D7}480 \u{2605}").tag(RGBResolution.downscaled)
+                            Text("Original").tag(RGBResolution.original)
+                        }
+                        .pickerStyle(.segmented)
+                        .disabled(isRecording)
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)

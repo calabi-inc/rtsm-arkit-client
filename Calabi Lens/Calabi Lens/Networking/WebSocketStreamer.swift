@@ -7,6 +7,7 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
     private static let maxQueueDepth = 10
     private static let maxReconnectAttempts = 3
     private static let reconnectDelays: [TimeInterval] = [1, 2, 4]
+    private static let handshakeTimeout: TimeInterval = 5.0
 
     // MARK: - Callbacks
 
@@ -14,6 +15,11 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
     var onMetricsUpdate: ((Int, Int) -> Void)?
     var onDropped: (() -> Void)?
     var onRTT: ((Double) -> Void)?
+
+    // MARK: - Handshake Configuration
+
+    var sessionID: String = UUID().uuidString
+    var deviceName: String = "iPhone"
 
     // MARK: - Private State
 
@@ -32,6 +38,9 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
     private var reconnectAttempt = 0
     private var shouldReconnect = false
 
+    private var handshakeCompleted = false
+    private var handshakeTimeoutWork: DispatchWorkItem?
+
     // MARK: - Connect
 
     func connect(to url: URL) {
@@ -44,6 +53,7 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         currentURL = url
         reconnectAttempt = 0
         shouldReconnect = false
+        handshakeCompleted = false
         notifyStateChange(.connecting)
 
         let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
@@ -68,6 +78,8 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         buffer.removeAll()
         isDraining = false
         shouldCloseAfterDrain = false
+        handshakeCompleted = false
+        cancelHandshakeTimeout()
         stopPingInternal()
         task?.cancel(with: .goingAway, reason: nil)
         task = nil
@@ -165,7 +177,10 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         task?.receive { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success:
+            case .success(let message):
+                self.sendQueue.async {
+                    self.handleReceivedMessage(message)
+                }
                 self.startReceiveLoop()
             case .failure(let error):
                 self.sendQueue.async {
@@ -224,6 +239,8 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
 
         notifyStateChange(.connecting)
 
+        cancelHandshakeTimeout()
+        handshakeCompleted = false
         task?.cancel(with: .goingAway, reason: nil)
         task = nil
         invalidateSession()
@@ -250,12 +267,9 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         sendQueue.async { [weak self] in
             guard let self else { return }
             self.reconnectAttempt = 0
-            self.acceptingEnqueues = true
-            self.notifyStateChange(.connected)
-
-            if !self.buffer.isEmpty && !self.isDraining {
-                self.drainNext()
-            }
+            self.handshakeCompleted = false
+            self.notifyStateChange(.handshaking)
+            self.sendHello()
         }
     }
 
@@ -324,6 +338,109 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         }
     }
 
+    // MARK: - Handshake
+
+    private func sendHello() {
+        dispatchPrecondition(condition: .onQueue(sendQueue))
+
+        let hello = HelloMessage(
+            type: "hello",
+            protocol_version: 1,
+            session_id: sessionID,
+            device_name: deviceName
+        )
+
+        guard let jsonData = try? JSONEncoder().encode(hello),
+              let jsonString = String(data: jsonData, encoding: .utf8) else {
+            notifyStateChange(.disconnected(
+                NSError(domain: "WebSocketStreamer", code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to encode hello message"])
+            ))
+            return
+        }
+
+        task?.send(.string(jsonString)) { [weak self] error in
+            guard let self else { return }
+            self.sendQueue.async {
+                if let error {
+                    self.handleConnectionError(error)
+                    return
+                }
+                self.startHandshakeTimeout()
+            }
+        }
+    }
+
+    private func startHandshakeTimeout() {
+        dispatchPrecondition(condition: .onQueue(sendQueue))
+
+        let work = DispatchWorkItem { [weak self] in
+            guard let self, !self.handshakeCompleted else { return }
+            self.task?.cancel(with: .goingAway, reason: nil)
+            self.task = nil
+            self.invalidateSession()
+            self.notifyStateChange(.disconnected(
+                NSError(domain: "WebSocketStreamer", code: 4002,
+                        userInfo: [NSLocalizedDescriptionKey: "Handshake timeout (5s)"])
+            ))
+        }
+        handshakeTimeoutWork = work
+        sendQueue.asyncAfter(deadline: .now() + Self.handshakeTimeout, execute: work)
+    }
+
+    private func cancelHandshakeTimeout() {
+        handshakeTimeoutWork?.cancel()
+        handshakeTimeoutWork = nil
+    }
+
+    private func handleReceivedMessage(_ message: URLSessionWebSocketTask.Message) {
+        dispatchPrecondition(condition: .onQueue(sendQueue))
+
+        guard !handshakeCompleted else { return }
+
+        switch message {
+        case .string(let text):
+            guard let data = text.data(using: .utf8),
+                  let ack = try? JSONDecoder().decode(HelloAck.self, from: data) else {
+                cancelHandshakeTimeout()
+                task?.cancel(with: .goingAway, reason: nil)
+                task = nil
+                invalidateSession()
+                notifyStateChange(.disconnected(
+                    NSError(domain: "WebSocketStreamer", code: -1,
+                            userInfo: [NSLocalizedDescriptionKey: "Invalid handshake response"])
+                ))
+                return
+            }
+
+            if ack.type == "hello_ack" && ack.status == "ok" {
+                cancelHandshakeTimeout()
+                handshakeCompleted = true
+                acceptingEnqueues = true
+                notifyStateChange(.connected)
+
+                if !buffer.isEmpty && !isDraining {
+                    drainNext()
+                }
+            } else {
+                cancelHandshakeTimeout()
+                task?.cancel(with: .goingAway, reason: nil)
+                task = nil
+                invalidateSession()
+                notifyStateChange(.disconnected(
+                    NSError(domain: "WebSocketStreamer", code: 4001,
+                            userInfo: [NSLocalizedDescriptionKey: "Handshake rejected: \(ack.status)"])
+                ))
+            }
+
+        case .data:
+            break
+
+        @unknown default:
+            break
+        }
+    }
+
     // MARK: - Helpers
 
     private func notifyStateChange(_ state: ConnectionState) {
@@ -334,4 +451,18 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         urlSession?.invalidateAndCancel()
         urlSession = nil
     }
+}
+
+// MARK: - Handshake Models
+
+private struct HelloMessage: Codable {
+    let type: String
+    let protocol_version: Int
+    let session_id: String
+    let device_name: String
+}
+
+private struct HelloAck: Codable {
+    let type: String
+    let status: String
 }
