@@ -138,6 +138,49 @@ struct StreamingSettingsSheet: View {
                         }
                     }
                     .padding(.horizontal, 20)
+                    .padding(.bottom, 14)
+
+                    divider
+
+                    // SLAM
+                    sectionHeader("ON-DEVICE SLAM")
+                    VStack(alignment: .leading, spacing: 10) {
+                        Picker("SLAM Mode", selection: $settings.slamMode) {
+                            Text("Off \u{2605}").tag(SLAMMode.off)
+                            Text("RTAB-Map").tag(SLAMMode.rtabmap)
+                        }
+                        .pickerStyle(.segmented)
+                        .disabled(isRecording)
+
+                        if settings.slamMode == .rtabmap {
+                            Text("RTAB-Map runs on-device SLAM with loop closure, ICP refinement, and pose graph optimization. Requires LiDAR.")
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+
+                            // Processing rate picker
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Processing Rate")
+                                    .foregroundColor(.primary)
+                                Picker("Rate", selection: $settings.slamProcessingRate) {
+                                    ForEach(SLAMProcessingRate.allCases, id: \.self) { rate in
+                                        Text(rate.displayName).tag(rate)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                                .disabled(isRecording)
+
+                                // Description for selected rate
+                                Text(settings.slamProcessingRate.description)
+                                    .font(.system(size: 12))
+                                    .foregroundColor(.secondary)
+
+                                if settings.slamProcessingRate == .medium_1hz {
+                                    defaultBadge
+                                }
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 20)
                     .padding(.bottom, 16)
                 }
             }

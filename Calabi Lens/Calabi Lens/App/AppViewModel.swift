@@ -22,6 +22,8 @@ final class AppViewModel: ObservableObject {
 
     private let encodeQueue = DispatchQueue(label: "com.calabiLens.encode", qos: .userInitiated)
     private var currentSessionSettings: SessionSettings?
+    private var rtabMapSLAM: RTABMapSLAM?
+    private var lastSLAMProcessTime: TimeInterval = 0
 
     // MARK: - Init
 
@@ -30,11 +32,30 @@ final class AppViewModel: ObservableObject {
     }
 
     private func wireCallbacks() {
-        // Frame pipeline: capture → encode → stream
+        // Frame pipeline: capture → [SLAM] → encode → stream
         captureManager.onFrame = { [weak self] frame in
             guard let self, let sessionSettings = self.currentSessionSettings else { return }
             self.encodeQueue.async {
-                let data = self.encoder.encode(frame: frame, settings: sessionSettings)
+                var correctedPose: simd_float4x4? = nil
+
+                if let slam = self.rtabMapSLAM, slam.isRunning {
+                    // Apply current mapToOdom correction to every frame
+                    correctedPose = slam.mapToOdom
+
+                    // Feed frame to RTAB-Map at configured cadence
+                    let interval = sessionSettings.slamProcessingRate.intervalSeconds
+                    let now = frame.timestamp
+                    if interval == 0 || (now - self.lastSLAMProcessTime) >= interval {
+                        self.lastSLAMProcessTime = now
+                        slam.processFrame(frame: frame, frameId: self.encoder.currentFrameID)
+                    }
+                }
+
+                let data = self.encoder.encode(
+                    frame: frame,
+                    settings: sessionSettings,
+                    correctedPose: correctedPose
+                )
                 self.streamer.enqueue(data)
             }
         }
@@ -144,6 +165,18 @@ final class AppViewModel: ObservableObject {
 
         encoder.resetFrameID()
         metrics.resetForSession()
+        lastSLAMProcessTime = 0
+
+        // Start RTAB-Map SLAM if enabled
+        if sessionSettings.slamMode == .rtabmap {
+            let slam = RTABMapSLAM()
+            slam.onLoopClosure = { [weak self] corrections in
+                self?.sendPoseCorrections(corrections)
+            }
+            slam.start()
+            rtabMapSLAM = slam
+        }
+
         captureManager.setStreaming(enabled: true, sessionSettings: sessionSettings)
         streamer.enableReconnect()
         streamer.startPing(interval: 2)
@@ -153,6 +186,8 @@ final class AppViewModel: ObservableObject {
 
     func stopRecording() {
         captureManager.setStreaming(enabled: false, sessionSettings: nil)
+        rtabMapSLAM?.stop()
+        rtabMapSLAM = nil
         streamer.disableReconnect()
         streamer.stopPing()
         streamer.flushAndDisconnect()
@@ -165,11 +200,24 @@ final class AppViewModel: ObservableObject {
     func handleBackground() {
         guard appState.isRecording else { return }
         captureManager.setStreaming(enabled: false, sessionSettings: nil)
+        rtabMapSLAM?.stop()
+        rtabMapSLAM = nil
         streamer.disableReconnect()
         streamer.stopPing()
         streamer.disconnect() // abort, not flush
         metrics.freezeMetrics()
         currentSessionSettings = nil
         appState = .idle
+    }
+
+    // MARK: - SLAM Pose Corrections
+
+    private func sendPoseCorrections(_ corrections: [String: [Float]]) {
+        let message: [String: Any] = [
+            "type": "pose_corrections",
+            "corrections": corrections
+        ]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: message) else { return }
+        streamer.sendTextMessage(jsonData)
     }
 }

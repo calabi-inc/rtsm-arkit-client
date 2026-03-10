@@ -9,6 +9,8 @@ struct SessionSettings {
     let depthFormat: DepthFormat
     let poseFormat: PoseFormat
     let rgbResolution: RGBResolution
+    let slamMode: SLAMMode
+    let slamProcessingRate: SLAMProcessingRate
 
     var depthScale: Double {
         switch depthFormat {
@@ -27,5 +29,7 @@ struct SessionSettings {
         self.depthFormat = settings.depthFormat
         self.poseFormat = settings.poseFormat
         self.rgbResolution = settings.rgbResolution
+        self.slamMode = settings.slamMode
+        self.slamProcessingRate = settings.slamProcessingRate
     }
 }

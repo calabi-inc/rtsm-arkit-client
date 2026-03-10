@@ -13,7 +13,14 @@ final class FrameEncoder {
         frameID = 0
     }
 
-    func encode(frame: ARFrame, settings: SessionSettings) -> Data {
+    /// Encode a frame for WebSocket transmission.
+    ///
+    /// - Parameters:
+    ///   - frame: The ARKit frame to encode.
+    ///   - settings: Session settings for encoding configuration.
+    ///   - correctedPose: Optional SLAM-corrected pose to use instead of raw ARKit VIO.
+    /// - Returns: Packed binary data ready for WebSocket transmission.
+    func encode(frame: ARFrame, settings: SessionSettings, correctedPose: simd_float4x4? = nil) -> Data {
         let currentFrameID = frameID
         frameID += 1
 
@@ -25,7 +32,8 @@ final class FrameEncoder {
             settings: settings,
             frameID: currentFrameID,
             rgbData: rgbData,
-            depthData: depthData
+            depthData: depthData,
+            correctedPose: correctedPose
         )
 
         let encoder = JSONEncoder()
@@ -33,6 +41,9 @@ final class FrameEncoder {
 
         return packMessage(json: jsonData, rgb: rgbData, depth: depthData)
     }
+
+    /// The current frame ID (for SLAM frame mapping).
+    var currentFrameID: UInt64 { frameID }
 
     // MARK: - RGB Encoding
 
@@ -218,15 +229,17 @@ final class FrameEncoder {
         settings: SessionSettings,
         frameID: UInt64,
         rgbData: Data,
-        depthData: Data
+        depthData: Data,
+        correctedPose: simd_float4x4? = nil
     ) -> FrameHeader {
         let camera = frame.camera
         let intrinsics = camera.intrinsics
         let imageResolution = camera.imageResolution
         let pixelBuffer = frame.capturedImage
 
-        // Pose
-        let transform = camera.transform
+        // Pose — use corrected SLAM pose if provided, otherwise raw ARKit VIO
+        let transform = correctedPose ?? camera.transform
+        let poseSource = correctedPose != nil ? "rtabmap_slam" : "arkit_vio"
         let twc: [Double]
         switch settings.poseFormat {
         case .matrix4x4:
@@ -310,7 +323,7 @@ final class FrameEncoder {
             T_wc: twc,
             tracking_state: trackingStateStr,
             tracking_reason: trackingReasonStr,
-            pose_source: "arkit_vio"
+            pose_source: poseSource
         )
     }
 

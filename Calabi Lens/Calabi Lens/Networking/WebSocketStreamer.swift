@@ -113,6 +113,22 @@ final class WebSocketStreamer: NSObject, URLSessionWebSocketDelegate {
         }
     }
 
+    // MARK: - Send Text Message
+
+    /// Send a JSON text message over the WebSocket (e.g., pose_corrections).
+    /// Bypasses the binary frame queue — sent immediately.
+    func sendTextMessage(_ jsonData: Data) {
+        sendQueue.async { [weak self] in
+            guard let self, self.handshakeCompleted,
+                  let jsonString = String(data: jsonData, encoding: .utf8) else { return }
+            self.task?.send(.string(jsonString)) { error in
+                if let error {
+                    print("[WebSocketStreamer] text message send error: \(error)")
+                }
+            }
+        }
+    }
+
     // MARK: - Enqueue
 
     func enqueue(_ data: Data) {
