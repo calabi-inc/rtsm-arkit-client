@@ -36,6 +36,10 @@ final class RTABMapSLAM {
     private var nodeIdToFrameId: [Int: UInt64] = [:]
     private var currentFrameId: UInt64 = 0
 
+    /// The ARKit odometry pose that was last fed to RTAB-Map.
+    /// Needed to compute: mapToOdom = correctedPose * inverse(lastOdometryPose)
+    private var lastOdometryPose: simd_float4x4 = matrix_identity_float4x4
+
     // MARK: - Lifecycle
 
     /// Start the SLAM engine. Creates a fresh database in the temp directory.
@@ -107,6 +111,7 @@ final class RTABMapSLAM {
         }
 
         mapToOdom = matrix_identity_float4x4
+        lastOdometryPose = matrix_identity_float4x4
         nodeIdToFrameId.removeAll()
 
         print("[RTABMapSLAM] Stopped and cleaned up")
@@ -137,6 +142,9 @@ final class RTABMapSLAM {
         let camera = frame.camera
         let transform = camera.transform
         let intrinsics = camera.intrinsics
+
+        // Store the odometry pose for mapToOdom computation
+        lastOdometryPose = transform
 
         // Extract column-major 4x4 pose
         var pose: [Float] = [Float](repeating: 0, count: 16)
@@ -193,11 +201,14 @@ final class RTABMapSLAM {
         // Store the current frame_id → node_id mapping
         nodeIdToFrameId[nodesCount] = currentFrameId
 
-        // Update mapToOdom (mapCorrection)
-        // correctedPose = mapToOdom * odometryPose
-        // But we compute it directly from the corrected pose output
-        // The map correction is embedded in the corrected pose already
-        mapToOdom = correctedPose
+        // Compute mapToOdom (the correction transform):
+        //   correctedPose = mapToOdom * odometryPose
+        //   => mapToOdom = correctedPose * inverse(odometryPose)
+        //
+        // This correction is then applied to ALL frames (not just SLAM-processed ones):
+        //   anyFrameCorrected = mapToOdom * anyFrameARKitPose
+        let odomInverse = lastOdometryPose.inverse
+        mapToOdom = correctedPose * odomInverse
 
         // Handle loop closure
         if loopClosureId > 0 {

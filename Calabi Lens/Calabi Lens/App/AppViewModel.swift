@@ -39,9 +39,6 @@ final class AppViewModel: ObservableObject {
                 var correctedPose: simd_float4x4? = nil
 
                 if let slam = self.rtabMapSLAM, slam.isRunning {
-                    // Apply current mapToOdom correction to every frame
-                    correctedPose = slam.mapToOdom
-
                     // Feed frame to RTAB-Map at configured cadence
                     let interval = sessionSettings.slamProcessingRate.intervalSeconds
                     let now = frame.timestamp
@@ -49,6 +46,10 @@ final class AppViewModel: ObservableObject {
                         self.lastSLAMProcessTime = now
                         slam.processFrame(frame: frame, frameId: self.encoder.currentFrameID)
                     }
+
+                    // Apply mapToOdom correction to current ARKit pose:
+                    // correctedPose = mapToOdom * arkitPose
+                    correctedPose = slam.mapToOdom * frame.camera.transform
                 }
 
                 let data = self.encoder.encode(
