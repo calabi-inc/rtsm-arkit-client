@@ -63,7 +63,7 @@ if [ ! -f "$OUTPUT_DIR/lib/libboost_thread.a" ]; then
     cd "$BUILD_DIR"
     if [ ! -d "$BOOST_DIR" ]; then
         curl -L -o boost.tar.bz2 \
-            "https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VER}/source/boost_${BOOST_VER_US}.tar.bz2"
+            "https://archives.boost.io/release/${BOOST_VER}/source/boost_${BOOST_VER_US}.tar.bz2"
         tar xf boost.tar.bz2
         rm boost.tar.bz2
     fi
