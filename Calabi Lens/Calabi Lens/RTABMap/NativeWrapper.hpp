@@ -85,6 +85,7 @@ void setOnlineBlendingNative(void* app, bool enabled);
  *   depthHeight     — Height of the depth map
  *   fx, fy, cx, cy  — Camera intrinsics
  *   stampSeconds    — Frame timestamp in seconds (ARFrame.timestamp)
+ *   trackingQuality — 0=degraded (limited tracking / reloc filtered), 2=normal
  */
 void postOdometryEventNative(
     void* app,
@@ -97,7 +98,8 @@ void postOdometryEventNative(
     int depthHeight,
     float fx, float fy,
     float cx, float cy,
-    double stampSeconds
+    double stampSeconds,
+    int trackingQuality
 );
 
 /*

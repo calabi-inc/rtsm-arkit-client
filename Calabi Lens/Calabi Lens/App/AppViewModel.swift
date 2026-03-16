@@ -55,6 +55,23 @@ final class AppViewModel: ObservableObject {
                 correctedPose = nil
             }
 
+            // Debug: log pose info every 30 frames
+            let fid = self.encoder.currentFrameID
+            if fid % 30 == 0 {
+                let t = frame.camera.transform
+                let arkitPos = (t.columns.3.x, t.columns.3.y, t.columns.3.z)
+                let sentPose = correctedPose ?? t
+                let sentPos = (sentPose.columns.3.x, sentPose.columns.3.y, sentPose.columns.3.z)
+                let isIdentity = self.rtabMapSLAM?.mapToOdom == matrix_identity_float4x4
+                let depth = frame.sceneDepth?.depthMap
+                let depthW = depth.map { CVPixelBufferGetWidth($0) } ?? 0
+                let depthH = depth.map { CVPixelBufferGetHeight($0) } ?? 0
+                let rgbW = CVPixelBufferGetWidth(frame.capturedImage)
+                let rgbH = CVPixelBufferGetHeight(frame.capturedImage)
+                let intr = frame.camera.intrinsics
+                print("[FRAME \(fid)] arkit=(\(String(format: "%.3f,%.3f,%.3f", arkitPos.0, arkitPos.1, arkitPos.2))) sent=(\(String(format: "%.3f,%.3f,%.3f", sentPos.0, sentPos.1, sentPos.2))) mapToOdom=\(isIdentity == true ? "identity" : "MODIFIED") rgb=\(rgbW)x\(rgbH) depth=\(depthW)x\(depthH) fx=\(String(format: "%.1f", intr[0][0])) fy=\(String(format: "%.1f", intr[1][1])) cx=\(String(format: "%.1f", intr[2][0])) cy=\(String(format: "%.1f", intr[2][1]))")
+            }
+
             // Extract & encode all pixel data NOW on the delegate thread.
             // After this call, the ARFrame can be released — no references retained.
             let extracted = self.encoder.extract(

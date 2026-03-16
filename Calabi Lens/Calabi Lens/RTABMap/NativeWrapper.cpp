@@ -31,6 +31,31 @@
 #include <mutex>
 #include <map>
 
+// ──────────────────── Coordinate Frame Constants ────────────────────
+//
+// ARKit/OpenGL world: X-right, Y-up, Z-toward-viewer
+// RTABMap world:      X-forward, Y-left, Z-up
+//
+// These transforms convert poses between the two conventions.
+// Applied as: rtabmapPose = rtabmap_world_T_opengl_world * arkitPose * opengl_world_T_rtabmap_world
+
+static const rtabmap::Transform rtabmap_world_T_opengl_world(
+     0,  0, -1, 0,
+    -1,  0,  0, 0,
+     0,  1,  0, 0);
+
+static const rtabmap::Transform opengl_world_T_rtabmap_world(
+     0, -1,  0, 0,
+     0,  0,  1, 0,
+    -1,  0,  0, 0);
+
+// Camera optical rotation: maps camera optical frame → device body frame.
+// Required by CameraModel so RTABMap knows the sensor orientation.
+static const rtabmap::Transform opticalRotation(
+     0,  0,  1, 0,
+    -1,  0,  0, 0,
+     0, -1,  0, 0);
+
 // ──────────────────── RTABMapApp (Headless SLAM) ────────────────────
 
 class RTABMapApp {
@@ -41,7 +66,8 @@ public:
           nodesCount_(0),
           wordsCount_(0),
           databaseSize_(0.0f),
-          graphOptimization_(true) {}
+          graphOptimization_(true),
+          isFirstFrame_(true) {}
 
     ~RTABMapApp() {
         close();
@@ -88,6 +114,36 @@ public:
         // Proximity detection
         params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDProximityBySpace(), "true"));
 
+        // --- Fix #5: Missing parameters from official app ---
+
+        // Visual matching
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kVisMinInliers(), "25"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kVisMaxFeatures(), "200"));
+
+        // Loop closure threshold
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRtabmapLoopThr(), "0.11"));
+
+        // Graph optimization direction (optimize from latest node)
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDOptimizeFromGraphEnd(), "true"));
+
+        // Node insertion rate thresholds (prevents redundant nodes)
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDLinearUpdate(), "0.05"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDAngularUpdate(), "0.05"));
+
+        // Gravity constraints from ARKit IMU
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kMemUseOdomGravity(), "true"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kOptimizerGravitySigma(), "0.2"));
+
+        // ICP safety bounds
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpPointToPlane(), "true"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpMaxRotation(), "0.17"));
+
+        // Speed-based outlier rejection
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDLinearSpeedUpdate(), "1.0"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRGBDAngularSpeedUpdate(), "0.5"));
+
+        isFirstFrame_ = true;
+
         rtabmap_->init(params, databasePath);
 
         if (clearDatabase) {
@@ -108,7 +164,8 @@ public:
         const unsigned char* rgbData, int rgbW, int rgbH,
         const float* depthData, int depthW, int depthH,
         float fx, float fy, float cx, float cy,
-        double stampSeconds
+        double stampSeconds,
+        int trackingQuality
     ) {
         std::lock_guard<std::mutex> lock(mutex_);
 
@@ -123,6 +180,9 @@ public:
             return;
         }
 
+        // --- Fix #3: Convert ARKit (OpenGL) pose → RTABMap coordinate frame ---
+        cameraPose = rtabmap_world_T_opengl_world * cameraPose * opengl_world_T_rtabmap_world;
+
         // Build RGB cv::Mat (BGRA → BGR)
         cv::Mat rgb(rgbH, rgbW, CV_8UC4, const_cast<unsigned char*>(rgbData));
         cv::Mat bgr;
@@ -131,16 +191,36 @@ public:
         // Build depth cv::Mat (float32 meters)
         cv::Mat depth(depthH, depthW, CV_32FC1, const_cast<float*>(depthData));
 
-        // Camera model
+        // --- Fix #1: Use optical rotation instead of identity ---
         rtabmap::CameraModel model(fx, fy, cx, cy,
-            rtabmap::Transform::getIdentity(), 0,
+            opticalRotation, 0,
             cv::Size(rgbW, rgbH));
 
         // Build SensorData
         rtabmap::SensorData data(bgr, depth, model, 0, stampSeconds);
 
-        // Process through RTAB-Map
-        rtabmap_->process(data, cameraPose);
+        // --- Fix #4: Build covariance based on tracking quality ---
+        cv::Mat covariance;
+        if (isFirstFrame_) {
+            covariance = cv::Mat::eye(6, 6, CV_64FC1) * 9999.0;
+            isFirstFrame_ = false;
+        } else {
+            covariance = cv::Mat::eye(6, 6, CV_64FC1) * 0.00001;
+            // Roll/pitch: 100x more confident (ARKit IMU fusion is excellent for these)
+            covariance.at<double>(3, 3) *= 0.01;
+            covariance.at<double>(4, 4) *= 0.01;
+            if (trackingQuality < 2) {
+                // Degraded tracking or upstream relocalization filtered:
+                // inflate translation + yaw uncertainty by 10x
+                covariance.at<double>(0, 0) *= 10.0;
+                covariance.at<double>(1, 1) *= 10.0;
+                covariance.at<double>(2, 2) *= 10.0;
+                covariance.at<double>(5, 5) *= 10.0;
+            }
+        }
+
+        // Process through RTAB-Map with covariance
+        rtabmap_->process(data, cameraPose, covariance);
 
         // Extract stats
         const rtabmap::Statistics& stats = rtabmap_->getStatistics();
@@ -152,13 +232,14 @@ public:
 
         int loopClosureId = stats.loopClosureId();
 
-        // Get corrected pose
-        rtabmap::Transform correctedPose = stats.mapCorrection() * cameraPose;
-        float x = correctedPose.x();
-        float y = correctedPose.y();
-        float z = correctedPose.z();
+        // Get corrected pose (in RTABMap frame), convert back to ARKit frame
+        rtabmap::Transform correctedRtabmap = stats.mapCorrection() * cameraPose;
+        rtabmap::Transform correctedArkit = opengl_world_T_rtabmap_world * correctedRtabmap * rtabmap_world_T_opengl_world;
+        float x = correctedArkit.x();
+        float y = correctedArkit.y();
+        float z = correctedArkit.z();
         float roll, pitch, yaw;
-        correctedPose.getEulerAngles(roll, pitch, yaw);
+        correctedArkit.getEulerAngles(roll, pitch, yaw);
 
         // Store map correction for external use
         mapCorrection_ = stats.mapCorrection();
@@ -189,14 +270,15 @@ public:
         for (const auto& pair : poses) {
             if (count >= maxPoses) break;
 
-            const rtabmap::Transform& t = pair.second;
+            // Convert from RTABMap frame back to ARKit frame
+            const rtabmap::Transform arkit = opengl_world_T_rtabmap_world * pair.second * rtabmap_world_T_opengl_world;
             float roll, pitch, yaw;
-            t.getEulerAngles(roll, pitch, yaw);
+            arkit.getEulerAngles(roll, pitch, yaw);
 
             int idx = count * 7;
-            outPoses[idx + 0] = t.x();
-            outPoses[idx + 1] = t.y();
-            outPoses[idx + 2] = t.z();
+            outPoses[idx + 0] = arkit.x();
+            outPoses[idx + 1] = arkit.y();
+            outPoses[idx + 2] = arkit.z();
             outPoses[idx + 3] = roll;
             outPoses[idx + 4] = pitch;
             outPoses[idx + 5] = yaw;
@@ -220,6 +302,7 @@ private:
     int wordsCount_;
     float databaseSize_;
     bool graphOptimization_;
+    bool isFirstFrame_;
 
     rtabmap::Transform mapCorrection_;
     std::map<int, rtabmap::Transform> optimizedPoses_;
@@ -253,12 +336,13 @@ void postOdometryEventNative(
     const unsigned char* rgbData, int rgbWidth, int rgbHeight,
     const float* depthData, int depthWidth, int depthHeight,
     float fx, float fy, float cx, float cy,
-    double stampSeconds
+    double stampSeconds,
+    int trackingQuality
 ) {
     static_cast<RTABMapApp*>(app)->postOdometryEvent(
         pose, rgbData, rgbWidth, rgbHeight,
         depthData, depthWidth, depthHeight,
-        fx, fy, cx, cy, stampSeconds
+        fx, fy, cx, cy, stampSeconds, trackingQuality
     );
 }
 

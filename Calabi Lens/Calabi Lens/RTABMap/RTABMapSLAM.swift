@@ -66,6 +66,16 @@ final class RTABMapSLAM {
     private static let slamWidth: Int = 480
     private static let slamHeight: Int = 360
 
+    // --- Fix #2: Upstream relocalization filter ---
+    // Detects sudden pose jumps from ARKit's internal relocalization and
+    // substitutes a constant-velocity predicted pose to prevent graph corruption.
+    private var prevFilteredPosition: simd_float3?
+    private var prevVelocity: simd_float3?
+    private var prevPoseTimestamp: Double = 0
+    private var accumulatedTranslationOffset = simd_float3.zero
+    /// Acceleration threshold: 6g ≈ 58.8 m/s² (matches official RTABMap app default)
+    private static let relocAccThreshold: Float = 6.0 * 9.81
+
     // MARK: - Lifecycle
 
     /// Start the SLAM engine. Creates a fresh database in the temp directory.
@@ -132,6 +142,12 @@ final class RTABMapSLAM {
         lastOdometryPose = matrix_identity_float4x4
         nodeIdToFrameId.removeAll()
 
+        // Reset relocalization filter state
+        prevFilteredPosition = nil
+        prevVelocity = nil
+        prevPoseTimestamp = 0
+        accumulatedTranslationOffset = .zero
+
         print("[RTABMapSLAM] Stopped and cleaned up")
     }
 
@@ -150,6 +166,7 @@ final class RTABMapSLAM {
         let fx: Float, fy: Float, cx: Float, cy: Float
         let timestamp: Double
         let frameId: UInt64
+        let trackingNormal: Bool    // true if ARKit tracking is .normal
     }
 
     /// Process a single frame through RTAB-Map SLAM.
@@ -220,12 +237,16 @@ final class RTABMapSLAM {
         let depthData = Data(bytes: depthPtr, count: depthByteCount)
         CVPixelBufferUnlockBaseAddress(depthMap, .readOnly)
 
+        let isTrackingNormal: Bool
+        if case .normal = camera.trackingState { isTrackingNormal = true } else { isTrackingNormal = false }
+
         let frameData = SLAMFrameData(
             pose: pose, transform: transform,
             bgraPixels: bgraData, rgbW: Int32(targetW), rgbH: Int32(targetH),
             depthPixels: depthData, depthW: Int32(depthW), depthH: Int32(depthH),
             fx: fx, fy: fy, cx: cx, cy: cy,
-            timestamp: frame.timestamp, frameId: frameId
+            timestamp: frame.timestamp, frameId: frameId,
+            trackingNormal: isTrackingNormal
         )
 
         // --- Dispatch heavy processing (no ARFrame reference held) ---
@@ -238,9 +259,22 @@ final class RTABMapSLAM {
         guard isRunning, let ptr = nativePtr else { return }
 
         currentFrameId = data.frameId
-        lastOdometryPose = data.transform
 
         var pose = data.pose
+
+        // --- Fix #2: Upstream relocalization filter ---
+        let relocFiltered = applyRelocalizationFilter(&pose, timestamp: data.timestamp)
+
+        // Tracking quality: 0 = degraded, 2 = normal
+        let trackingQuality: Int32
+        if !data.trackingNormal || relocFiltered {
+            trackingQuality = 0
+        } else {
+            trackingQuality = 2
+        }
+
+        // Update lastOdometryPose with the (potentially filtered) pose
+        lastOdometryPose = makeSimdFromColMajor(pose)
 
         data.bgraPixels.withUnsafeBytes { bgraRaw in
             data.depthPixels.withUnsafeBytes { depthRaw in
@@ -253,10 +287,73 @@ final class RTABMapSLAM {
                     rgbPtr, data.rgbW, data.rgbH,
                     depthPtr, data.depthW, data.depthH,
                     data.fx, data.fy, data.cx, data.cy,
-                    data.timestamp
+                    data.timestamp,
+                    trackingQuality
                 )
             }
         }
+    }
+
+    // MARK: - Upstream Relocalization Filter
+
+    /// Detects sudden pose jumps from ARKit's internal relocalization by measuring
+    /// acceleration. When a jump exceeds the threshold, substitutes a constant-velocity
+    /// predicted position to prevent SLAM graph corruption.
+    ///
+    /// Returns `true` if the pose was filtered (relocalization detected).
+    private func applyRelocalizationFilter(_ pose: inout [Float], timestamp: Double) -> Bool {
+        // Apply accumulated translation offset from previous filterings
+        var pos = simd_float3(pose[12], pose[13], pose[14]) + accumulatedTranslationOffset
+        let dt = Float(timestamp - prevPoseTimestamp)
+
+        defer {
+            prevPoseTimestamp = timestamp
+        }
+
+        guard dt > 0, let prevPos = prevFilteredPosition else {
+            // First frame — initialize state
+            prevFilteredPosition = pos
+            prevPoseTimestamp = timestamp
+            pose[12] = pos.x; pose[13] = pos.y; pose[14] = pos.z
+            return false
+        }
+
+        let velocity = (pos - prevPos) / dt
+
+        if let prevVel = prevVelocity {
+            let acceleration = (velocity - prevVel) / dt
+            let accMagnitude = length(acceleration)
+            let distance = length(pos - prevPos)
+
+            if accMagnitude >= Self.relocAccThreshold && distance > 0.02 {
+                // Upstream relocalization detected — use constant velocity prediction
+                let predictedPos = prevPos + prevVel * dt
+                let correction = predictedPos - pos
+                accumulatedTranslationOffset += correction
+                pos = predictedPos
+
+                prevFilteredPosition = pos
+                // Keep previous velocity (constant velocity model)
+                print("[RTABMapSLAM] Upstream relocalization filtered (acc=\(String(format: "%.1f", accMagnitude)) m/s², dist=\(String(format: "%.3f", distance))m)")
+                pose[12] = pos.x; pose[13] = pos.y; pose[14] = pos.z
+                return true
+            }
+        }
+
+        prevFilteredPosition = pos
+        prevVelocity = velocity
+        pose[12] = pos.x; pose[13] = pos.y; pose[14] = pos.z
+        return false
+    }
+
+    /// Reconstruct a simd_float4x4 from a 16-float column-major array.
+    private func makeSimdFromColMajor(_ m: [Float]) -> simd_float4x4 {
+        return simd_float4x4(columns: (
+            simd_float4(m[0], m[1], m[2], m[3]),
+            simd_float4(m[4], m[5], m[6], m[7]),
+            simd_float4(m[8], m[9], m[10], m[11]),
+            simd_float4(m[12], m[13], m[14], m[15])
+        ))
     }
 
     // MARK: - Stats Callback
@@ -270,25 +367,20 @@ final class RTABMapSLAM {
     ) {
         print("[SLAM] nodes=\(nodesCount) words=\(wordsCount) loopId=\(loopClosureId) pos=(\(String(format: "%.3f", x)),\(String(format: "%.3f", y)),\(String(format: "%.3f", z)))")
 
-        // Build corrected pose from Euler angles
-        let correctedPose = makeTransform(x: x, y: y, z: z,
-                                           roll: roll, pitch: pitch, yaw: yaw)
-
         // Store the current frame_id → node_id mapping
         nodeIdToFrameId[nodesCount] = currentFrameId
 
-        // Compute mapToOdom (the correction transform):
-        //   correctedPose = mapToOdom * odometryPose
-        //   => mapToOdom = correctedPose * inverse(odometryPose)
-        //
-        // This correction is then applied to ALL frames (not just SLAM-processed ones):
-        //   anyFrameCorrected = mapToOdom * anyFrameARKitPose
-        let odomInverse = lastOdometryPose.inverse
-        mapToOdom = correctedPose * odomInverse
-
-        // Handle loop closure
+        // Only update mapToOdom when a loop closure is detected.
+        // Without loop closure, RTAB-Map's reported pose is its own odometry estimate
+        // which diverges slightly from ARKit's — applying that as a "correction" causes
+        // frame-to-frame jitter and the "multiple layers" effect.
         if loopClosureId > 0 {
-            print("[RTABMapSLAM] Loop closure detected (id: \(loopClosureId))")
+            let correctedPose = makeTransform(x: x, y: y, z: z,
+                                               roll: roll, pitch: pitch, yaw: yaw)
+            let odomInverse = lastOdometryPose.inverse
+            mapToOdom = correctedPose * odomInverse
+
+            print("[RTABMapSLAM] Loop closure detected (id: \(loopClosureId)), mapToOdom updated")
             handleLoopClosure()
         }
     }
