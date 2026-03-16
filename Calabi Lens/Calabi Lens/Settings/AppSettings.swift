@@ -9,6 +9,6 @@ final class AppSettings: ObservableObject {
     @AppStorage("depthFormat") var depthFormat = DepthFormat.uint16mm
     @AppStorage("poseFormat") var poseFormat = PoseFormat.matrix4x4
     @AppStorage("rgbResolution") var rgbResolution = RGBResolution.downscaled
-    @AppStorage("slamMode") var slamMode = SLAMMode.off
+    @AppStorage("slamMode") var slamMode = SLAMMode.rtabmap
     @AppStorage("slamProcessingRate") var slamProcessingRate = SLAMProcessingRate.medium_1hz
 }

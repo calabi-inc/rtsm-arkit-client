@@ -9,6 +9,10 @@
  * ICP refinement, and GTSAM pose graph optimization.
  */
 
+// Ensure POSIX types (timespec) are available before C++ threading headers
+#include <time.h>
+#include <sys/types.h>
+
 #include "NativeWrapper.hpp"
 
 #include <rtabmap/core/Rtabmap.h>
@@ -67,7 +71,7 @@ public:
         // Feature detection (ORB for speed on mobile)
         params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kKpDetectorStrategy(), "6"));  // ORB
         params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kKpMaxFeatures(), "200"));
-        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kKpWordsPerImage(), "200"));
+        // kKpWordsPerImage removed in 0.21; kKpMaxFeatures controls this
 
         // Graph optimization (GTSAM)
         if (graphOptimization_) {
@@ -106,7 +110,12 @@ public:
         float fx, float fy, float cx, float cy,
         double stampSeconds
     ) {
+        printf("[NativeWrapper] postOdometryEvent: rgb=%dx%d depth=%dx%d fx=%.1f fy=%.1f\n",
+               rgbW, rgbH, depthW, depthH, fx, fy);
+        fflush(stdout);
+
         std::lock_guard<std::mutex> lock(mutex_);
+        printf("[NativeWrapper] mutex acquired\n"); fflush(stdout);
 
         // Build camera transform from column-major 4x4
         rtabmap::Transform cameraPose(
@@ -116,13 +125,18 @@ public:
         );
 
         if (cameraPose.isNull()) {
+            printf("[NativeWrapper] cameraPose is null, skipping\n"); fflush(stdout);
             return;
         }
+        printf("[NativeWrapper] cameraPose ok: %.2f %.2f %.2f\n",
+               cameraPose.x(), cameraPose.y(), cameraPose.z());
+        fflush(stdout);
 
         // Build RGB cv::Mat (BGRA → BGR)
         cv::Mat rgb(rgbH, rgbW, CV_8UC4, const_cast<unsigned char*>(rgbData));
         cv::Mat bgr;
         cv::cvtColor(rgb, bgr, cv::COLOR_BGRA2BGR);
+        printf("[NativeWrapper] cvtColor done\n"); fflush(stdout);
 
         // Build depth cv::Mat (float32 meters)
         cv::Mat depth(depthH, depthW, CV_32FC1, const_cast<float*>(depthData));
@@ -134,15 +148,19 @@ public:
 
         // Build SensorData
         rtabmap::SensorData data(bgr, depth, model, 0, stampSeconds);
+        printf("[NativeWrapper] SensorData built, calling process()...\n"); fflush(stdout);
 
         // Process through RTAB-Map
         rtabmap_->process(data, cameraPose);
+        printf("[NativeWrapper] process() returned\n"); fflush(stdout);
 
         // Extract stats
         const rtabmap::Statistics& stats = rtabmap_->getStatistics();
         nodesCount_ = static_cast<int>(rtabmap_->getMemory()->getWorkingMem().size() +
                                         rtabmap_->getMemory()->getStMem().size());
-        wordsCount_ = stats.words().size();
+        const auto& statsData = stats.data();
+        auto it = statsData.find(rtabmap::Statistics::kKeypointDictionary_size());
+        wordsCount_ = (it != statsData.end()) ? static_cast<int>(it->second) : 0;
 
         int loopClosureId = stats.loopClosureId();
 
@@ -163,6 +181,10 @@ public:
         }
 
         // Fire callback
+        printf("[NativeWrapper] stats: nodes=%d loopId=%d corrected=(%.3f,%.3f,%.3f) callback=%s\n",
+               nodesCount_, loopClosureId, x, y, z,
+               statsCallback_ ? "yes" : "no");
+        fflush(stdout);
         if (statsCallback_) {
             statsCallback_(
                 nodesCount_, wordsCount_, databaseSize_,

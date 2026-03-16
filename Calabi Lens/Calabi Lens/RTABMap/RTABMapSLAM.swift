@@ -1,4 +1,5 @@
 import ARKit
+import CoreImage
 import simd
 
 /// On-device SLAM wrapper around RTAB-Map C++ library.
@@ -12,6 +13,24 @@ import simd
 ///   3. Read `mapToOdom` to correct ARKit poses: `correctedPose = mapToOdom * arkitPose`
 ///   4. Handle `onLoopClosure` to send retroactive corrections
 ///   5. Call `stop()` at recording end
+/// Global reference for C callback (only one SLAM instance at a time)
+private weak var _activeRTABMapSLAM: RTABMapSLAM?
+
+private func _slamStatsCallback(
+    _ nodesCount: Int32, _ wordsCount: Int32, _ databaseSize: Float,
+    _ loopClosureId: Int32,
+    _ x: Float, _ y: Float, _ z: Float,
+    _ roll: Float, _ pitch: Float, _ yaw: Float
+) {
+    _activeRTABMapSLAM?.handleStatsUpdate(
+        nodesCount: Int(nodesCount),
+        wordsCount: Int(wordsCount),
+        loopClosureId: Int(loopClosureId),
+        x: x, y: y, z: z,
+        roll: roll, pitch: pitch, yaw: yaw
+    )
+}
+
 final class RTABMapSLAM {
 
     // MARK: - Public State
@@ -61,17 +80,9 @@ final class RTABMapSLAM {
         let ptr = createNativeApplication()
         nativePtr = ptr
 
-        // Setup stats callback
-        setupCallbacksNative(ptr, { [weak self] nodesCount, wordsCount, databaseSize,
-                                     loopClosureId, x, y, z, roll, pitch, yaw in
-            self?.handleStatsUpdate(
-                nodesCount: Int(nodesCount),
-                wordsCount: Int(wordsCount),
-                loopClosureId: Int(loopClosureId),
-                x: x, y: y, z: z,
-                roll: roll, pitch: pitch, yaw: yaw
-            )
-        })
+        // Setup stats callback (uses module-level function since C pointers can't capture context)
+        _activeRTABMapSLAM = self
+        setupCallbacksNative(ptr, _slamStatsCallback)
 
         // Disable rendering features (headless SLAM)
         setOnlineBlendingNative(ptr, false)
@@ -154,13 +165,29 @@ final class RTABMapSLAM {
             }
         }
 
-        // Get RGB pixel data (BGRA8)
+        // Convert YCbCr (NV12) capturedImage to BGRA using CoreImage
         let pixelBuffer = frame.capturedImage
-        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
-        let rgbData = CVPixelBufferGetBaseAddress(pixelBuffer)!
-            .assumingMemoryBound(to: UInt8.self)
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
         let rgbW = Int32(CVPixelBufferGetWidth(pixelBuffer))
         let rgbH = Int32(CVPixelBufferGetHeight(pixelBuffer))
+
+        // Render CIImage to a BGRA pixel buffer
+        var bgraBuffer: CVPixelBuffer?
+        let attrs: [String: Any] = [
+            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+            kCVPixelBufferWidthKey as String: Int(rgbW),
+            kCVPixelBufferHeightKey as String: Int(rgbH),
+        ]
+        CVPixelBufferCreate(kCFAllocatorDefault, Int(rgbW), Int(rgbH),
+                            kCVPixelFormatType_32BGRA, attrs as CFDictionary, &bgraBuffer)
+        guard let bgra = bgraBuffer else { return }
+
+        let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+        ciContext.render(ciImage, to: bgra)
+
+        CVPixelBufferLockBaseAddress(bgra, .readOnly)
+        let rgbData = CVPixelBufferGetBaseAddress(bgra)!
+            .assumingMemoryBound(to: UInt8.self)
 
         // Get depth data (float32 meters)
         let depthMap = sceneDepth.depthMap
@@ -181,19 +208,20 @@ final class RTABMapSLAM {
             frame.timestamp
         )
 
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly)
+        CVPixelBufferUnlockBaseAddress(bgra, .readOnly)
         CVPixelBufferUnlockBaseAddress(depthMap, .readOnly)
     }
 
     // MARK: - Stats Callback
 
-    private func handleStatsUpdate(
+    fileprivate func handleStatsUpdate(
         nodesCount: Int,
         wordsCount: Int,
         loopClosureId: Int,
         x: Float, y: Float, z: Float,
         roll: Float, pitch: Float, yaw: Float
     ) {
+        print("[RTABMapSLAM] handleStatsUpdate: nodes=\(nodesCount) loopId=\(loopClosureId) pos=(\(x),\(y),\(z))")
         // Build corrected pose from Euler angles
         let correctedPose = makeTransform(x: x, y: y, z: z,
                                            roll: roll, pitch: pitch, yaw: yaw)

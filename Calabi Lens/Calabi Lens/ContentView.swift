@@ -26,7 +26,7 @@ struct ContentView: View {
                 ShutterButtonView(
                     appState: viewModel.appState,
                     trackingState: viewModel.trackingState,
-                    frameCounter: viewModel.metrics.frameCounter,
+                    metrics: viewModel.metrics,
                     settings: viewModel.settings,
                     onRecord: { viewModel.startRecording() },
                     onStop: { viewModel.stopRecording() }
@@ -126,7 +126,7 @@ private struct TopBarView: View {
 private struct ShutterButtonView: View {
     let appState: AppState
     let trackingState: ARCamera.TrackingState
-    let frameCounter: UInt64
+    @ObservedObject var metrics: MetricsTracker
     let settings: AppSettings
     let onRecord: () -> Void
     let onStop: () -> Void
@@ -165,7 +165,7 @@ private struct ShutterButtonView: View {
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(.red)
                 } else {
-                    Text("\u{25CF} STREAMING \u{00B7} \(frameCounter) frames")
+                    Text("\u{25CF} STREAMING \u{00B7} \(metrics.frameCounter) frames")
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(.red)
                 }

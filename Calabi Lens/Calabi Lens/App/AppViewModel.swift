@@ -44,12 +44,15 @@ final class AppViewModel: ObservableObject {
                     let now = frame.timestamp
                     if interval == 0 || (now - self.lastSLAMProcessTime) >= interval {
                         self.lastSLAMProcessTime = now
+                        print("[DEBUG] Sending frame to SLAM, frameId=\(self.encoder.currentFrameID)")
                         slam.processFrame(frame: frame, frameId: self.encoder.currentFrameID)
                     }
 
                     // Apply mapToOdom correction to current ARKit pose:
                     // correctedPose = mapToOdom * arkitPose
                     correctedPose = slam.mapToOdom * frame.camera.transform
+                } else {
+                    print("[DEBUG] SLAM not running, isRunning=\(self.rtabMapSLAM?.isRunning ?? false)")
                 }
 
                 let data = self.encoder.encode(
@@ -57,6 +60,7 @@ final class AppViewModel: ObservableObject {
                     settings: sessionSettings,
                     correctedPose: correctedPose
                 )
+                print("[DEBUG] Encoded frame, size=\(data.count) bytes, enqueueing to streamer")
                 self.streamer.enqueue(data)
             }
         }
@@ -132,6 +136,9 @@ final class AppViewModel: ObservableObject {
                 metrics.freezeMetrics()
                 currentSessionSettings = nil
                 appState = .idle
+            } else if case .idle = appState {
+                // Already idle (intentional stop) — ignore disconnect errors
+                break
             } else if !appState.isRecording {
                 if error != nil {
                     appState = .failed(error)

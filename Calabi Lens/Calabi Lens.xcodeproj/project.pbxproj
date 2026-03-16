@@ -7,6 +7,99 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5930998D2F6799FA00CDABE8 /* libamd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DB2F67993300CDABE8 /* libamd.a */; };
+		5930998E2F6799FA00CDABE8 /* libboost_atomic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DC2F67993300CDABE8 /* libboost_atomic.a */; };
+		5930998F2F6799FA00CDABE8 /* libboost_chrono.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DD2F67993300CDABE8 /* libboost_chrono.a */; };
+		593099902F6799FA00CDABE8 /* libboost_date_time.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DE2F67993300CDABE8 /* libboost_date_time.a */; };
+		593099912F6799FA00CDABE8 /* libboost_filesystem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DF2F67993300CDABE8 /* libboost_filesystem.a */; };
+		593099922F6799FA00CDABE8 /* libboost_graph.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E02F67993300CDABE8 /* libboost_graph.a */; };
+		593099932F6799FA00CDABE8 /* libboost_iostreams.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E12F67993300CDABE8 /* libboost_iostreams.a */; };
+		593099942F6799FA00CDABE8 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E22F67993300CDABE8 /* libboost_program_options.a */; };
+		593099952F6799FA00CDABE8 /* libboost_random.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E32F67993300CDABE8 /* libboost_random.a */; };
+		593099962F6799FA00CDABE8 /* libboost_regex.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E42F67993300CDABE8 /* libboost_regex.a */; };
+		593099972F6799FA00CDABE8 /* libboost_serialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E52F67993300CDABE8 /* libboost_serialization.a */; };
+		593099982F6799FA00CDABE8 /* libboost_system.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E62F67993300CDABE8 /* libboost_system.a */; };
+		593099992F6799FA00CDABE8 /* libboost_thread.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E72F67993300CDABE8 /* libboost_thread.a */; };
+		5930999A2F6799FA00CDABE8 /* libboost_timer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E82F67993300CDABE8 /* libboost_timer.a */; };
+		5930999B2F6799FA00CDABE8 /* libboost_wserialization.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098E92F67993300CDABE8 /* libboost_wserialization.a */; };
+		5930999C2F6799FA00CDABE8 /* libcamd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098EA2F67993300CDABE8 /* libcamd.a */; };
+		5930999D2F6799FA00CDABE8 /* libccolamd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098EB2F67993300CDABE8 /* libccolamd.a */; };
+		5930999E2F6799FA00CDABE8 /* libcholmod.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098EC2F67993300CDABE8 /* libcholmod.a */; };
+		5930999F2F6799FA00CDABE8 /* libcolamd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098ED2F67993300CDABE8 /* libcolamd.a */; };
+		593099A02F6799FA00CDABE8 /* libCppUnitLite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098EE2F67993300CDABE8 /* libCppUnitLite.a */; };
+		593099A12F6799FA00CDABE8 /* libflann_cpp_s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098EF2F67993300CDABE8 /* libflann_cpp_s.a */; };
+		593099A22F6799FA00CDABE8 /* libflann_cpp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F02F67993300CDABE8 /* libflann_cpp.a */; };
+		593099A32F6799FA00CDABE8 /* libflann_s.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F12F67993300CDABE8 /* libflann_s.a */; };
+		593099A42F6799FA00CDABE8 /* libflann.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F22F67993300CDABE8 /* libflann.a */; };
+		593099A52F6799FA00CDABE8 /* libgtsam.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F32F67993300CDABE8 /* libgtsam.a */; };
+		593099A62F6799FA00CDABE8 /* liblz4.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F42F67993300CDABE8 /* liblz4.a */; };
+		593099A72F6799FA00CDABE8 /* libopencv_alphamat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F52F67993300CDABE8 /* libopencv_alphamat.a */; };
+		593099A82F6799FA00CDABE8 /* libopencv_aruco.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F62F67993300CDABE8 /* libopencv_aruco.a */; };
+		593099A92F6799FA00CDABE8 /* libopencv_bgsegm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F72F67993300CDABE8 /* libopencv_bgsegm.a */; };
+		593099AA2F6799FA00CDABE8 /* libopencv_bioinspired.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F82F67993300CDABE8 /* libopencv_bioinspired.a */; };
+		593099AB2F6799FA00CDABE8 /* libopencv_calib3d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098F92F67993300CDABE8 /* libopencv_calib3d.a */; };
+		593099AC2F6799FA00CDABE8 /* libopencv_ccalib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FA2F67993300CDABE8 /* libopencv_ccalib.a */; };
+		593099AD2F6799FA00CDABE8 /* libopencv_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FB2F67993300CDABE8 /* libopencv_core.a */; };
+		593099AE2F6799FA00CDABE8 /* libopencv_dpm.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FC2F67993300CDABE8 /* libopencv_dpm.a */; };
+		593099AF2F6799FA00CDABE8 /* libopencv_face.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FD2F67993300CDABE8 /* libopencv_face.a */; };
+		593099B02F6799FA00CDABE8 /* libopencv_features2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FE2F67993300CDABE8 /* libopencv_features2d.a */; };
+		593099B12F6799FA00CDABE8 /* libopencv_flann.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098FF2F67993300CDABE8 /* libopencv_flann.a */; };
+		593099B22F6799FA00CDABE8 /* libopencv_fuzzy.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099002F67993300CDABE8 /* libopencv_fuzzy.a */; };
+		593099B32F6799FA00CDABE8 /* libopencv_gapi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099012F67993300CDABE8 /* libopencv_gapi.a */; };
+		593099B42F6799FA00CDABE8 /* libopencv_hfs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099022F67993300CDABE8 /* libopencv_hfs.a */; };
+		593099B52F6799FA00CDABE8 /* libopencv_highgui.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099032F67993300CDABE8 /* libopencv_highgui.a */; };
+		593099B62F6799FA00CDABE8 /* libopencv_img_hash.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099042F67993300CDABE8 /* libopencv_img_hash.a */; };
+		593099B72F6799FA00CDABE8 /* libopencv_imgcodecs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099052F67993300CDABE8 /* libopencv_imgcodecs.a */; };
+		593099B82F6799FA00CDABE8 /* libopencv_imgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099062F67993300CDABE8 /* libopencv_imgproc.a */; };
+		593099B92F6799FA00CDABE8 /* libopencv_intensity_transform.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099072F67993300CDABE8 /* libopencv_intensity_transform.a */; };
+		593099BA2F6799FA00CDABE8 /* libopencv_line_descriptor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099082F67993300CDABE8 /* libopencv_line_descriptor.a */; };
+		593099BB2F6799FA00CDABE8 /* libopencv_objdetect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099092F67993300CDABE8 /* libopencv_objdetect.a */; };
+		593099BC2F6799FA00CDABE8 /* libopencv_optflow.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990A2F67993300CDABE8 /* libopencv_optflow.a */; };
+		593099BD2F6799FA00CDABE8 /* libopencv_phase_unwrapping.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990B2F67993300CDABE8 /* libopencv_phase_unwrapping.a */; };
+		593099BE2F6799FA00CDABE8 /* libopencv_photo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990C2F67993300CDABE8 /* libopencv_photo.a */; };
+		593099BF2F6799FA00CDABE8 /* libopencv_plot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990D2F67993300CDABE8 /* libopencv_plot.a */; };
+		593099C02F6799FA00CDABE8 /* libopencv_rapid.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990E2F67993300CDABE8 /* libopencv_rapid.a */; };
+		593099C12F6799FA00CDABE8 /* libopencv_reg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930990F2F67993300CDABE8 /* libopencv_reg.a */; };
+		593099C22F6799FA00CDABE8 /* libopencv_rgbd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099102F67993300CDABE8 /* libopencv_rgbd.a */; };
+		593099C32F6799FA00CDABE8 /* libopencv_saliency.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099112F67993300CDABE8 /* libopencv_saliency.a */; };
+		593099C42F6799FA00CDABE8 /* libopencv_shape.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099122F67993300CDABE8 /* libopencv_shape.a */; };
+		593099C52F6799FA00CDABE8 /* libopencv_signal.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099132F67993300CDABE8 /* libopencv_signal.a */; };
+		593099C62F6799FA00CDABE8 /* libopencv_stereo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099142F67993300CDABE8 /* libopencv_stereo.a */; };
+		593099C72F6799FA00CDABE8 /* libopencv_stitching.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099152F67993300CDABE8 /* libopencv_stitching.a */; };
+		593099C82F6799FA00CDABE8 /* libopencv_structured_light.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099162F67993300CDABE8 /* libopencv_structured_light.a */; };
+		593099C92F6799FA00CDABE8 /* libopencv_surface_matching.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099172F67993300CDABE8 /* libopencv_surface_matching.a */; };
+		593099CA2F6799FA00CDABE8 /* libopencv_tracking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099182F67993300CDABE8 /* libopencv_tracking.a */; };
+		593099CB2F6799FA00CDABE8 /* libopencv_video.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099192F67993300CDABE8 /* libopencv_video.a */; };
+		593099CC2F6799FA00CDABE8 /* libopencv_videoio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991A2F67993300CDABE8 /* libopencv_videoio.a */; };
+		593099CD2F6799FA00CDABE8 /* libopencv_videostab.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991B2F67993300CDABE8 /* libopencv_videostab.a */; };
+		593099CE2F6799FA00CDABE8 /* libopencv_xfeatures2d.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991C2F67993300CDABE8 /* libopencv_xfeatures2d.a */; };
+		593099CF2F6799FA00CDABE8 /* libopencv_ximgproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991D2F67993300CDABE8 /* libopencv_ximgproc.a */; };
+		593099D02F6799FA00CDABE8 /* libopencv_xobjdetect.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991E2F67993300CDABE8 /* libopencv_xobjdetect.a */; };
+		593099D12F6799FA00CDABE8 /* libopencv_xphoto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930991F2F67993300CDABE8 /* libopencv_xphoto.a */; };
+		593099D22F6799FA00CDABE8 /* libpcl_common.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099202F67993300CDABE8 /* libpcl_common.a */; };
+		593099D32F6799FA00CDABE8 /* libpcl_features.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099212F67993300CDABE8 /* libpcl_features.a */; };
+		593099D42F6799FA00CDABE8 /* libpcl_filters.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099222F67993300CDABE8 /* libpcl_filters.a */; };
+		593099D52F6799FA00CDABE8 /* libpcl_io_ply.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099232F67993300CDABE8 /* libpcl_io_ply.a */; };
+		593099D62F6799FA00CDABE8 /* libpcl_io.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099242F67993300CDABE8 /* libpcl_io.a */; };
+		593099D72F6799FA00CDABE8 /* libpcl_kdtree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099252F67993300CDABE8 /* libpcl_kdtree.a */; };
+		593099D82F6799FA00CDABE8 /* libpcl_keypoints.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099262F67993300CDABE8 /* libpcl_keypoints.a */; };
+		593099D92F6799FA00CDABE8 /* libpcl_ml.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099272F67993300CDABE8 /* libpcl_ml.a */; };
+		593099DA2F6799FA00CDABE8 /* libpcl_octree.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099282F67993300CDABE8 /* libpcl_octree.a */; };
+		593099DB2F6799FA00CDABE8 /* libpcl_recognition.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099292F67993300CDABE8 /* libpcl_recognition.a */; };
+		593099DC2F6799FA00CDABE8 /* libpcl_registration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992A2F67993300CDABE8 /* libpcl_registration.a */; };
+		593099DD2F6799FA00CDABE8 /* libpcl_sample_consensus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992B2F67993300CDABE8 /* libpcl_sample_consensus.a */; };
+		593099DE2F6799FA00CDABE8 /* libpcl_search.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992C2F67993300CDABE8 /* libpcl_search.a */; };
+		593099DF2F6799FA00CDABE8 /* libpcl_segmentation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992D2F67993300CDABE8 /* libpcl_segmentation.a */; };
+		593099E02F6799FA00CDABE8 /* libpcl_stereo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992E2F67993300CDABE8 /* libpcl_stereo.a */; };
+		593099E12F6799FA00CDABE8 /* libpcl_surface.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5930992F2F67993300CDABE8 /* libpcl_surface.a */; };
+		593099E22F6799FA00CDABE8 /* librtabmap_core.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099302F67993300CDABE8 /* librtabmap_core.a */; };
+		593099E32F6799FA00CDABE8 /* librtabmap_utilite.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099312F67993300CDABE8 /* librtabmap_utilite.a */; };
+		593099E42F6799FA00CDABE8 /* libsuitesparseconfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099322F67993300CDABE8 /* libsuitesparseconfig.a */; };
+		593099E52F6799FA00CDABE8 /* vtk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 593099332F67993300CDABE8 /* vtk.framework */; };
+		59309A972F679A1C00CDABE8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A962F679A1C00CDABE8 /* Accelerate.framework */; };
+		59309A992F679A2900CDABE8 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A982F679A2900CDABE8 /* libc++.tbd */; };
+		59309A9B2F679A3300CDABE8 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A9A2F679A3300CDABE8 /* libsqlite3.tbd */; };
+		59309A9D2F679A5600CDABE8 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A9C2F679A5600CDABE8 /* libz.tbd */; };
 		59C0175C2F483DC400A64702 /* Calabi_LensApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0175B2F483DC400A64702 /* Calabi_LensApp.swift */; };
 		59C0175E2F483DC400A64702 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C0175D2F483DC400A64702 /* ContentView.swift */; };
 		59C017602F483DC500A64702 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59C0175F2F483DC500A64702 /* Assets.xcassets */; };
@@ -26,9 +119,397 @@
 		59C017D22F4B000100A64702 /* NetworkConfigSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017C22F4B000100A64702 /* NetworkConfigSheet.swift */; };
 		59C017D32F4B000100A64702 /* StreamingSettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017C32F4B000100A64702 /* StreamingSettingsSheet.swift */; };
 		59C017D42F4B000100A64702 /* WiFiMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C017C42F4B000100A64702 /* WiFiMonitor.swift */; };
+		59CBFD7E2F67A4AA003811C8 /* NativeWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 59CBFD7A2F67A4AA003811C8 /* NativeWrapper.cpp */; };
+		59CBFD7F2F67A4AA003811C8 /* RTABMapSLAM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CBFD7C2F67A4AA003811C8 /* RTABMapSLAM.swift */; };
+		59CBFD802F67A797003811C8 /* libade.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A6B2F6799FA00CDABE8 /* libade.a */; };
+		59CBFD812F67A797003811C8 /* libIlmImf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098B12F67993300CDABE8 /* libIlmImf.a */; };
+		59CBFD822F67A797003811C8 /* liblibjpeg-turbo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098B22F67993300CDABE8 /* liblibjpeg-turbo.a */; };
+		59CBFD832F67A797003811C8 /* liblibpng.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098B32F67993300CDABE8 /* liblibpng.a */; };
+		59CBFD842F67A797003811C8 /* liblibprotobuf.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 59309A6F2F6799FA00CDABE8 /* liblibprotobuf.a */; };
+		59CBFD852F67A797003811C8 /* liblibwebp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098B52F67993300CDABE8 /* liblibwebp.a */; };
+		59CBFD862F67A797003811C8 /* libzlib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098B62F67993300CDABE8 /* libzlib.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5930982B2F67993300CDABE8 /* AMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfig.cmake; sourceTree = "<group>"; };
+		5930982C2F67993300CDABE8 /* AMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfigVersion.cmake; sourceTree = "<group>"; };
+		5930982D2F67993300CDABE8 /* AMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "AMDTargets-release.cmake"; sourceTree = "<group>"; };
+		5930982E2F67993300CDABE8 /* AMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDTargets.cmake; sourceTree = "<group>"; };
+		593098302F67993300CDABE8 /* boost_atomic-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_atomic-config-version.cmake"; sourceTree = "<group>"; };
+		593098312F67993300CDABE8 /* boost_atomic-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_atomic-config.cmake"; sourceTree = "<group>"; };
+		593098322F67993300CDABE8 /* libboost_atomic-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_atomic-variant-static.cmake"; sourceTree = "<group>"; };
+		593098342F67993300CDABE8 /* boost_chrono-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_chrono-config-version.cmake"; sourceTree = "<group>"; };
+		593098352F67993300CDABE8 /* boost_chrono-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_chrono-config.cmake"; sourceTree = "<group>"; };
+		593098362F67993300CDABE8 /* libboost_chrono-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_chrono-variant-static.cmake"; sourceTree = "<group>"; };
+		593098382F67993300CDABE8 /* boost_date_time-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_date_time-config-version.cmake"; sourceTree = "<group>"; };
+		593098392F67993300CDABE8 /* boost_date_time-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_date_time-config.cmake"; sourceTree = "<group>"; };
+		5930983A2F67993300CDABE8 /* libboost_date_time-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_date_time-variant-static.cmake"; sourceTree = "<group>"; };
+		5930983C2F67993300CDABE8 /* boost_filesystem-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_filesystem-config-version.cmake"; sourceTree = "<group>"; };
+		5930983D2F67993300CDABE8 /* boost_filesystem-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_filesystem-config.cmake"; sourceTree = "<group>"; };
+		5930983E2F67993300CDABE8 /* libboost_filesystem-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_filesystem-variant-static.cmake"; sourceTree = "<group>"; };
+		593098402F67993300CDABE8 /* boost_graph-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_graph-config-version.cmake"; sourceTree = "<group>"; };
+		593098412F67993300CDABE8 /* boost_graph-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_graph-config.cmake"; sourceTree = "<group>"; };
+		593098422F67993300CDABE8 /* libboost_graph-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_graph-variant-static.cmake"; sourceTree = "<group>"; };
+		593098442F67993300CDABE8 /* boost_headers-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_headers-config-version.cmake"; sourceTree = "<group>"; };
+		593098452F67993300CDABE8 /* boost_headers-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_headers-config.cmake"; sourceTree = "<group>"; };
+		593098472F67993300CDABE8 /* boost_iostreams-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_iostreams-config-version.cmake"; sourceTree = "<group>"; };
+		593098482F67993300CDABE8 /* boost_iostreams-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_iostreams-config.cmake"; sourceTree = "<group>"; };
+		593098492F67993300CDABE8 /* libboost_iostreams-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_iostreams-variant-static.cmake"; sourceTree = "<group>"; };
+		5930984B2F67993300CDABE8 /* boost_program_options-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_program_options-config-version.cmake"; sourceTree = "<group>"; };
+		5930984C2F67993300CDABE8 /* boost_program_options-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_program_options-config.cmake"; sourceTree = "<group>"; };
+		5930984D2F67993300CDABE8 /* libboost_program_options-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_program_options-variant-static.cmake"; sourceTree = "<group>"; };
+		5930984F2F67993300CDABE8 /* boost_random-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_random-config-version.cmake"; sourceTree = "<group>"; };
+		593098502F67993300CDABE8 /* boost_random-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_random-config.cmake"; sourceTree = "<group>"; };
+		593098512F67993300CDABE8 /* libboost_random-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_random-variant-static.cmake"; sourceTree = "<group>"; };
+		593098532F67993300CDABE8 /* boost_regex-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_regex-config-version.cmake"; sourceTree = "<group>"; };
+		593098542F67993300CDABE8 /* boost_regex-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_regex-config.cmake"; sourceTree = "<group>"; };
+		593098552F67993300CDABE8 /* libboost_regex-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_regex-variant-static.cmake"; sourceTree = "<group>"; };
+		593098572F67993300CDABE8 /* boost_serialization-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_serialization-config-version.cmake"; sourceTree = "<group>"; };
+		593098582F67993300CDABE8 /* boost_serialization-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_serialization-config.cmake"; sourceTree = "<group>"; };
+		593098592F67993300CDABE8 /* libboost_serialization-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_serialization-variant-static.cmake"; sourceTree = "<group>"; };
+		5930985B2F67993300CDABE8 /* boost_system-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_system-config-version.cmake"; sourceTree = "<group>"; };
+		5930985C2F67993300CDABE8 /* boost_system-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_system-config.cmake"; sourceTree = "<group>"; };
+		5930985D2F67993300CDABE8 /* libboost_system-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_system-variant-static.cmake"; sourceTree = "<group>"; };
+		5930985F2F67993300CDABE8 /* boost_thread-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_thread-config-version.cmake"; sourceTree = "<group>"; };
+		593098602F67993300CDABE8 /* boost_thread-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_thread-config.cmake"; sourceTree = "<group>"; };
+		593098612F67993300CDABE8 /* libboost_thread-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_thread-variant-static.cmake"; sourceTree = "<group>"; };
+		593098632F67993300CDABE8 /* boost_timer-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_timer-config-version.cmake"; sourceTree = "<group>"; };
+		593098642F67993300CDABE8 /* boost_timer-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_timer-config.cmake"; sourceTree = "<group>"; };
+		593098652F67993300CDABE8 /* libboost_timer-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_timer-variant-static.cmake"; sourceTree = "<group>"; };
+		593098672F67993300CDABE8 /* boost_wserialization-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_wserialization-config-version.cmake"; sourceTree = "<group>"; };
+		593098682F67993300CDABE8 /* boost_wserialization-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_wserialization-config.cmake"; sourceTree = "<group>"; };
+		593098692F67993300CDABE8 /* libboost_wserialization-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_wserialization-variant-static.cmake"; sourceTree = "<group>"; };
+		5930986B2F67993300CDABE8 /* BoostConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoostConfig.cmake; sourceTree = "<group>"; };
+		5930986C2F67993300CDABE8 /* BoostConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoostConfigVersion.cmake; sourceTree = "<group>"; };
+		5930986E2F67993300CDABE8 /* CAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDConfig.cmake; sourceTree = "<group>"; };
+		5930986F2F67993300CDABE8 /* CAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		593098702F67993300CDABE8 /* CAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		593098712F67993300CDABE8 /* CAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDTargets.cmake; sourceTree = "<group>"; };
+		593098732F67993300CDABE8 /* CCOLAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDConfig.cmake; sourceTree = "<group>"; };
+		593098742F67993300CDABE8 /* CCOLAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		593098752F67993300CDABE8 /* CCOLAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CCOLAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		593098762F67993300CDABE8 /* CCOLAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDTargets.cmake; sourceTree = "<group>"; };
+		593098782F67993300CDABE8 /* CHOLMODConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODConfig.cmake; sourceTree = "<group>"; };
+		593098792F67993300CDABE8 /* CHOLMODConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODConfigVersion.cmake; sourceTree = "<group>"; };
+		5930987A2F67993300CDABE8 /* CHOLMODTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CHOLMODTargets-release.cmake"; sourceTree = "<group>"; };
+		5930987B2F67993300CDABE8 /* CHOLMODTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODTargets.cmake; sourceTree = "<group>"; };
+		5930987D2F67993300CDABE8 /* COLAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDConfig.cmake; sourceTree = "<group>"; };
+		5930987E2F67993300CDABE8 /* COLAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		5930987F2F67993300CDABE8 /* COLAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "COLAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		593098802F67993300CDABE8 /* COLAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDTargets.cmake; sourceTree = "<group>"; };
+		593098822F67993300CDABE8 /* flann-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-config-version.cmake"; sourceTree = "<group>"; };
+		593098832F67993300CDABE8 /* flann-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-config.cmake"; sourceTree = "<group>"; };
+		593098842F67993300CDABE8 /* flann-targets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-targets-release.cmake"; sourceTree = "<group>"; };
+		593098852F67993300CDABE8 /* flann-targets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-targets.cmake"; sourceTree = "<group>"; };
+		593098872F67993300CDABE8 /* gtsam_extra.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = gtsam_extra.cmake; sourceTree = "<group>"; };
+		593098882F67993300CDABE8 /* GTSAM-exports-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GTSAM-exports-release.cmake"; sourceTree = "<group>"; };
+		593098892F67993300CDABE8 /* GTSAM-exports.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GTSAM-exports.cmake"; sourceTree = "<group>"; };
+		5930988A2F67993300CDABE8 /* GTSAMConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMConfig.cmake; sourceTree = "<group>"; };
+		5930988B2F67993300CDABE8 /* GTSAMConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMConfigVersion.cmake; sourceTree = "<group>"; };
+		5930988D2F67993300CDABE8 /* Config.cmake.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config.cmake.in; sourceTree = "<group>"; };
+		5930988E2F67993300CDABE8 /* dllexport.h.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = dllexport.h.in; sourceTree = "<group>"; };
+		5930988F2F67993300CDABE8 /* FindNumPy.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindNumPy.cmake; sourceTree = "<group>"; };
+		593098902F67993300CDABE8 /* GtsamBuildTypes.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamBuildTypes.cmake; sourceTree = "<group>"; };
+		593098912F67993300CDABE8 /* GTSAMCMakeToolsConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMCMakeToolsConfig.cmake; sourceTree = "<group>"; };
+		593098922F67993300CDABE8 /* GtsamMakeConfigFile.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamMakeConfigFile.cmake; sourceTree = "<group>"; };
+		593098932F67993300CDABE8 /* GtsamPrinting.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamPrinting.cmake; sourceTree = "<group>"; };
+		593098942F67993300CDABE8 /* GtsamTesting.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamTesting.cmake; sourceTree = "<group>"; };
+		593098952F67993300CDABE8 /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
+		593098972F67993300CDABE8 /* lz4Config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4Config.cmake; sourceTree = "<group>"; };
+		593098982F67993300CDABE8 /* lz4ConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4ConfigVersion.cmake; sourceTree = "<group>"; };
+		593098992F67993300CDABE8 /* lz4Targets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "lz4Targets-release.cmake"; sourceTree = "<group>"; };
+		5930989A2F67993300CDABE8 /* lz4Targets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4Targets.cmake; sourceTree = "<group>"; };
+		5930989C2F67993300CDABE8 /* OpenCVConfig-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OpenCVConfig-version.cmake"; sourceTree = "<group>"; };
+		5930989D2F67993300CDABE8 /* OpenCVConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenCVConfig.cmake; sourceTree = "<group>"; };
+		5930989E2F67993300CDABE8 /* OpenCVModules-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OpenCVModules-release.cmake"; sourceTree = "<group>"; };
+		5930989F2F67993300CDABE8 /* OpenCVModules.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenCVModules.cmake; sourceTree = "<group>"; };
+		593098A12F67993300CDABE8 /* SuiteSparse__thread.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse__thread.cmake; sourceTree = "<group>"; };
+		593098A22F67993300CDABE8 /* SuiteSparseBLAS.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS.cmake; sourceTree = "<group>"; };
+		593098A32F67993300CDABE8 /* SuiteSparseBLAS32.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS32.cmake; sourceTree = "<group>"; };
+		593098A42F67993300CDABE8 /* SuiteSparseBLAS64.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS64.cmake; sourceTree = "<group>"; };
+		593098A52F67993300CDABE8 /* SuiteSparseLAPACK.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseLAPACK.cmake; sourceTree = "<group>"; };
+		593098A62F67993300CDABE8 /* SuiteSparsePolicy.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparsePolicy.cmake; sourceTree = "<group>"; };
+		593098A72F67993300CDABE8 /* SuiteSparseReport.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseReport.cmake; sourceTree = "<group>"; };
+		593098A92F67993300CDABE8 /* SuiteSparse_configConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configConfig.cmake; sourceTree = "<group>"; };
+		593098AA2F67993300CDABE8 /* SuiteSparse_configConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configConfigVersion.cmake; sourceTree = "<group>"; };
+		593098AB2F67993300CDABE8 /* SuiteSparse_configTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SuiteSparse_configTargets-release.cmake"; sourceTree = "<group>"; };
+		593098AC2F67993300CDABE8 /* SuiteSparse_configTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configTargets.cmake; sourceTree = "<group>"; };
+		593098AE2F67993300CDABE8 /* BoostDetectToolset-1.88.0.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "BoostDetectToolset-1.88.0.cmake"; sourceTree = "<group>"; };
+		593098B02F67993300CDABE8 /* libade.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libade.a; sourceTree = "<group>"; };
+		593098B12F67993300CDABE8 /* libIlmImf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIlmImf.a; sourceTree = "<group>"; };
+		593098B22F67993300CDABE8 /* liblibjpeg-turbo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "liblibjpeg-turbo.a"; sourceTree = "<group>"; };
+		593098B32F67993300CDABE8 /* liblibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibpng.a; sourceTree = "<group>"; };
+		593098B42F67993300CDABE8 /* liblibprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibprotobuf.a; sourceTree = "<group>"; };
+		593098B52F67993300CDABE8 /* liblibwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibwebp.a; sourceTree = "<group>"; };
+		593098B62F67993300CDABE8 /* libzlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzlib.a; sourceTree = "<group>"; };
+		593098B92F67993300CDABE8 /* AMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMD.pc; sourceTree = "<group>"; };
+		593098BA2F67993300CDABE8 /* CAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMD.pc; sourceTree = "<group>"; };
+		593098BB2F67993300CDABE8 /* CCOLAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMD.pc; sourceTree = "<group>"; };
+		593098BC2F67993300CDABE8 /* CHOLMOD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMOD.pc; sourceTree = "<group>"; };
+		593098BD2F67993300CDABE8 /* COLAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMD.pc; sourceTree = "<group>"; };
+		593098BE2F67993300CDABE8 /* flann.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = flann.pc; sourceTree = "<group>"; };
+		593098BF2F67993300CDABE8 /* liblz4.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = liblz4.pc; sourceTree = "<group>"; };
+		593098C02F67993300CDABE8 /* pcl_2d.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_2d.pc; sourceTree = "<group>"; };
+		593098C12F67993300CDABE8 /* pcl_common.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_common.pc; sourceTree = "<group>"; };
+		593098C22F67993300CDABE8 /* pcl_features.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_features.pc; sourceTree = "<group>"; };
+		593098C32F67993300CDABE8 /* pcl_filters.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_filters.pc; sourceTree = "<group>"; };
+		593098C42F67993300CDABE8 /* pcl_geometry.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_geometry.pc; sourceTree = "<group>"; };
+		593098C52F67993300CDABE8 /* pcl_io.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_io.pc; sourceTree = "<group>"; };
+		593098C62F67993300CDABE8 /* pcl_kdtree.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_kdtree.pc; sourceTree = "<group>"; };
+		593098C72F67993300CDABE8 /* pcl_keypoints.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_keypoints.pc; sourceTree = "<group>"; };
+		593098C82F67993300CDABE8 /* pcl_ml.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_ml.pc; sourceTree = "<group>"; };
+		593098C92F67993300CDABE8 /* pcl_octree.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_octree.pc; sourceTree = "<group>"; };
+		593098CA2F67993300CDABE8 /* pcl_recognition.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_recognition.pc; sourceTree = "<group>"; };
+		593098CB2F67993300CDABE8 /* pcl_registration.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_registration.pc; sourceTree = "<group>"; };
+		593098CC2F67993300CDABE8 /* pcl_sample_consensus.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_sample_consensus.pc; sourceTree = "<group>"; };
+		593098CD2F67993300CDABE8 /* pcl_search.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_search.pc; sourceTree = "<group>"; };
+		593098CE2F67993300CDABE8 /* pcl_segmentation.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_segmentation.pc; sourceTree = "<group>"; };
+		593098CF2F67993300CDABE8 /* pcl_stereo.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_stereo.pc; sourceTree = "<group>"; };
+		593098D02F67993300CDABE8 /* pcl_surface.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_surface.pc; sourceTree = "<group>"; };
+		593098D12F67993300CDABE8 /* SuiteSparse_config.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_config.pc; sourceTree = "<group>"; };
+		593098D32F67993300CDABE8 /* RTABMap_coreTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "RTABMap_coreTargets-release.cmake"; sourceTree = "<group>"; };
+		593098D42F67993300CDABE8 /* RTABMap_coreTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMap_coreTargets.cmake; sourceTree = "<group>"; };
+		593098D52F67993300CDABE8 /* RTABMap_utiliteTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "RTABMap_utiliteTargets-release.cmake"; sourceTree = "<group>"; };
+		593098D62F67993300CDABE8 /* RTABMap_utiliteTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMap_utiliteTargets.cmake; sourceTree = "<group>"; };
+		593098D72F67993300CDABE8 /* RTABMapConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapConfig.cmake; sourceTree = "<group>"; };
+		593098D82F67993300CDABE8 /* RTABMapConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapConfigVersion.cmake; sourceTree = "<group>"; };
+		593098D92F67993300CDABE8 /* RTABMapTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapTargets.cmake; sourceTree = "<group>"; };
+		593098DB2F67993300CDABE8 /* libamd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libamd.a; sourceTree = "<group>"; };
+		593098DC2F67993300CDABE8 /* libboost_atomic.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_atomic.a; sourceTree = "<group>"; };
+		593098DD2F67993300CDABE8 /* libboost_chrono.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_chrono.a; sourceTree = "<group>"; };
+		593098DE2F67993300CDABE8 /* libboost_date_time.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_date_time.a; sourceTree = "<group>"; };
+		593098DF2F67993300CDABE8 /* libboost_filesystem.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_filesystem.a; sourceTree = "<group>"; };
+		593098E02F67993300CDABE8 /* libboost_graph.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_graph.a; sourceTree = "<group>"; };
+		593098E12F67993300CDABE8 /* libboost_iostreams.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_iostreams.a; sourceTree = "<group>"; };
+		593098E22F67993300CDABE8 /* libboost_program_options.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_program_options.a; sourceTree = "<group>"; };
+		593098E32F67993300CDABE8 /* libboost_random.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_random.a; sourceTree = "<group>"; };
+		593098E42F67993300CDABE8 /* libboost_regex.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_regex.a; sourceTree = "<group>"; };
+		593098E52F67993300CDABE8 /* libboost_serialization.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_serialization.a; sourceTree = "<group>"; };
+		593098E62F67993300CDABE8 /* libboost_system.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_system.a; sourceTree = "<group>"; };
+		593098E72F67993300CDABE8 /* libboost_thread.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_thread.a; sourceTree = "<group>"; };
+		593098E82F67993300CDABE8 /* libboost_timer.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_timer.a; sourceTree = "<group>"; };
+		593098E92F67993300CDABE8 /* libboost_wserialization.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libboost_wserialization.a; sourceTree = "<group>"; };
+		593098EA2F67993300CDABE8 /* libcamd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcamd.a; sourceTree = "<group>"; };
+		593098EB2F67993300CDABE8 /* libccolamd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libccolamd.a; sourceTree = "<group>"; };
+		593098EC2F67993300CDABE8 /* libcholmod.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcholmod.a; sourceTree = "<group>"; };
+		593098ED2F67993300CDABE8 /* libcolamd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcolamd.a; sourceTree = "<group>"; };
+		593098EE2F67993300CDABE8 /* libCppUnitLite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libCppUnitLite.a; sourceTree = "<group>"; };
+		593098EF2F67993300CDABE8 /* libflann_cpp_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libflann_cpp_s.a; sourceTree = "<group>"; };
+		593098F02F67993300CDABE8 /* libflann_cpp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libflann_cpp.a; sourceTree = "<group>"; };
+		593098F12F67993300CDABE8 /* libflann_s.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libflann_s.a; sourceTree = "<group>"; };
+		593098F22F67993300CDABE8 /* libflann.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libflann.a; sourceTree = "<group>"; };
+		593098F32F67993300CDABE8 /* libgtsam.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libgtsam.a; sourceTree = "<group>"; };
+		593098F42F67993300CDABE8 /* liblz4.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblz4.a; sourceTree = "<group>"; };
+		593098F52F67993300CDABE8 /* libopencv_alphamat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_alphamat.a; sourceTree = "<group>"; };
+		593098F62F67993300CDABE8 /* libopencv_aruco.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_aruco.a; sourceTree = "<group>"; };
+		593098F72F67993300CDABE8 /* libopencv_bgsegm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_bgsegm.a; sourceTree = "<group>"; };
+		593098F82F67993300CDABE8 /* libopencv_bioinspired.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_bioinspired.a; sourceTree = "<group>"; };
+		593098F92F67993300CDABE8 /* libopencv_calib3d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_calib3d.a; sourceTree = "<group>"; };
+		593098FA2F67993300CDABE8 /* libopencv_ccalib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_ccalib.a; sourceTree = "<group>"; };
+		593098FB2F67993300CDABE8 /* libopencv_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_core.a; sourceTree = "<group>"; };
+		593098FC2F67993300CDABE8 /* libopencv_dpm.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_dpm.a; sourceTree = "<group>"; };
+		593098FD2F67993300CDABE8 /* libopencv_face.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_face.a; sourceTree = "<group>"; };
+		593098FE2F67993300CDABE8 /* libopencv_features2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_features2d.a; sourceTree = "<group>"; };
+		593098FF2F67993300CDABE8 /* libopencv_flann.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_flann.a; sourceTree = "<group>"; };
+		593099002F67993300CDABE8 /* libopencv_fuzzy.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_fuzzy.a; sourceTree = "<group>"; };
+		593099012F67993300CDABE8 /* libopencv_gapi.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_gapi.a; sourceTree = "<group>"; };
+		593099022F67993300CDABE8 /* libopencv_hfs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_hfs.a; sourceTree = "<group>"; };
+		593099032F67993300CDABE8 /* libopencv_highgui.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_highgui.a; sourceTree = "<group>"; };
+		593099042F67993300CDABE8 /* libopencv_img_hash.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_img_hash.a; sourceTree = "<group>"; };
+		593099052F67993300CDABE8 /* libopencv_imgcodecs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_imgcodecs.a; sourceTree = "<group>"; };
+		593099062F67993300CDABE8 /* libopencv_imgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_imgproc.a; sourceTree = "<group>"; };
+		593099072F67993300CDABE8 /* libopencv_intensity_transform.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_intensity_transform.a; sourceTree = "<group>"; };
+		593099082F67993300CDABE8 /* libopencv_line_descriptor.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_line_descriptor.a; sourceTree = "<group>"; };
+		593099092F67993300CDABE8 /* libopencv_objdetect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_objdetect.a; sourceTree = "<group>"; };
+		5930990A2F67993300CDABE8 /* libopencv_optflow.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_optflow.a; sourceTree = "<group>"; };
+		5930990B2F67993300CDABE8 /* libopencv_phase_unwrapping.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_phase_unwrapping.a; sourceTree = "<group>"; };
+		5930990C2F67993300CDABE8 /* libopencv_photo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_photo.a; sourceTree = "<group>"; };
+		5930990D2F67993300CDABE8 /* libopencv_plot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_plot.a; sourceTree = "<group>"; };
+		5930990E2F67993300CDABE8 /* libopencv_rapid.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_rapid.a; sourceTree = "<group>"; };
+		5930990F2F67993300CDABE8 /* libopencv_reg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_reg.a; sourceTree = "<group>"; };
+		593099102F67993300CDABE8 /* libopencv_rgbd.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_rgbd.a; sourceTree = "<group>"; };
+		593099112F67993300CDABE8 /* libopencv_saliency.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_saliency.a; sourceTree = "<group>"; };
+		593099122F67993300CDABE8 /* libopencv_shape.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_shape.a; sourceTree = "<group>"; };
+		593099132F67993300CDABE8 /* libopencv_signal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_signal.a; sourceTree = "<group>"; };
+		593099142F67993300CDABE8 /* libopencv_stereo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_stereo.a; sourceTree = "<group>"; };
+		593099152F67993300CDABE8 /* libopencv_stitching.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_stitching.a; sourceTree = "<group>"; };
+		593099162F67993300CDABE8 /* libopencv_structured_light.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_structured_light.a; sourceTree = "<group>"; };
+		593099172F67993300CDABE8 /* libopencv_surface_matching.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_surface_matching.a; sourceTree = "<group>"; };
+		593099182F67993300CDABE8 /* libopencv_tracking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_tracking.a; sourceTree = "<group>"; };
+		593099192F67993300CDABE8 /* libopencv_video.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_video.a; sourceTree = "<group>"; };
+		5930991A2F67993300CDABE8 /* libopencv_videoio.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_videoio.a; sourceTree = "<group>"; };
+		5930991B2F67993300CDABE8 /* libopencv_videostab.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_videostab.a; sourceTree = "<group>"; };
+		5930991C2F67993300CDABE8 /* libopencv_xfeatures2d.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_xfeatures2d.a; sourceTree = "<group>"; };
+		5930991D2F67993300CDABE8 /* libopencv_ximgproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_ximgproc.a; sourceTree = "<group>"; };
+		5930991E2F67993300CDABE8 /* libopencv_xobjdetect.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_xobjdetect.a; sourceTree = "<group>"; };
+		5930991F2F67993300CDABE8 /* libopencv_xphoto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libopencv_xphoto.a; sourceTree = "<group>"; };
+		593099202F67993300CDABE8 /* libpcl_common.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_common.a; sourceTree = "<group>"; };
+		593099212F67993300CDABE8 /* libpcl_features.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_features.a; sourceTree = "<group>"; };
+		593099222F67993300CDABE8 /* libpcl_filters.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_filters.a; sourceTree = "<group>"; };
+		593099232F67993300CDABE8 /* libpcl_io_ply.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_io_ply.a; sourceTree = "<group>"; };
+		593099242F67993300CDABE8 /* libpcl_io.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_io.a; sourceTree = "<group>"; };
+		593099252F67993300CDABE8 /* libpcl_kdtree.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_kdtree.a; sourceTree = "<group>"; };
+		593099262F67993300CDABE8 /* libpcl_keypoints.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_keypoints.a; sourceTree = "<group>"; };
+		593099272F67993300CDABE8 /* libpcl_ml.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_ml.a; sourceTree = "<group>"; };
+		593099282F67993300CDABE8 /* libpcl_octree.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_octree.a; sourceTree = "<group>"; };
+		593099292F67993300CDABE8 /* libpcl_recognition.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_recognition.a; sourceTree = "<group>"; };
+		5930992A2F67993300CDABE8 /* libpcl_registration.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_registration.a; sourceTree = "<group>"; };
+		5930992B2F67993300CDABE8 /* libpcl_sample_consensus.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_sample_consensus.a; sourceTree = "<group>"; };
+		5930992C2F67993300CDABE8 /* libpcl_search.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_search.a; sourceTree = "<group>"; };
+		5930992D2F67993300CDABE8 /* libpcl_segmentation.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_segmentation.a; sourceTree = "<group>"; };
+		5930992E2F67993300CDABE8 /* libpcl_stereo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_stereo.a; sourceTree = "<group>"; };
+		5930992F2F67993300CDABE8 /* libpcl_surface.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpcl_surface.a; sourceTree = "<group>"; };
+		593099302F67993300CDABE8 /* librtabmap_core.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librtabmap_core.a; sourceTree = "<group>"; };
+		593099312F67993300CDABE8 /* librtabmap_utilite.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librtabmap_utilite.a; sourceTree = "<group>"; };
+		593099322F67993300CDABE8 /* libsuitesparseconfig.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libsuitesparseconfig.a; sourceTree = "<group>"; };
+		593099332F67993300CDABE8 /* vtk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = vtk.framework; sourceTree = "<group>"; };
+		593099E62F6799FA00CDABE8 /* AMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfig.cmake; sourceTree = "<group>"; };
+		593099E72F6799FA00CDABE8 /* AMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfigVersion.cmake; sourceTree = "<group>"; };
+		593099E82F6799FA00CDABE8 /* AMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "AMDTargets-release.cmake"; sourceTree = "<group>"; };
+		593099E92F6799FA00CDABE8 /* AMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDTargets.cmake; sourceTree = "<group>"; };
+		593099EB2F6799FA00CDABE8 /* boost_atomic-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_atomic-config-version.cmake"; sourceTree = "<group>"; };
+		593099EC2F6799FA00CDABE8 /* boost_atomic-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_atomic-config.cmake"; sourceTree = "<group>"; };
+		593099ED2F6799FA00CDABE8 /* libboost_atomic-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_atomic-variant-static.cmake"; sourceTree = "<group>"; };
+		593099EF2F6799FA00CDABE8 /* boost_chrono-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_chrono-config-version.cmake"; sourceTree = "<group>"; };
+		593099F02F6799FA00CDABE8 /* boost_chrono-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_chrono-config.cmake"; sourceTree = "<group>"; };
+		593099F12F6799FA00CDABE8 /* libboost_chrono-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_chrono-variant-static.cmake"; sourceTree = "<group>"; };
+		593099F32F6799FA00CDABE8 /* boost_date_time-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_date_time-config-version.cmake"; sourceTree = "<group>"; };
+		593099F42F6799FA00CDABE8 /* boost_date_time-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_date_time-config.cmake"; sourceTree = "<group>"; };
+		593099F52F6799FA00CDABE8 /* libboost_date_time-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_date_time-variant-static.cmake"; sourceTree = "<group>"; };
+		593099F72F6799FA00CDABE8 /* boost_filesystem-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_filesystem-config-version.cmake"; sourceTree = "<group>"; };
+		593099F82F6799FA00CDABE8 /* boost_filesystem-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_filesystem-config.cmake"; sourceTree = "<group>"; };
+		593099F92F6799FA00CDABE8 /* libboost_filesystem-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_filesystem-variant-static.cmake"; sourceTree = "<group>"; };
+		593099FB2F6799FA00CDABE8 /* boost_graph-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_graph-config-version.cmake"; sourceTree = "<group>"; };
+		593099FC2F6799FA00CDABE8 /* boost_graph-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_graph-config.cmake"; sourceTree = "<group>"; };
+		593099FD2F6799FA00CDABE8 /* libboost_graph-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_graph-variant-static.cmake"; sourceTree = "<group>"; };
+		593099FF2F6799FA00CDABE8 /* boost_headers-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_headers-config-version.cmake"; sourceTree = "<group>"; };
+		59309A002F6799FA00CDABE8 /* boost_headers-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_headers-config.cmake"; sourceTree = "<group>"; };
+		59309A022F6799FA00CDABE8 /* boost_iostreams-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_iostreams-config-version.cmake"; sourceTree = "<group>"; };
+		59309A032F6799FA00CDABE8 /* boost_iostreams-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_iostreams-config.cmake"; sourceTree = "<group>"; };
+		59309A042F6799FA00CDABE8 /* libboost_iostreams-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_iostreams-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A062F6799FA00CDABE8 /* boost_program_options-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_program_options-config-version.cmake"; sourceTree = "<group>"; };
+		59309A072F6799FA00CDABE8 /* boost_program_options-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_program_options-config.cmake"; sourceTree = "<group>"; };
+		59309A082F6799FA00CDABE8 /* libboost_program_options-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_program_options-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A0A2F6799FA00CDABE8 /* boost_random-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_random-config-version.cmake"; sourceTree = "<group>"; };
+		59309A0B2F6799FA00CDABE8 /* boost_random-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_random-config.cmake"; sourceTree = "<group>"; };
+		59309A0C2F6799FA00CDABE8 /* libboost_random-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_random-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A0E2F6799FA00CDABE8 /* boost_regex-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_regex-config-version.cmake"; sourceTree = "<group>"; };
+		59309A0F2F6799FA00CDABE8 /* boost_regex-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_regex-config.cmake"; sourceTree = "<group>"; };
+		59309A102F6799FA00CDABE8 /* libboost_regex-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_regex-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A122F6799FA00CDABE8 /* boost_serialization-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_serialization-config-version.cmake"; sourceTree = "<group>"; };
+		59309A132F6799FA00CDABE8 /* boost_serialization-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_serialization-config.cmake"; sourceTree = "<group>"; };
+		59309A142F6799FA00CDABE8 /* libboost_serialization-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_serialization-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A162F6799FA00CDABE8 /* boost_system-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_system-config-version.cmake"; sourceTree = "<group>"; };
+		59309A172F6799FA00CDABE8 /* boost_system-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_system-config.cmake"; sourceTree = "<group>"; };
+		59309A182F6799FA00CDABE8 /* libboost_system-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_system-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A1A2F6799FA00CDABE8 /* boost_thread-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_thread-config-version.cmake"; sourceTree = "<group>"; };
+		59309A1B2F6799FA00CDABE8 /* boost_thread-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_thread-config.cmake"; sourceTree = "<group>"; };
+		59309A1C2F6799FA00CDABE8 /* libboost_thread-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_thread-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A1E2F6799FA00CDABE8 /* boost_timer-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_timer-config-version.cmake"; sourceTree = "<group>"; };
+		59309A1F2F6799FA00CDABE8 /* boost_timer-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_timer-config.cmake"; sourceTree = "<group>"; };
+		59309A202F6799FA00CDABE8 /* libboost_timer-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_timer-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A222F6799FA00CDABE8 /* boost_wserialization-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_wserialization-config-version.cmake"; sourceTree = "<group>"; };
+		59309A232F6799FA00CDABE8 /* boost_wserialization-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "boost_wserialization-config.cmake"; sourceTree = "<group>"; };
+		59309A242F6799FA00CDABE8 /* libboost_wserialization-variant-static.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "libboost_wserialization-variant-static.cmake"; sourceTree = "<group>"; };
+		59309A262F6799FA00CDABE8 /* BoostConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoostConfig.cmake; sourceTree = "<group>"; };
+		59309A272F6799FA00CDABE8 /* BoostConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = BoostConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A292F6799FA00CDABE8 /* CAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDConfig.cmake; sourceTree = "<group>"; };
+		59309A2A2F6799FA00CDABE8 /* CAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A2B2F6799FA00CDABE8 /* CAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A2C2F6799FA00CDABE8 /* CAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMDTargets.cmake; sourceTree = "<group>"; };
+		59309A2E2F6799FA00CDABE8 /* CCOLAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDConfig.cmake; sourceTree = "<group>"; };
+		59309A2F2F6799FA00CDABE8 /* CCOLAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A302F6799FA00CDABE8 /* CCOLAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CCOLAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A312F6799FA00CDABE8 /* CCOLAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMDTargets.cmake; sourceTree = "<group>"; };
+		59309A332F6799FA00CDABE8 /* CHOLMODConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODConfig.cmake; sourceTree = "<group>"; };
+		59309A342F6799FA00CDABE8 /* CHOLMODConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A352F6799FA00CDABE8 /* CHOLMODTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "CHOLMODTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A362F6799FA00CDABE8 /* CHOLMODTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMODTargets.cmake; sourceTree = "<group>"; };
+		59309A382F6799FA00CDABE8 /* COLAMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDConfig.cmake; sourceTree = "<group>"; };
+		59309A392F6799FA00CDABE8 /* COLAMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A3A2F6799FA00CDABE8 /* COLAMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "COLAMDTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A3B2F6799FA00CDABE8 /* COLAMDTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMDTargets.cmake; sourceTree = "<group>"; };
+		59309A3D2F6799FA00CDABE8 /* flann-config-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-config-version.cmake"; sourceTree = "<group>"; };
+		59309A3E2F6799FA00CDABE8 /* flann-config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-config.cmake"; sourceTree = "<group>"; };
+		59309A3F2F6799FA00CDABE8 /* flann-targets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-targets-release.cmake"; sourceTree = "<group>"; };
+		59309A402F6799FA00CDABE8 /* flann-targets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "flann-targets.cmake"; sourceTree = "<group>"; };
+		59309A422F6799FA00CDABE8 /* gtsam_extra.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = gtsam_extra.cmake; sourceTree = "<group>"; };
+		59309A432F6799FA00CDABE8 /* GTSAM-exports-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GTSAM-exports-release.cmake"; sourceTree = "<group>"; };
+		59309A442F6799FA00CDABE8 /* GTSAM-exports.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "GTSAM-exports.cmake"; sourceTree = "<group>"; };
+		59309A452F6799FA00CDABE8 /* GTSAMConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMConfig.cmake; sourceTree = "<group>"; };
+		59309A462F6799FA00CDABE8 /* GTSAMConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A482F6799FA00CDABE8 /* Config.cmake.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Config.cmake.in; sourceTree = "<group>"; };
+		59309A492F6799FA00CDABE8 /* dllexport.h.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = dllexport.h.in; sourceTree = "<group>"; };
+		59309A4A2F6799FA00CDABE8 /* FindNumPy.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = FindNumPy.cmake; sourceTree = "<group>"; };
+		59309A4B2F6799FA00CDABE8 /* GtsamBuildTypes.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamBuildTypes.cmake; sourceTree = "<group>"; };
+		59309A4C2F6799FA00CDABE8 /* GTSAMCMakeToolsConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GTSAMCMakeToolsConfig.cmake; sourceTree = "<group>"; };
+		59309A4D2F6799FA00CDABE8 /* GtsamMakeConfigFile.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamMakeConfigFile.cmake; sourceTree = "<group>"; };
+		59309A4E2F6799FA00CDABE8 /* GtsamPrinting.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamPrinting.cmake; sourceTree = "<group>"; };
+		59309A4F2F6799FA00CDABE8 /* GtsamTesting.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = GtsamTesting.cmake; sourceTree = "<group>"; };
+		59309A502F6799FA00CDABE8 /* README.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = README.html; sourceTree = "<group>"; };
+		59309A522F6799FA00CDABE8 /* lz4Config.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4Config.cmake; sourceTree = "<group>"; };
+		59309A532F6799FA00CDABE8 /* lz4ConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4ConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A542F6799FA00CDABE8 /* lz4Targets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "lz4Targets-release.cmake"; sourceTree = "<group>"; };
+		59309A552F6799FA00CDABE8 /* lz4Targets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = lz4Targets.cmake; sourceTree = "<group>"; };
+		59309A572F6799FA00CDABE8 /* OpenCVConfig-version.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OpenCVConfig-version.cmake"; sourceTree = "<group>"; };
+		59309A582F6799FA00CDABE8 /* OpenCVConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenCVConfig.cmake; sourceTree = "<group>"; };
+		59309A592F6799FA00CDABE8 /* OpenCVModules-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "OpenCVModules-release.cmake"; sourceTree = "<group>"; };
+		59309A5A2F6799FA00CDABE8 /* OpenCVModules.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = OpenCVModules.cmake; sourceTree = "<group>"; };
+		59309A5C2F6799FA00CDABE8 /* SuiteSparse__thread.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse__thread.cmake; sourceTree = "<group>"; };
+		59309A5D2F6799FA00CDABE8 /* SuiteSparseBLAS.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS.cmake; sourceTree = "<group>"; };
+		59309A5E2F6799FA00CDABE8 /* SuiteSparseBLAS32.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS32.cmake; sourceTree = "<group>"; };
+		59309A5F2F6799FA00CDABE8 /* SuiteSparseBLAS64.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseBLAS64.cmake; sourceTree = "<group>"; };
+		59309A602F6799FA00CDABE8 /* SuiteSparseLAPACK.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseLAPACK.cmake; sourceTree = "<group>"; };
+		59309A612F6799FA00CDABE8 /* SuiteSparsePolicy.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparsePolicy.cmake; sourceTree = "<group>"; };
+		59309A622F6799FA00CDABE8 /* SuiteSparseReport.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparseReport.cmake; sourceTree = "<group>"; };
+		59309A642F6799FA00CDABE8 /* SuiteSparse_configConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configConfig.cmake; sourceTree = "<group>"; };
+		59309A652F6799FA00CDABE8 /* SuiteSparse_configConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A662F6799FA00CDABE8 /* SuiteSparse_configTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SuiteSparse_configTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A672F6799FA00CDABE8 /* SuiteSparse_configTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_configTargets.cmake; sourceTree = "<group>"; };
+		59309A692F6799FA00CDABE8 /* BoostDetectToolset-1.88.0.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "BoostDetectToolset-1.88.0.cmake"; sourceTree = "<group>"; };
+		59309A6B2F6799FA00CDABE8 /* libade.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libade.a; sourceTree = "<group>"; };
+		59309A6C2F6799FA00CDABE8 /* libIlmImf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIlmImf.a; sourceTree = "<group>"; };
+		59309A6D2F6799FA00CDABE8 /* liblibjpeg-turbo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "liblibjpeg-turbo.a"; sourceTree = "<group>"; };
+		59309A6E2F6799FA00CDABE8 /* liblibpng.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibpng.a; sourceTree = "<group>"; };
+		59309A6F2F6799FA00CDABE8 /* liblibprotobuf.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibprotobuf.a; sourceTree = "<group>"; };
+		59309A702F6799FA00CDABE8 /* liblibwebp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblibwebp.a; sourceTree = "<group>"; };
+		59309A712F6799FA00CDABE8 /* libzlib.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzlib.a; sourceTree = "<group>"; };
+		59309A742F6799FB00CDABE8 /* AMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMD.pc; sourceTree = "<group>"; };
+		59309A752F6799FB00CDABE8 /* CAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CAMD.pc; sourceTree = "<group>"; };
+		59309A762F6799FB00CDABE8 /* CCOLAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CCOLAMD.pc; sourceTree = "<group>"; };
+		59309A772F6799FB00CDABE8 /* CHOLMOD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHOLMOD.pc; sourceTree = "<group>"; };
+		59309A782F6799FB00CDABE8 /* COLAMD.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = COLAMD.pc; sourceTree = "<group>"; };
+		59309A792F6799FB00CDABE8 /* flann.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = flann.pc; sourceTree = "<group>"; };
+		59309A7A2F6799FB00CDABE8 /* liblz4.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = liblz4.pc; sourceTree = "<group>"; };
+		59309A7B2F6799FB00CDABE8 /* pcl_2d.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_2d.pc; sourceTree = "<group>"; };
+		59309A7C2F6799FB00CDABE8 /* pcl_common.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_common.pc; sourceTree = "<group>"; };
+		59309A7D2F6799FB00CDABE8 /* pcl_features.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_features.pc; sourceTree = "<group>"; };
+		59309A7E2F6799FB00CDABE8 /* pcl_filters.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_filters.pc; sourceTree = "<group>"; };
+		59309A7F2F6799FB00CDABE8 /* pcl_geometry.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_geometry.pc; sourceTree = "<group>"; };
+		59309A802F6799FB00CDABE8 /* pcl_io.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_io.pc; sourceTree = "<group>"; };
+		59309A812F6799FB00CDABE8 /* pcl_kdtree.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_kdtree.pc; sourceTree = "<group>"; };
+		59309A822F6799FB00CDABE8 /* pcl_keypoints.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_keypoints.pc; sourceTree = "<group>"; };
+		59309A832F6799FB00CDABE8 /* pcl_ml.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_ml.pc; sourceTree = "<group>"; };
+		59309A842F6799FB00CDABE8 /* pcl_octree.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_octree.pc; sourceTree = "<group>"; };
+		59309A852F6799FB00CDABE8 /* pcl_recognition.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_recognition.pc; sourceTree = "<group>"; };
+		59309A862F6799FB00CDABE8 /* pcl_registration.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_registration.pc; sourceTree = "<group>"; };
+		59309A872F6799FB00CDABE8 /* pcl_sample_consensus.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_sample_consensus.pc; sourceTree = "<group>"; };
+		59309A882F6799FB00CDABE8 /* pcl_search.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_search.pc; sourceTree = "<group>"; };
+		59309A892F6799FB00CDABE8 /* pcl_segmentation.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_segmentation.pc; sourceTree = "<group>"; };
+		59309A8A2F6799FB00CDABE8 /* pcl_stereo.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_stereo.pc; sourceTree = "<group>"; };
+		59309A8B2F6799FB00CDABE8 /* pcl_surface.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = pcl_surface.pc; sourceTree = "<group>"; };
+		59309A8C2F6799FB00CDABE8 /* SuiteSparse_config.pc */ = {isa = PBXFileReference; lastKnownFileType = text; path = SuiteSparse_config.pc; sourceTree = "<group>"; };
+		59309A8E2F6799FB00CDABE8 /* RTABMap_coreTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "RTABMap_coreTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A8F2F6799FB00CDABE8 /* RTABMap_coreTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMap_coreTargets.cmake; sourceTree = "<group>"; };
+		59309A902F6799FB00CDABE8 /* RTABMap_utiliteTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "RTABMap_utiliteTargets-release.cmake"; sourceTree = "<group>"; };
+		59309A912F6799FB00CDABE8 /* RTABMap_utiliteTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMap_utiliteTargets.cmake; sourceTree = "<group>"; };
+		59309A922F6799FB00CDABE8 /* RTABMapConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapConfig.cmake; sourceTree = "<group>"; };
+		59309A932F6799FB00CDABE8 /* RTABMapConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapConfigVersion.cmake; sourceTree = "<group>"; };
+		59309A942F6799FB00CDABE8 /* RTABMapTargets.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = RTABMapTargets.cmake; sourceTree = "<group>"; };
+		59309A962F679A1C00CDABE8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		59309A982F679A2900CDABE8 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		59309A9A2F679A3300CDABE8 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		59309A9C2F679A5600CDABE8 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		59C017582F483DC400A64702 /* Calabi Lens.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Calabi Lens.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		59C0175B2F483DC400A64702 /* Calabi_LensApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calabi_LensApp.swift; sourceTree = "<group>"; };
 		59C0175D2F483DC400A64702 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,6 +530,9 @@
 		59C017C22F4B000100A64702 /* NetworkConfigSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConfigSheet.swift; sourceTree = "<group>"; };
 		59C017C32F4B000100A64702 /* StreamingSettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingSettingsSheet.swift; sourceTree = "<group>"; };
 		59C017C42F4B000100A64702 /* WiFiMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WiFiMonitor.swift; sourceTree = "<group>"; };
+		59CBFD7A2F67A4AA003811C8 /* NativeWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeWrapper.cpp; sourceTree = "<group>"; };
+		59CBFD7B2F67A4AA003811C8 /* NativeWrapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NativeWrapper.hpp; sourceTree = "<group>"; };
+		59CBFD7C2F67A4AA003811C8 /* RTABMapSLAM.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RTABMapSLAM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +540,106 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				59CBFD802F67A797003811C8 /* libade.a in Frameworks */,
+				59CBFD812F67A797003811C8 /* libIlmImf.a in Frameworks */,
+				59CBFD822F67A797003811C8 /* liblibjpeg-turbo.a in Frameworks */,
+				59CBFD832F67A797003811C8 /* liblibpng.a in Frameworks */,
+				59CBFD842F67A797003811C8 /* liblibprotobuf.a in Frameworks */,
+				59CBFD852F67A797003811C8 /* liblibwebp.a in Frameworks */,
+				59CBFD862F67A797003811C8 /* libzlib.a in Frameworks */,
+				59309A9D2F679A5600CDABE8 /* libz.tbd in Frameworks */,
+				59309A9B2F679A3300CDABE8 /* libsqlite3.tbd in Frameworks */,
+				59309A992F679A2900CDABE8 /* libc++.tbd in Frameworks */,
+				59309A972F679A1C00CDABE8 /* Accelerate.framework in Frameworks */,
+				5930998D2F6799FA00CDABE8 /* libamd.a in Frameworks */,
+				5930998E2F6799FA00CDABE8 /* libboost_atomic.a in Frameworks */,
+				5930998F2F6799FA00CDABE8 /* libboost_chrono.a in Frameworks */,
+				593099902F6799FA00CDABE8 /* libboost_date_time.a in Frameworks */,
+				593099912F6799FA00CDABE8 /* libboost_filesystem.a in Frameworks */,
+				593099922F6799FA00CDABE8 /* libboost_graph.a in Frameworks */,
+				593099932F6799FA00CDABE8 /* libboost_iostreams.a in Frameworks */,
+				593099942F6799FA00CDABE8 /* libboost_program_options.a in Frameworks */,
+				593099952F6799FA00CDABE8 /* libboost_random.a in Frameworks */,
+				593099962F6799FA00CDABE8 /* libboost_regex.a in Frameworks */,
+				593099972F6799FA00CDABE8 /* libboost_serialization.a in Frameworks */,
+				593099982F6799FA00CDABE8 /* libboost_system.a in Frameworks */,
+				593099992F6799FA00CDABE8 /* libboost_thread.a in Frameworks */,
+				5930999A2F6799FA00CDABE8 /* libboost_timer.a in Frameworks */,
+				5930999B2F6799FA00CDABE8 /* libboost_wserialization.a in Frameworks */,
+				5930999C2F6799FA00CDABE8 /* libcamd.a in Frameworks */,
+				5930999D2F6799FA00CDABE8 /* libccolamd.a in Frameworks */,
+				5930999E2F6799FA00CDABE8 /* libcholmod.a in Frameworks */,
+				5930999F2F6799FA00CDABE8 /* libcolamd.a in Frameworks */,
+				593099A02F6799FA00CDABE8 /* libCppUnitLite.a in Frameworks */,
+				593099A12F6799FA00CDABE8 /* libflann_cpp_s.a in Frameworks */,
+				593099A22F6799FA00CDABE8 /* libflann_cpp.a in Frameworks */,
+				593099A32F6799FA00CDABE8 /* libflann_s.a in Frameworks */,
+				593099A42F6799FA00CDABE8 /* libflann.a in Frameworks */,
+				593099A52F6799FA00CDABE8 /* libgtsam.a in Frameworks */,
+				593099A62F6799FA00CDABE8 /* liblz4.a in Frameworks */,
+				593099A72F6799FA00CDABE8 /* libopencv_alphamat.a in Frameworks */,
+				593099A82F6799FA00CDABE8 /* libopencv_aruco.a in Frameworks */,
+				593099A92F6799FA00CDABE8 /* libopencv_bgsegm.a in Frameworks */,
+				593099AA2F6799FA00CDABE8 /* libopencv_bioinspired.a in Frameworks */,
+				593099AB2F6799FA00CDABE8 /* libopencv_calib3d.a in Frameworks */,
+				593099AC2F6799FA00CDABE8 /* libopencv_ccalib.a in Frameworks */,
+				593099AD2F6799FA00CDABE8 /* libopencv_core.a in Frameworks */,
+				593099AE2F6799FA00CDABE8 /* libopencv_dpm.a in Frameworks */,
+				593099AF2F6799FA00CDABE8 /* libopencv_face.a in Frameworks */,
+				593099B02F6799FA00CDABE8 /* libopencv_features2d.a in Frameworks */,
+				593099B12F6799FA00CDABE8 /* libopencv_flann.a in Frameworks */,
+				593099B22F6799FA00CDABE8 /* libopencv_fuzzy.a in Frameworks */,
+				593099B32F6799FA00CDABE8 /* libopencv_gapi.a in Frameworks */,
+				593099B42F6799FA00CDABE8 /* libopencv_hfs.a in Frameworks */,
+				593099B52F6799FA00CDABE8 /* libopencv_highgui.a in Frameworks */,
+				593099B62F6799FA00CDABE8 /* libopencv_img_hash.a in Frameworks */,
+				593099B72F6799FA00CDABE8 /* libopencv_imgcodecs.a in Frameworks */,
+				593099B82F6799FA00CDABE8 /* libopencv_imgproc.a in Frameworks */,
+				593099B92F6799FA00CDABE8 /* libopencv_intensity_transform.a in Frameworks */,
+				593099BA2F6799FA00CDABE8 /* libopencv_line_descriptor.a in Frameworks */,
+				593099BB2F6799FA00CDABE8 /* libopencv_objdetect.a in Frameworks */,
+				593099BC2F6799FA00CDABE8 /* libopencv_optflow.a in Frameworks */,
+				593099BD2F6799FA00CDABE8 /* libopencv_phase_unwrapping.a in Frameworks */,
+				593099BE2F6799FA00CDABE8 /* libopencv_photo.a in Frameworks */,
+				593099BF2F6799FA00CDABE8 /* libopencv_plot.a in Frameworks */,
+				593099C02F6799FA00CDABE8 /* libopencv_rapid.a in Frameworks */,
+				593099C12F6799FA00CDABE8 /* libopencv_reg.a in Frameworks */,
+				593099C22F6799FA00CDABE8 /* libopencv_rgbd.a in Frameworks */,
+				593099C32F6799FA00CDABE8 /* libopencv_saliency.a in Frameworks */,
+				593099C42F6799FA00CDABE8 /* libopencv_shape.a in Frameworks */,
+				593099C52F6799FA00CDABE8 /* libopencv_signal.a in Frameworks */,
+				593099C62F6799FA00CDABE8 /* libopencv_stereo.a in Frameworks */,
+				593099C72F6799FA00CDABE8 /* libopencv_stitching.a in Frameworks */,
+				593099C82F6799FA00CDABE8 /* libopencv_structured_light.a in Frameworks */,
+				593099C92F6799FA00CDABE8 /* libopencv_surface_matching.a in Frameworks */,
+				593099CA2F6799FA00CDABE8 /* libopencv_tracking.a in Frameworks */,
+				593099CB2F6799FA00CDABE8 /* libopencv_video.a in Frameworks */,
+				593099CC2F6799FA00CDABE8 /* libopencv_videoio.a in Frameworks */,
+				593099CD2F6799FA00CDABE8 /* libopencv_videostab.a in Frameworks */,
+				593099CE2F6799FA00CDABE8 /* libopencv_xfeatures2d.a in Frameworks */,
+				593099CF2F6799FA00CDABE8 /* libopencv_ximgproc.a in Frameworks */,
+				593099D02F6799FA00CDABE8 /* libopencv_xobjdetect.a in Frameworks */,
+				593099D12F6799FA00CDABE8 /* libopencv_xphoto.a in Frameworks */,
+				593099D22F6799FA00CDABE8 /* libpcl_common.a in Frameworks */,
+				593099D32F6799FA00CDABE8 /* libpcl_features.a in Frameworks */,
+				593099D42F6799FA00CDABE8 /* libpcl_filters.a in Frameworks */,
+				593099D52F6799FA00CDABE8 /* libpcl_io_ply.a in Frameworks */,
+				593099D62F6799FA00CDABE8 /* libpcl_io.a in Frameworks */,
+				593099D72F6799FA00CDABE8 /* libpcl_kdtree.a in Frameworks */,
+				593099D82F6799FA00CDABE8 /* libpcl_keypoints.a in Frameworks */,
+				593099D92F6799FA00CDABE8 /* libpcl_ml.a in Frameworks */,
+				593099DA2F6799FA00CDABE8 /* libpcl_octree.a in Frameworks */,
+				593099DB2F6799FA00CDABE8 /* libpcl_recognition.a in Frameworks */,
+				593099DC2F6799FA00CDABE8 /* libpcl_registration.a in Frameworks */,
+				593099DD2F6799FA00CDABE8 /* libpcl_sample_consensus.a in Frameworks */,
+				593099DE2F6799FA00CDABE8 /* libpcl_search.a in Frameworks */,
+				593099DF2F6799FA00CDABE8 /* libpcl_segmentation.a in Frameworks */,
+				593099E02F6799FA00CDABE8 /* libpcl_stereo.a in Frameworks */,
+				593099E12F6799FA00CDABE8 /* libpcl_surface.a in Frameworks */,
+				593099E22F6799FA00CDABE8 /* librtabmap_core.a in Frameworks */,
+				593099E32F6799FA00CDABE8 /* librtabmap_utilite.a in Frameworks */,
+				593099E42F6799FA00CDABE8 /* libsuitesparseconfig.a in Frameworks */,
+				593099E52F6799FA00CDABE8 /* vtk.framework in Frameworks */,
 				59C017752F483DC500A64702 /* ARKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -63,6 +647,917 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5930982F2F67993300CDABE8 /* AMD */ = {
+			isa = PBXGroup;
+			children = (
+				5930982B2F67993300CDABE8 /* AMDConfig.cmake */,
+				5930982C2F67993300CDABE8 /* AMDConfigVersion.cmake */,
+				5930982D2F67993300CDABE8 /* AMDTargets-release.cmake */,
+				5930982E2F67993300CDABE8 /* AMDTargets.cmake */,
+			);
+			path = AMD;
+			sourceTree = "<group>";
+		};
+		593098332F67993300CDABE8 /* boost_atomic-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098302F67993300CDABE8 /* boost_atomic-config-version.cmake */,
+				593098312F67993300CDABE8 /* boost_atomic-config.cmake */,
+				593098322F67993300CDABE8 /* libboost_atomic-variant-static.cmake */,
+			);
+			path = "boost_atomic-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098372F67993300CDABE8 /* boost_chrono-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098342F67993300CDABE8 /* boost_chrono-config-version.cmake */,
+				593098352F67993300CDABE8 /* boost_chrono-config.cmake */,
+				593098362F67993300CDABE8 /* libboost_chrono-variant-static.cmake */,
+			);
+			path = "boost_chrono-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930983B2F67993300CDABE8 /* boost_date_time-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098382F67993300CDABE8 /* boost_date_time-config-version.cmake */,
+				593098392F67993300CDABE8 /* boost_date_time-config.cmake */,
+				5930983A2F67993300CDABE8 /* libboost_date_time-variant-static.cmake */,
+			);
+			path = "boost_date_time-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930983F2F67993300CDABE8 /* boost_filesystem-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930983C2F67993300CDABE8 /* boost_filesystem-config-version.cmake */,
+				5930983D2F67993300CDABE8 /* boost_filesystem-config.cmake */,
+				5930983E2F67993300CDABE8 /* libboost_filesystem-variant-static.cmake */,
+			);
+			path = "boost_filesystem-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098432F67993300CDABE8 /* boost_graph-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098402F67993300CDABE8 /* boost_graph-config-version.cmake */,
+				593098412F67993300CDABE8 /* boost_graph-config.cmake */,
+				593098422F67993300CDABE8 /* libboost_graph-variant-static.cmake */,
+			);
+			path = "boost_graph-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098462F67993300CDABE8 /* boost_headers-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098442F67993300CDABE8 /* boost_headers-config-version.cmake */,
+				593098452F67993300CDABE8 /* boost_headers-config.cmake */,
+			);
+			path = "boost_headers-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930984A2F67993300CDABE8 /* boost_iostreams-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098472F67993300CDABE8 /* boost_iostreams-config-version.cmake */,
+				593098482F67993300CDABE8 /* boost_iostreams-config.cmake */,
+				593098492F67993300CDABE8 /* libboost_iostreams-variant-static.cmake */,
+			);
+			path = "boost_iostreams-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930984E2F67993300CDABE8 /* boost_program_options-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930984B2F67993300CDABE8 /* boost_program_options-config-version.cmake */,
+				5930984C2F67993300CDABE8 /* boost_program_options-config.cmake */,
+				5930984D2F67993300CDABE8 /* libboost_program_options-variant-static.cmake */,
+			);
+			path = "boost_program_options-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098522F67993300CDABE8 /* boost_random-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930984F2F67993300CDABE8 /* boost_random-config-version.cmake */,
+				593098502F67993300CDABE8 /* boost_random-config.cmake */,
+				593098512F67993300CDABE8 /* libboost_random-variant-static.cmake */,
+			);
+			path = "boost_random-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098562F67993300CDABE8 /* boost_regex-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098532F67993300CDABE8 /* boost_regex-config-version.cmake */,
+				593098542F67993300CDABE8 /* boost_regex-config.cmake */,
+				593098552F67993300CDABE8 /* libboost_regex-variant-static.cmake */,
+			);
+			path = "boost_regex-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930985A2F67993300CDABE8 /* boost_serialization-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098572F67993300CDABE8 /* boost_serialization-config-version.cmake */,
+				593098582F67993300CDABE8 /* boost_serialization-config.cmake */,
+				593098592F67993300CDABE8 /* libboost_serialization-variant-static.cmake */,
+			);
+			path = "boost_serialization-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930985E2F67993300CDABE8 /* boost_system-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930985B2F67993300CDABE8 /* boost_system-config-version.cmake */,
+				5930985C2F67993300CDABE8 /* boost_system-config.cmake */,
+				5930985D2F67993300CDABE8 /* libboost_system-variant-static.cmake */,
+			);
+			path = "boost_system-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098622F67993300CDABE8 /* boost_thread-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930985F2F67993300CDABE8 /* boost_thread-config-version.cmake */,
+				593098602F67993300CDABE8 /* boost_thread-config.cmake */,
+				593098612F67993300CDABE8 /* libboost_thread-variant-static.cmake */,
+			);
+			path = "boost_thread-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098662F67993300CDABE8 /* boost_timer-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098632F67993300CDABE8 /* boost_timer-config-version.cmake */,
+				593098642F67993300CDABE8 /* boost_timer-config.cmake */,
+				593098652F67993300CDABE8 /* libboost_timer-variant-static.cmake */,
+			);
+			path = "boost_timer-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930986A2F67993300CDABE8 /* boost_wserialization-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593098672F67993300CDABE8 /* boost_wserialization-config-version.cmake */,
+				593098682F67993300CDABE8 /* boost_wserialization-config.cmake */,
+				593098692F67993300CDABE8 /* libboost_wserialization-variant-static.cmake */,
+			);
+			path = "boost_wserialization-1.88.0";
+			sourceTree = "<group>";
+		};
+		5930986D2F67993300CDABE8 /* Boost-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				5930986B2F67993300CDABE8 /* BoostConfig.cmake */,
+				5930986C2F67993300CDABE8 /* BoostConfigVersion.cmake */,
+			);
+			path = "Boost-1.88.0";
+			sourceTree = "<group>";
+		};
+		593098722F67993300CDABE8 /* CAMD */ = {
+			isa = PBXGroup;
+			children = (
+				5930986E2F67993300CDABE8 /* CAMDConfig.cmake */,
+				5930986F2F67993300CDABE8 /* CAMDConfigVersion.cmake */,
+				593098702F67993300CDABE8 /* CAMDTargets-release.cmake */,
+				593098712F67993300CDABE8 /* CAMDTargets.cmake */,
+			);
+			path = CAMD;
+			sourceTree = "<group>";
+		};
+		593098772F67993300CDABE8 /* CCOLAMD */ = {
+			isa = PBXGroup;
+			children = (
+				593098732F67993300CDABE8 /* CCOLAMDConfig.cmake */,
+				593098742F67993300CDABE8 /* CCOLAMDConfigVersion.cmake */,
+				593098752F67993300CDABE8 /* CCOLAMDTargets-release.cmake */,
+				593098762F67993300CDABE8 /* CCOLAMDTargets.cmake */,
+			);
+			path = CCOLAMD;
+			sourceTree = "<group>";
+		};
+		5930987C2F67993300CDABE8 /* CHOLMOD */ = {
+			isa = PBXGroup;
+			children = (
+				593098782F67993300CDABE8 /* CHOLMODConfig.cmake */,
+				593098792F67993300CDABE8 /* CHOLMODConfigVersion.cmake */,
+				5930987A2F67993300CDABE8 /* CHOLMODTargets-release.cmake */,
+				5930987B2F67993300CDABE8 /* CHOLMODTargets.cmake */,
+			);
+			path = CHOLMOD;
+			sourceTree = "<group>";
+		};
+		593098812F67993300CDABE8 /* COLAMD */ = {
+			isa = PBXGroup;
+			children = (
+				5930987D2F67993300CDABE8 /* COLAMDConfig.cmake */,
+				5930987E2F67993300CDABE8 /* COLAMDConfigVersion.cmake */,
+				5930987F2F67993300CDABE8 /* COLAMDTargets-release.cmake */,
+				593098802F67993300CDABE8 /* COLAMDTargets.cmake */,
+			);
+			path = COLAMD;
+			sourceTree = "<group>";
+		};
+		593098862F67993300CDABE8 /* flann */ = {
+			isa = PBXGroup;
+			children = (
+				593098822F67993300CDABE8 /* flann-config-version.cmake */,
+				593098832F67993300CDABE8 /* flann-config.cmake */,
+				593098842F67993300CDABE8 /* flann-targets-release.cmake */,
+				593098852F67993300CDABE8 /* flann-targets.cmake */,
+			);
+			path = flann;
+			sourceTree = "<group>";
+		};
+		5930988C2F67993300CDABE8 /* GTSAM */ = {
+			isa = PBXGroup;
+			children = (
+				593098872F67993300CDABE8 /* gtsam_extra.cmake */,
+				593098882F67993300CDABE8 /* GTSAM-exports-release.cmake */,
+				593098892F67993300CDABE8 /* GTSAM-exports.cmake */,
+				5930988A2F67993300CDABE8 /* GTSAMConfig.cmake */,
+				5930988B2F67993300CDABE8 /* GTSAMConfigVersion.cmake */,
+			);
+			path = GTSAM;
+			sourceTree = "<group>";
+		};
+		593098962F67993300CDABE8 /* GTSAMCMakeTools */ = {
+			isa = PBXGroup;
+			children = (
+				5930988D2F67993300CDABE8 /* Config.cmake.in */,
+				5930988E2F67993300CDABE8 /* dllexport.h.in */,
+				5930988F2F67993300CDABE8 /* FindNumPy.cmake */,
+				593098902F67993300CDABE8 /* GtsamBuildTypes.cmake */,
+				593098912F67993300CDABE8 /* GTSAMCMakeToolsConfig.cmake */,
+				593098922F67993300CDABE8 /* GtsamMakeConfigFile.cmake */,
+				593098932F67993300CDABE8 /* GtsamPrinting.cmake */,
+				593098942F67993300CDABE8 /* GtsamTesting.cmake */,
+				593098952F67993300CDABE8 /* README.html */,
+			);
+			path = GTSAMCMakeTools;
+			sourceTree = "<group>";
+		};
+		5930989B2F67993300CDABE8 /* lz4 */ = {
+			isa = PBXGroup;
+			children = (
+				593098972F67993300CDABE8 /* lz4Config.cmake */,
+				593098982F67993300CDABE8 /* lz4ConfigVersion.cmake */,
+				593098992F67993300CDABE8 /* lz4Targets-release.cmake */,
+				5930989A2F67993300CDABE8 /* lz4Targets.cmake */,
+			);
+			path = lz4;
+			sourceTree = "<group>";
+		};
+		593098A02F67993300CDABE8 /* opencv4 */ = {
+			isa = PBXGroup;
+			children = (
+				5930989C2F67993300CDABE8 /* OpenCVConfig-version.cmake */,
+				5930989D2F67993300CDABE8 /* OpenCVConfig.cmake */,
+				5930989E2F67993300CDABE8 /* OpenCVModules-release.cmake */,
+				5930989F2F67993300CDABE8 /* OpenCVModules.cmake */,
+			);
+			path = opencv4;
+			sourceTree = "<group>";
+		};
+		593098A82F67993300CDABE8 /* SuiteSparse */ = {
+			isa = PBXGroup;
+			children = (
+				593098A12F67993300CDABE8 /* SuiteSparse__thread.cmake */,
+				593098A22F67993300CDABE8 /* SuiteSparseBLAS.cmake */,
+				593098A32F67993300CDABE8 /* SuiteSparseBLAS32.cmake */,
+				593098A42F67993300CDABE8 /* SuiteSparseBLAS64.cmake */,
+				593098A52F67993300CDABE8 /* SuiteSparseLAPACK.cmake */,
+				593098A62F67993300CDABE8 /* SuiteSparsePolicy.cmake */,
+				593098A72F67993300CDABE8 /* SuiteSparseReport.cmake */,
+			);
+			path = SuiteSparse;
+			sourceTree = "<group>";
+		};
+		593098AD2F67993300CDABE8 /* SuiteSparse_config */ = {
+			isa = PBXGroup;
+			children = (
+				593098A92F67993300CDABE8 /* SuiteSparse_configConfig.cmake */,
+				593098AA2F67993300CDABE8 /* SuiteSparse_configConfigVersion.cmake */,
+				593098AB2F67993300CDABE8 /* SuiteSparse_configTargets-release.cmake */,
+				593098AC2F67993300CDABE8 /* SuiteSparse_configTargets.cmake */,
+			);
+			path = SuiteSparse_config;
+			sourceTree = "<group>";
+		};
+		593098AF2F67993300CDABE8 /* cmake */ = {
+			isa = PBXGroup;
+			children = (
+				5930982F2F67993300CDABE8 /* AMD */,
+				593098332F67993300CDABE8 /* boost_atomic-1.88.0 */,
+				593098372F67993300CDABE8 /* boost_chrono-1.88.0 */,
+				5930983B2F67993300CDABE8 /* boost_date_time-1.88.0 */,
+				5930983F2F67993300CDABE8 /* boost_filesystem-1.88.0 */,
+				593098432F67993300CDABE8 /* boost_graph-1.88.0 */,
+				593098462F67993300CDABE8 /* boost_headers-1.88.0 */,
+				5930984A2F67993300CDABE8 /* boost_iostreams-1.88.0 */,
+				5930984E2F67993300CDABE8 /* boost_program_options-1.88.0 */,
+				593098522F67993300CDABE8 /* boost_random-1.88.0 */,
+				593098562F67993300CDABE8 /* boost_regex-1.88.0 */,
+				5930985A2F67993300CDABE8 /* boost_serialization-1.88.0 */,
+				5930985E2F67993300CDABE8 /* boost_system-1.88.0 */,
+				593098622F67993300CDABE8 /* boost_thread-1.88.0 */,
+				593098662F67993300CDABE8 /* boost_timer-1.88.0 */,
+				5930986A2F67993300CDABE8 /* boost_wserialization-1.88.0 */,
+				5930986D2F67993300CDABE8 /* Boost-1.88.0 */,
+				593098722F67993300CDABE8 /* CAMD */,
+				593098772F67993300CDABE8 /* CCOLAMD */,
+				5930987C2F67993300CDABE8 /* CHOLMOD */,
+				593098812F67993300CDABE8 /* COLAMD */,
+				593098862F67993300CDABE8 /* flann */,
+				5930988C2F67993300CDABE8 /* GTSAM */,
+				593098962F67993300CDABE8 /* GTSAMCMakeTools */,
+				5930989B2F67993300CDABE8 /* lz4 */,
+				593098A02F67993300CDABE8 /* opencv4 */,
+				593098A82F67993300CDABE8 /* SuiteSparse */,
+				593098AD2F67993300CDABE8 /* SuiteSparse_config */,
+				593098AE2F67993300CDABE8 /* BoostDetectToolset-1.88.0.cmake */,
+			);
+			path = cmake;
+			sourceTree = "<group>";
+		};
+		593098B72F67993300CDABE8 /* 3rdparty */ = {
+			isa = PBXGroup;
+			children = (
+				593098B02F67993300CDABE8 /* libade.a */,
+				593098B12F67993300CDABE8 /* libIlmImf.a */,
+				593098B22F67993300CDABE8 /* liblibjpeg-turbo.a */,
+				593098B32F67993300CDABE8 /* liblibpng.a */,
+				593098B42F67993300CDABE8 /* liblibprotobuf.a */,
+				593098B52F67993300CDABE8 /* liblibwebp.a */,
+				593098B62F67993300CDABE8 /* libzlib.a */,
+			);
+			path = 3rdparty;
+			sourceTree = "<group>";
+		};
+		593098B82F67993300CDABE8 /* opencv4 */ = {
+			isa = PBXGroup;
+			children = (
+				593098B72F67993300CDABE8 /* 3rdparty */,
+			);
+			path = opencv4;
+			sourceTree = "<group>";
+		};
+		593098D22F67993300CDABE8 /* pkgconfig */ = {
+			isa = PBXGroup;
+			children = (
+				593098B92F67993300CDABE8 /* AMD.pc */,
+				593098BA2F67993300CDABE8 /* CAMD.pc */,
+				593098BB2F67993300CDABE8 /* CCOLAMD.pc */,
+				593098BC2F67993300CDABE8 /* CHOLMOD.pc */,
+				593098BD2F67993300CDABE8 /* COLAMD.pc */,
+				593098BE2F67993300CDABE8 /* flann.pc */,
+				593098BF2F67993300CDABE8 /* liblz4.pc */,
+				593098C02F67993300CDABE8 /* pcl_2d.pc */,
+				593098C12F67993300CDABE8 /* pcl_common.pc */,
+				593098C22F67993300CDABE8 /* pcl_features.pc */,
+				593098C32F67993300CDABE8 /* pcl_filters.pc */,
+				593098C42F67993300CDABE8 /* pcl_geometry.pc */,
+				593098C52F67993300CDABE8 /* pcl_io.pc */,
+				593098C62F67993300CDABE8 /* pcl_kdtree.pc */,
+				593098C72F67993300CDABE8 /* pcl_keypoints.pc */,
+				593098C82F67993300CDABE8 /* pcl_ml.pc */,
+				593098C92F67993300CDABE8 /* pcl_octree.pc */,
+				593098CA2F67993300CDABE8 /* pcl_recognition.pc */,
+				593098CB2F67993300CDABE8 /* pcl_registration.pc */,
+				593098CC2F67993300CDABE8 /* pcl_sample_consensus.pc */,
+				593098CD2F67993300CDABE8 /* pcl_search.pc */,
+				593098CE2F67993300CDABE8 /* pcl_segmentation.pc */,
+				593098CF2F67993300CDABE8 /* pcl_stereo.pc */,
+				593098D02F67993300CDABE8 /* pcl_surface.pc */,
+				593098D12F67993300CDABE8 /* SuiteSparse_config.pc */,
+			);
+			path = pkgconfig;
+			sourceTree = "<group>";
+		};
+		593098DA2F67993300CDABE8 /* rtabmap-0.21 */ = {
+			isa = PBXGroup;
+			children = (
+				593098D32F67993300CDABE8 /* RTABMap_coreTargets-release.cmake */,
+				593098D42F67993300CDABE8 /* RTABMap_coreTargets.cmake */,
+				593098D52F67993300CDABE8 /* RTABMap_utiliteTargets-release.cmake */,
+				593098D62F67993300CDABE8 /* RTABMap_utiliteTargets.cmake */,
+				593098D72F67993300CDABE8 /* RTABMapConfig.cmake */,
+				593098D82F67993300CDABE8 /* RTABMapConfigVersion.cmake */,
+				593098D92F67993300CDABE8 /* RTABMapTargets.cmake */,
+			);
+			path = "rtabmap-0.21";
+			sourceTree = "<group>";
+		};
+		593099342F67993300CDABE8 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				593098AF2F67993300CDABE8 /* cmake */,
+				593098B82F67993300CDABE8 /* opencv4 */,
+				593098D22F67993300CDABE8 /* pkgconfig */,
+				593098DA2F67993300CDABE8 /* rtabmap-0.21 */,
+				593098DB2F67993300CDABE8 /* libamd.a */,
+				593098DC2F67993300CDABE8 /* libboost_atomic.a */,
+				593098DD2F67993300CDABE8 /* libboost_chrono.a */,
+				593098DE2F67993300CDABE8 /* libboost_date_time.a */,
+				593098DF2F67993300CDABE8 /* libboost_filesystem.a */,
+				593098E02F67993300CDABE8 /* libboost_graph.a */,
+				593098E12F67993300CDABE8 /* libboost_iostreams.a */,
+				593098E22F67993300CDABE8 /* libboost_program_options.a */,
+				593098E32F67993300CDABE8 /* libboost_random.a */,
+				593098E42F67993300CDABE8 /* libboost_regex.a */,
+				593098E52F67993300CDABE8 /* libboost_serialization.a */,
+				593098E62F67993300CDABE8 /* libboost_system.a */,
+				593098E72F67993300CDABE8 /* libboost_thread.a */,
+				593098E82F67993300CDABE8 /* libboost_timer.a */,
+				593098E92F67993300CDABE8 /* libboost_wserialization.a */,
+				593098EA2F67993300CDABE8 /* libcamd.a */,
+				593098EB2F67993300CDABE8 /* libccolamd.a */,
+				593098EC2F67993300CDABE8 /* libcholmod.a */,
+				593098ED2F67993300CDABE8 /* libcolamd.a */,
+				593098EE2F67993300CDABE8 /* libCppUnitLite.a */,
+				593098EF2F67993300CDABE8 /* libflann_cpp_s.a */,
+				593098F02F67993300CDABE8 /* libflann_cpp.a */,
+				593098F12F67993300CDABE8 /* libflann_s.a */,
+				593098F22F67993300CDABE8 /* libflann.a */,
+				593098F32F67993300CDABE8 /* libgtsam.a */,
+				593098F42F67993300CDABE8 /* liblz4.a */,
+				593098F52F67993300CDABE8 /* libopencv_alphamat.a */,
+				593098F62F67993300CDABE8 /* libopencv_aruco.a */,
+				593098F72F67993300CDABE8 /* libopencv_bgsegm.a */,
+				593098F82F67993300CDABE8 /* libopencv_bioinspired.a */,
+				593098F92F67993300CDABE8 /* libopencv_calib3d.a */,
+				593098FA2F67993300CDABE8 /* libopencv_ccalib.a */,
+				593098FB2F67993300CDABE8 /* libopencv_core.a */,
+				593098FC2F67993300CDABE8 /* libopencv_dpm.a */,
+				593098FD2F67993300CDABE8 /* libopencv_face.a */,
+				593098FE2F67993300CDABE8 /* libopencv_features2d.a */,
+				593098FF2F67993300CDABE8 /* libopencv_flann.a */,
+				593099002F67993300CDABE8 /* libopencv_fuzzy.a */,
+				593099012F67993300CDABE8 /* libopencv_gapi.a */,
+				593099022F67993300CDABE8 /* libopencv_hfs.a */,
+				593099032F67993300CDABE8 /* libopencv_highgui.a */,
+				593099042F67993300CDABE8 /* libopencv_img_hash.a */,
+				593099052F67993300CDABE8 /* libopencv_imgcodecs.a */,
+				593099062F67993300CDABE8 /* libopencv_imgproc.a */,
+				593099072F67993300CDABE8 /* libopencv_intensity_transform.a */,
+				593099082F67993300CDABE8 /* libopencv_line_descriptor.a */,
+				593099092F67993300CDABE8 /* libopencv_objdetect.a */,
+				5930990A2F67993300CDABE8 /* libopencv_optflow.a */,
+				5930990B2F67993300CDABE8 /* libopencv_phase_unwrapping.a */,
+				5930990C2F67993300CDABE8 /* libopencv_photo.a */,
+				5930990D2F67993300CDABE8 /* libopencv_plot.a */,
+				5930990E2F67993300CDABE8 /* libopencv_rapid.a */,
+				5930990F2F67993300CDABE8 /* libopencv_reg.a */,
+				593099102F67993300CDABE8 /* libopencv_rgbd.a */,
+				593099112F67993300CDABE8 /* libopencv_saliency.a */,
+				593099122F67993300CDABE8 /* libopencv_shape.a */,
+				593099132F67993300CDABE8 /* libopencv_signal.a */,
+				593099142F67993300CDABE8 /* libopencv_stereo.a */,
+				593099152F67993300CDABE8 /* libopencv_stitching.a */,
+				593099162F67993300CDABE8 /* libopencv_structured_light.a */,
+				593099172F67993300CDABE8 /* libopencv_surface_matching.a */,
+				593099182F67993300CDABE8 /* libopencv_tracking.a */,
+				593099192F67993300CDABE8 /* libopencv_video.a */,
+				5930991A2F67993300CDABE8 /* libopencv_videoio.a */,
+				5930991B2F67993300CDABE8 /* libopencv_videostab.a */,
+				5930991C2F67993300CDABE8 /* libopencv_xfeatures2d.a */,
+				5930991D2F67993300CDABE8 /* libopencv_ximgproc.a */,
+				5930991E2F67993300CDABE8 /* libopencv_xobjdetect.a */,
+				5930991F2F67993300CDABE8 /* libopencv_xphoto.a */,
+				593099202F67993300CDABE8 /* libpcl_common.a */,
+				593099212F67993300CDABE8 /* libpcl_features.a */,
+				593099222F67993300CDABE8 /* libpcl_filters.a */,
+				593099232F67993300CDABE8 /* libpcl_io_ply.a */,
+				593099242F67993300CDABE8 /* libpcl_io.a */,
+				593099252F67993300CDABE8 /* libpcl_kdtree.a */,
+				593099262F67993300CDABE8 /* libpcl_keypoints.a */,
+				593099272F67993300CDABE8 /* libpcl_ml.a */,
+				593099282F67993300CDABE8 /* libpcl_octree.a */,
+				593099292F67993300CDABE8 /* libpcl_recognition.a */,
+				5930992A2F67993300CDABE8 /* libpcl_registration.a */,
+				5930992B2F67993300CDABE8 /* libpcl_sample_consensus.a */,
+				5930992C2F67993300CDABE8 /* libpcl_search.a */,
+				5930992D2F67993300CDABE8 /* libpcl_segmentation.a */,
+				5930992E2F67993300CDABE8 /* libpcl_stereo.a */,
+				5930992F2F67993300CDABE8 /* libpcl_surface.a */,
+				593099302F67993300CDABE8 /* librtabmap_core.a */,
+				593099312F67993300CDABE8 /* librtabmap_utilite.a */,
+				593099322F67993300CDABE8 /* libsuitesparseconfig.a */,
+				593099332F67993300CDABE8 /* vtk.framework */,
+			);
+			name = lib;
+			path = RTABMap/build/output/ios/arm64/lib;
+			sourceTree = "<group>";
+		};
+		593099EA2F6799FA00CDABE8 /* AMD */ = {
+			isa = PBXGroup;
+			children = (
+				593099E62F6799FA00CDABE8 /* AMDConfig.cmake */,
+				593099E72F6799FA00CDABE8 /* AMDConfigVersion.cmake */,
+				593099E82F6799FA00CDABE8 /* AMDTargets-release.cmake */,
+				593099E92F6799FA00CDABE8 /* AMDTargets.cmake */,
+			);
+			path = AMD;
+			sourceTree = "<group>";
+		};
+		593099EE2F6799FA00CDABE8 /* boost_atomic-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099EB2F6799FA00CDABE8 /* boost_atomic-config-version.cmake */,
+				593099EC2F6799FA00CDABE8 /* boost_atomic-config.cmake */,
+				593099ED2F6799FA00CDABE8 /* libboost_atomic-variant-static.cmake */,
+			);
+			path = "boost_atomic-1.88.0";
+			sourceTree = "<group>";
+		};
+		593099F22F6799FA00CDABE8 /* boost_chrono-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099EF2F6799FA00CDABE8 /* boost_chrono-config-version.cmake */,
+				593099F02F6799FA00CDABE8 /* boost_chrono-config.cmake */,
+				593099F12F6799FA00CDABE8 /* libboost_chrono-variant-static.cmake */,
+			);
+			path = "boost_chrono-1.88.0";
+			sourceTree = "<group>";
+		};
+		593099F62F6799FA00CDABE8 /* boost_date_time-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099F32F6799FA00CDABE8 /* boost_date_time-config-version.cmake */,
+				593099F42F6799FA00CDABE8 /* boost_date_time-config.cmake */,
+				593099F52F6799FA00CDABE8 /* libboost_date_time-variant-static.cmake */,
+			);
+			path = "boost_date_time-1.88.0";
+			sourceTree = "<group>";
+		};
+		593099FA2F6799FA00CDABE8 /* boost_filesystem-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099F72F6799FA00CDABE8 /* boost_filesystem-config-version.cmake */,
+				593099F82F6799FA00CDABE8 /* boost_filesystem-config.cmake */,
+				593099F92F6799FA00CDABE8 /* libboost_filesystem-variant-static.cmake */,
+			);
+			path = "boost_filesystem-1.88.0";
+			sourceTree = "<group>";
+		};
+		593099FE2F6799FA00CDABE8 /* boost_graph-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099FB2F6799FA00CDABE8 /* boost_graph-config-version.cmake */,
+				593099FC2F6799FA00CDABE8 /* boost_graph-config.cmake */,
+				593099FD2F6799FA00CDABE8 /* libboost_graph-variant-static.cmake */,
+			);
+			path = "boost_graph-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A012F6799FA00CDABE8 /* boost_headers-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				593099FF2F6799FA00CDABE8 /* boost_headers-config-version.cmake */,
+				59309A002F6799FA00CDABE8 /* boost_headers-config.cmake */,
+			);
+			path = "boost_headers-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A052F6799FA00CDABE8 /* boost_iostreams-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A022F6799FA00CDABE8 /* boost_iostreams-config-version.cmake */,
+				59309A032F6799FA00CDABE8 /* boost_iostreams-config.cmake */,
+				59309A042F6799FA00CDABE8 /* libboost_iostreams-variant-static.cmake */,
+			);
+			path = "boost_iostreams-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A092F6799FA00CDABE8 /* boost_program_options-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A062F6799FA00CDABE8 /* boost_program_options-config-version.cmake */,
+				59309A072F6799FA00CDABE8 /* boost_program_options-config.cmake */,
+				59309A082F6799FA00CDABE8 /* libboost_program_options-variant-static.cmake */,
+			);
+			path = "boost_program_options-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A0D2F6799FA00CDABE8 /* boost_random-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A0A2F6799FA00CDABE8 /* boost_random-config-version.cmake */,
+				59309A0B2F6799FA00CDABE8 /* boost_random-config.cmake */,
+				59309A0C2F6799FA00CDABE8 /* libboost_random-variant-static.cmake */,
+			);
+			path = "boost_random-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A112F6799FA00CDABE8 /* boost_regex-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A0E2F6799FA00CDABE8 /* boost_regex-config-version.cmake */,
+				59309A0F2F6799FA00CDABE8 /* boost_regex-config.cmake */,
+				59309A102F6799FA00CDABE8 /* libboost_regex-variant-static.cmake */,
+			);
+			path = "boost_regex-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A152F6799FA00CDABE8 /* boost_serialization-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A122F6799FA00CDABE8 /* boost_serialization-config-version.cmake */,
+				59309A132F6799FA00CDABE8 /* boost_serialization-config.cmake */,
+				59309A142F6799FA00CDABE8 /* libboost_serialization-variant-static.cmake */,
+			);
+			path = "boost_serialization-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A192F6799FA00CDABE8 /* boost_system-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A162F6799FA00CDABE8 /* boost_system-config-version.cmake */,
+				59309A172F6799FA00CDABE8 /* boost_system-config.cmake */,
+				59309A182F6799FA00CDABE8 /* libboost_system-variant-static.cmake */,
+			);
+			path = "boost_system-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A1D2F6799FA00CDABE8 /* boost_thread-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A1A2F6799FA00CDABE8 /* boost_thread-config-version.cmake */,
+				59309A1B2F6799FA00CDABE8 /* boost_thread-config.cmake */,
+				59309A1C2F6799FA00CDABE8 /* libboost_thread-variant-static.cmake */,
+			);
+			path = "boost_thread-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A212F6799FA00CDABE8 /* boost_timer-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A1E2F6799FA00CDABE8 /* boost_timer-config-version.cmake */,
+				59309A1F2F6799FA00CDABE8 /* boost_timer-config.cmake */,
+				59309A202F6799FA00CDABE8 /* libboost_timer-variant-static.cmake */,
+			);
+			path = "boost_timer-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A252F6799FA00CDABE8 /* boost_wserialization-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A222F6799FA00CDABE8 /* boost_wserialization-config-version.cmake */,
+				59309A232F6799FA00CDABE8 /* boost_wserialization-config.cmake */,
+				59309A242F6799FA00CDABE8 /* libboost_wserialization-variant-static.cmake */,
+			);
+			path = "boost_wserialization-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A282F6799FA00CDABE8 /* Boost-1.88.0 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A262F6799FA00CDABE8 /* BoostConfig.cmake */,
+				59309A272F6799FA00CDABE8 /* BoostConfigVersion.cmake */,
+			);
+			path = "Boost-1.88.0";
+			sourceTree = "<group>";
+		};
+		59309A2D2F6799FA00CDABE8 /* CAMD */ = {
+			isa = PBXGroup;
+			children = (
+				59309A292F6799FA00CDABE8 /* CAMDConfig.cmake */,
+				59309A2A2F6799FA00CDABE8 /* CAMDConfigVersion.cmake */,
+				59309A2B2F6799FA00CDABE8 /* CAMDTargets-release.cmake */,
+				59309A2C2F6799FA00CDABE8 /* CAMDTargets.cmake */,
+			);
+			path = CAMD;
+			sourceTree = "<group>";
+		};
+		59309A322F6799FA00CDABE8 /* CCOLAMD */ = {
+			isa = PBXGroup;
+			children = (
+				59309A2E2F6799FA00CDABE8 /* CCOLAMDConfig.cmake */,
+				59309A2F2F6799FA00CDABE8 /* CCOLAMDConfigVersion.cmake */,
+				59309A302F6799FA00CDABE8 /* CCOLAMDTargets-release.cmake */,
+				59309A312F6799FA00CDABE8 /* CCOLAMDTargets.cmake */,
+			);
+			path = CCOLAMD;
+			sourceTree = "<group>";
+		};
+		59309A372F6799FA00CDABE8 /* CHOLMOD */ = {
+			isa = PBXGroup;
+			children = (
+				59309A332F6799FA00CDABE8 /* CHOLMODConfig.cmake */,
+				59309A342F6799FA00CDABE8 /* CHOLMODConfigVersion.cmake */,
+				59309A352F6799FA00CDABE8 /* CHOLMODTargets-release.cmake */,
+				59309A362F6799FA00CDABE8 /* CHOLMODTargets.cmake */,
+			);
+			path = CHOLMOD;
+			sourceTree = "<group>";
+		};
+		59309A3C2F6799FA00CDABE8 /* COLAMD */ = {
+			isa = PBXGroup;
+			children = (
+				59309A382F6799FA00CDABE8 /* COLAMDConfig.cmake */,
+				59309A392F6799FA00CDABE8 /* COLAMDConfigVersion.cmake */,
+				59309A3A2F6799FA00CDABE8 /* COLAMDTargets-release.cmake */,
+				59309A3B2F6799FA00CDABE8 /* COLAMDTargets.cmake */,
+			);
+			path = COLAMD;
+			sourceTree = "<group>";
+		};
+		59309A412F6799FA00CDABE8 /* flann */ = {
+			isa = PBXGroup;
+			children = (
+				59309A3D2F6799FA00CDABE8 /* flann-config-version.cmake */,
+				59309A3E2F6799FA00CDABE8 /* flann-config.cmake */,
+				59309A3F2F6799FA00CDABE8 /* flann-targets-release.cmake */,
+				59309A402F6799FA00CDABE8 /* flann-targets.cmake */,
+			);
+			path = flann;
+			sourceTree = "<group>";
+		};
+		59309A472F6799FA00CDABE8 /* GTSAM */ = {
+			isa = PBXGroup;
+			children = (
+				59309A422F6799FA00CDABE8 /* gtsam_extra.cmake */,
+				59309A432F6799FA00CDABE8 /* GTSAM-exports-release.cmake */,
+				59309A442F6799FA00CDABE8 /* GTSAM-exports.cmake */,
+				59309A452F6799FA00CDABE8 /* GTSAMConfig.cmake */,
+				59309A462F6799FA00CDABE8 /* GTSAMConfigVersion.cmake */,
+			);
+			path = GTSAM;
+			sourceTree = "<group>";
+		};
+		59309A512F6799FA00CDABE8 /* GTSAMCMakeTools */ = {
+			isa = PBXGroup;
+			children = (
+				59309A482F6799FA00CDABE8 /* Config.cmake.in */,
+				59309A492F6799FA00CDABE8 /* dllexport.h.in */,
+				59309A4A2F6799FA00CDABE8 /* FindNumPy.cmake */,
+				59309A4B2F6799FA00CDABE8 /* GtsamBuildTypes.cmake */,
+				59309A4C2F6799FA00CDABE8 /* GTSAMCMakeToolsConfig.cmake */,
+				59309A4D2F6799FA00CDABE8 /* GtsamMakeConfigFile.cmake */,
+				59309A4E2F6799FA00CDABE8 /* GtsamPrinting.cmake */,
+				59309A4F2F6799FA00CDABE8 /* GtsamTesting.cmake */,
+				59309A502F6799FA00CDABE8 /* README.html */,
+			);
+			path = GTSAMCMakeTools;
+			sourceTree = "<group>";
+		};
+		59309A562F6799FA00CDABE8 /* lz4 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A522F6799FA00CDABE8 /* lz4Config.cmake */,
+				59309A532F6799FA00CDABE8 /* lz4ConfigVersion.cmake */,
+				59309A542F6799FA00CDABE8 /* lz4Targets-release.cmake */,
+				59309A552F6799FA00CDABE8 /* lz4Targets.cmake */,
+			);
+			path = lz4;
+			sourceTree = "<group>";
+		};
+		59309A5B2F6799FA00CDABE8 /* opencv4 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A572F6799FA00CDABE8 /* OpenCVConfig-version.cmake */,
+				59309A582F6799FA00CDABE8 /* OpenCVConfig.cmake */,
+				59309A592F6799FA00CDABE8 /* OpenCVModules-release.cmake */,
+				59309A5A2F6799FA00CDABE8 /* OpenCVModules.cmake */,
+			);
+			path = opencv4;
+			sourceTree = "<group>";
+		};
+		59309A632F6799FA00CDABE8 /* SuiteSparse */ = {
+			isa = PBXGroup;
+			children = (
+				59309A5C2F6799FA00CDABE8 /* SuiteSparse__thread.cmake */,
+				59309A5D2F6799FA00CDABE8 /* SuiteSparseBLAS.cmake */,
+				59309A5E2F6799FA00CDABE8 /* SuiteSparseBLAS32.cmake */,
+				59309A5F2F6799FA00CDABE8 /* SuiteSparseBLAS64.cmake */,
+				59309A602F6799FA00CDABE8 /* SuiteSparseLAPACK.cmake */,
+				59309A612F6799FA00CDABE8 /* SuiteSparsePolicy.cmake */,
+				59309A622F6799FA00CDABE8 /* SuiteSparseReport.cmake */,
+			);
+			path = SuiteSparse;
+			sourceTree = "<group>";
+		};
+		59309A682F6799FA00CDABE8 /* SuiteSparse_config */ = {
+			isa = PBXGroup;
+			children = (
+				59309A642F6799FA00CDABE8 /* SuiteSparse_configConfig.cmake */,
+				59309A652F6799FA00CDABE8 /* SuiteSparse_configConfigVersion.cmake */,
+				59309A662F6799FA00CDABE8 /* SuiteSparse_configTargets-release.cmake */,
+				59309A672F6799FA00CDABE8 /* SuiteSparse_configTargets.cmake */,
+			);
+			path = SuiteSparse_config;
+			sourceTree = "<group>";
+		};
+		59309A6A2F6799FA00CDABE8 /* cmake */ = {
+			isa = PBXGroup;
+			children = (
+				593099EA2F6799FA00CDABE8 /* AMD */,
+				593099EE2F6799FA00CDABE8 /* boost_atomic-1.88.0 */,
+				593099F22F6799FA00CDABE8 /* boost_chrono-1.88.0 */,
+				593099F62F6799FA00CDABE8 /* boost_date_time-1.88.0 */,
+				593099FA2F6799FA00CDABE8 /* boost_filesystem-1.88.0 */,
+				593099FE2F6799FA00CDABE8 /* boost_graph-1.88.0 */,
+				59309A012F6799FA00CDABE8 /* boost_headers-1.88.0 */,
+				59309A052F6799FA00CDABE8 /* boost_iostreams-1.88.0 */,
+				59309A092F6799FA00CDABE8 /* boost_program_options-1.88.0 */,
+				59309A0D2F6799FA00CDABE8 /* boost_random-1.88.0 */,
+				59309A112F6799FA00CDABE8 /* boost_regex-1.88.0 */,
+				59309A152F6799FA00CDABE8 /* boost_serialization-1.88.0 */,
+				59309A192F6799FA00CDABE8 /* boost_system-1.88.0 */,
+				59309A1D2F6799FA00CDABE8 /* boost_thread-1.88.0 */,
+				59309A212F6799FA00CDABE8 /* boost_timer-1.88.0 */,
+				59309A252F6799FA00CDABE8 /* boost_wserialization-1.88.0 */,
+				59309A282F6799FA00CDABE8 /* Boost-1.88.0 */,
+				59309A2D2F6799FA00CDABE8 /* CAMD */,
+				59309A322F6799FA00CDABE8 /* CCOLAMD */,
+				59309A372F6799FA00CDABE8 /* CHOLMOD */,
+				59309A3C2F6799FA00CDABE8 /* COLAMD */,
+				59309A412F6799FA00CDABE8 /* flann */,
+				59309A472F6799FA00CDABE8 /* GTSAM */,
+				59309A512F6799FA00CDABE8 /* GTSAMCMakeTools */,
+				59309A562F6799FA00CDABE8 /* lz4 */,
+				59309A5B2F6799FA00CDABE8 /* opencv4 */,
+				59309A632F6799FA00CDABE8 /* SuiteSparse */,
+				59309A682F6799FA00CDABE8 /* SuiteSparse_config */,
+				59309A692F6799FA00CDABE8 /* BoostDetectToolset-1.88.0.cmake */,
+			);
+			name = cmake;
+			path = RTABMap/build/output/ios/arm64/lib/cmake;
+			sourceTree = "<group>";
+		};
+		59309A722F6799FA00CDABE8 /* 3rdparty */ = {
+			isa = PBXGroup;
+			children = (
+				59309A6B2F6799FA00CDABE8 /* libade.a */,
+				59309A6C2F6799FA00CDABE8 /* libIlmImf.a */,
+				59309A6D2F6799FA00CDABE8 /* liblibjpeg-turbo.a */,
+				59309A6E2F6799FA00CDABE8 /* liblibpng.a */,
+				59309A6F2F6799FA00CDABE8 /* liblibprotobuf.a */,
+				59309A702F6799FA00CDABE8 /* liblibwebp.a */,
+				59309A712F6799FA00CDABE8 /* libzlib.a */,
+			);
+			path = 3rdparty;
+			sourceTree = "<group>";
+		};
+		59309A732F6799FA00CDABE8 /* opencv4 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A722F6799FA00CDABE8 /* 3rdparty */,
+			);
+			name = opencv4;
+			path = RTABMap/build/output/ios/arm64/lib/opencv4;
+			sourceTree = "<group>";
+		};
+		59309A8D2F6799FB00CDABE8 /* pkgconfig */ = {
+			isa = PBXGroup;
+			children = (
+				59309A742F6799FB00CDABE8 /* AMD.pc */,
+				59309A752F6799FB00CDABE8 /* CAMD.pc */,
+				59309A762F6799FB00CDABE8 /* CCOLAMD.pc */,
+				59309A772F6799FB00CDABE8 /* CHOLMOD.pc */,
+				59309A782F6799FB00CDABE8 /* COLAMD.pc */,
+				59309A792F6799FB00CDABE8 /* flann.pc */,
+				59309A7A2F6799FB00CDABE8 /* liblz4.pc */,
+				59309A7B2F6799FB00CDABE8 /* pcl_2d.pc */,
+				59309A7C2F6799FB00CDABE8 /* pcl_common.pc */,
+				59309A7D2F6799FB00CDABE8 /* pcl_features.pc */,
+				59309A7E2F6799FB00CDABE8 /* pcl_filters.pc */,
+				59309A7F2F6799FB00CDABE8 /* pcl_geometry.pc */,
+				59309A802F6799FB00CDABE8 /* pcl_io.pc */,
+				59309A812F6799FB00CDABE8 /* pcl_kdtree.pc */,
+				59309A822F6799FB00CDABE8 /* pcl_keypoints.pc */,
+				59309A832F6799FB00CDABE8 /* pcl_ml.pc */,
+				59309A842F6799FB00CDABE8 /* pcl_octree.pc */,
+				59309A852F6799FB00CDABE8 /* pcl_recognition.pc */,
+				59309A862F6799FB00CDABE8 /* pcl_registration.pc */,
+				59309A872F6799FB00CDABE8 /* pcl_sample_consensus.pc */,
+				59309A882F6799FB00CDABE8 /* pcl_search.pc */,
+				59309A892F6799FB00CDABE8 /* pcl_segmentation.pc */,
+				59309A8A2F6799FB00CDABE8 /* pcl_stereo.pc */,
+				59309A8B2F6799FB00CDABE8 /* pcl_surface.pc */,
+				59309A8C2F6799FB00CDABE8 /* SuiteSparse_config.pc */,
+			);
+			name = pkgconfig;
+			path = RTABMap/build/output/ios/arm64/lib/pkgconfig;
+			sourceTree = "<group>";
+		};
+		59309A952F6799FB00CDABE8 /* rtabmap-0.21 */ = {
+			isa = PBXGroup;
+			children = (
+				59309A8E2F6799FB00CDABE8 /* RTABMap_coreTargets-release.cmake */,
+				59309A8F2F6799FB00CDABE8 /* RTABMap_coreTargets.cmake */,
+				59309A902F6799FB00CDABE8 /* RTABMap_utiliteTargets-release.cmake */,
+				59309A912F6799FB00CDABE8 /* RTABMap_utiliteTargets.cmake */,
+				59309A922F6799FB00CDABE8 /* RTABMapConfig.cmake */,
+				59309A932F6799FB00CDABE8 /* RTABMapConfigVersion.cmake */,
+				59309A942F6799FB00CDABE8 /* RTABMapTargets.cmake */,
+			);
+			name = "rtabmap-0.21";
+			path = "RTABMap/build/output/ios/arm64/lib/rtabmap-0.21";
+			sourceTree = "<group>";
+		};
 		59C0174F2F483DC400A64702 = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +1578,7 @@
 		59C0175A2F483DC400A64702 /* Calabi Lens */ = {
 			isa = PBXGroup;
 			children = (
+				59CBFD7D2F67A4AA003811C8 /* RTABMap */,
 				59C0177E2F483DC500A64702 /* App */,
 				59C0177F2F483DC500A64702 /* Capture */,
 				59C017802F483DC500A64702 /* Encoding */,
@@ -172,9 +1668,28 @@
 		59C017852F483DC500A64702 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				59309A9C2F679A5600CDABE8 /* libz.tbd */,
+				59309A9A2F679A3300CDABE8 /* libsqlite3.tbd */,
+				59309A982F679A2900CDABE8 /* libc++.tbd */,
+				59309A962F679A1C00CDABE8 /* Accelerate.framework */,
+				59309A6A2F6799FA00CDABE8 /* cmake */,
+				59309A732F6799FA00CDABE8 /* opencv4 */,
+				59309A8D2F6799FB00CDABE8 /* pkgconfig */,
+				59309A952F6799FB00CDABE8 /* rtabmap-0.21 */,
+				593099342F67993300CDABE8 /* lib */,
 				59C017742F483DC500A64702 /* ARKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		59CBFD7D2F67A4AA003811C8 /* RTABMap */ = {
+			isa = PBXGroup;
+			children = (
+				59CBFD7A2F67A4AA003811C8 /* NativeWrapper.cpp */,
+				59CBFD7B2F67A4AA003811C8 /* NativeWrapper.hpp */,
+				59CBFD7C2F67A4AA003811C8 /* RTABMapSLAM.swift */,
+			);
+			path = RTABMap;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,6 +1765,7 @@
 				59C0175E2F483DC400A64702 /* ContentView.swift in Sources */,
 				59C0175C2F483DC400A64702 /* Calabi_LensApp.swift in Sources */,
 				59C017722F483DC500A64702 /* ARKitCaptureManager.swift in Sources */,
+				59CBFD7E2F67A4AA003811C8 /* NativeWrapper.cpp in Sources */,
 				59C017732F483DC500A64702 /* ARSCNViewRepresentable.swift in Sources */,
 				59C017772F483DC500A64702 /* SettingsEnums.swift in Sources */,
 				59C017792F483DC500A64702 /* AppSettings.swift in Sources */,
@@ -258,6 +1774,7 @@
 				59C017892F4A000100A64702 /* ConnectionState.swift in Sources */,
 				59C0178A2F4A000100A64702 /* WebSocketStreamer.swift in Sources */,
 				59C0178B2F4A000100A64702 /* MetricsTracker.swift in Sources */,
+				59CBFD7F2F67A4AA003811C8 /* RTABMapSLAM.swift in Sources */,
 				59C017D02F4B000100A64702 /* FrameEncoder.swift in Sources */,
 				59C017D12F4B000100A64702 /* AppViewModel.swift in Sources */,
 				59C017D22F4B000100A64702 /* NetworkConfigSheet.swift in Sources */,
@@ -276,8 +1793,8 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -339,8 +1856,8 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CLANG_ENABLE_MODULES = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CLANG_ENABLE_MODULES = NO;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -393,11 +1910,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
+				DEVELOPMENT_TEAM = 83WF5493BU;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/opencv4",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/rtabmap-0.21",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/pcl-1.14",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/eigen3",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/gtsam",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/suitesparse",
+				);
 				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens uses the camera for ARKit world tracking and sensor streaming.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -407,12 +1939,18 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib/opencv4/3rdparty",
+				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.calabi.Calabi-Lens";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Calabi Lens/Calabi Lens-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -421,11 +1959,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Calabi Lens/Preview Content\"";
+				DEVELOPMENT_TEAM = 83WF5493BU;
 				ENABLE_PREVIEWS = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/opencv4",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/rtabmap-0.21",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/pcl-1.14",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/eigen3",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/gtsam",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/include/suitesparse",
+				);
 				INFOPLIST_KEY_NSCameraUsageDescription = "Calabi Lens uses the camera for ARKit world tracking and sensor streaming.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -435,12 +1988,18 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib",
+					"$(PROJECT_DIR)/RTABMap/build/output/ios/arm64/lib/opencv4/3rdparty",
+				);
 				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = "-lc++";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.calabi.Calabi-Lens";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "Calabi Lens/Calabi Lens-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
