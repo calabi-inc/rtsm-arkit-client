@@ -9,8 +9,12 @@ final class FrameEncoder {
         frameID = 0
     }
 
-    /// The current frame ID (for SLAM frame mapping).
-    var currentFrameID: UInt64 { frameID }
+    /// Consume and return the next frame ID. Each call returns a unique value.
+    func nextFrameID() -> UInt64 {
+        let id = frameID
+        frameID += 1
+        return id
+    }
 
     // MARK: - Extracted Frame (lightweight, no ARFrame reference)
 
@@ -23,10 +27,7 @@ final class FrameEncoder {
 
     /// Extract all data from an ARFrame synchronously. Call on the delegate thread.
     /// After this returns, the ARFrame can be released — no references are retained.
-    func extract(frame: ARFrame, settings: SessionSettings, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
-        let currentFrameID = frameID
-        frameID += 1
-
+    func extract(frame: ARFrame, settings: SessionSettings, frameID: UInt64, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
         let rgbData = encodeNV12(pixelBuffer: frame.capturedImage)
         let depthData = encodeDepth(frame: frame, settings: settings)
         let confidenceData = encodeConfidence(frame: frame, settings: settings)
@@ -34,7 +35,7 @@ final class FrameEncoder {
         let header = buildHeader(
             frame: frame,
             settings: settings,
-            frameID: currentFrameID,
+            frameID: frameID,
             rgbData: rgbData,
             depthData: depthData,
             confidenceData: confidenceData,
@@ -298,8 +299,9 @@ final class FrameEncoder {
         // Confidence map info
         let hasConfidence = !confidenceData.isEmpty
         let confMap = hasConfidence ? frame.sceneDepth?.confidenceMap : nil
-        let confWidth: Int? = confMap.map { CVPixelBufferGetWidth($0) }
-        let confHeight: Int? = confMap.map { CVPixelBufferGetHeight($0) }
+        let confWidth: Int? = confMap.map { CVPixelBufferGetWidth($0) }.flatMap { $0 > 0 ? $0 : nil }
+        let confHeight: Int? = confMap.map { CVPixelBufferGetHeight($0) }.flatMap { $0 > 0 ? $0 : nil }
+        let hasConfidenceMetadata = confWidth != nil && confHeight != nil
 
         return FrameHeader(
             session_id: settings.sessionID.uuidString,
@@ -309,12 +311,12 @@ final class FrameEncoder {
             rgb_format: "nv12",
             rgb_width: rgbWidth,
             rgb_height: rgbHeight,
-            image_orientation: "landscapeRight",
+            image_orientation: Self.currentImageOrientation(),
             depth_format: hasDepth ? settings.depthFormat.wireString : nil,
             depth_width: depthWidth,
             depth_height: depthHeight,
             depth_scale: hasDepth ? settings.depthScale : nil,
-            confidence_format: hasConfidence ? "uint8" : nil,
+            confidence_format: hasConfidence && hasConfidenceMetadata ? "uint8" : nil,
             confidence_width: confWidth,
             confidence_height: confHeight,
             fx: Double(intrinsics[0][0]),
@@ -338,6 +340,17 @@ final class FrameEncoder {
                 }
             }()
         )
+    }
+
+    private static func currentImageOrientation() -> String {
+        let orientation = UIDevice.current.orientation
+        switch orientation {
+        case .portrait: return "portrait"
+        case .landscapeLeft: return "landscapeLeft"
+        case .landscapeRight: return "landscapeRight"
+        case .portraitUpsideDown: return "portraitUpsideDown"
+        default: return "landscapeRight"
+        }
     }
 
     private func trackingStateStrings(_ state: ARCamera.TrackingState) -> (String, String?) {

@@ -17,12 +17,14 @@ import simd
 private weak var _activeRTABMapSLAM: RTABMapSLAM?
 
 private func _slamStatsCallback(
+    _ nodeId: Int32,
     _ nodesCount: Int32, _ wordsCount: Int32, _ databaseSize: Float,
     _ loopClosureId: Int32,
     _ x: Float, _ y: Float, _ z: Float,
     _ roll: Float, _ pitch: Float, _ yaw: Float
 ) {
     _activeRTABMapSLAM?.handleStatsUpdate(
+        nodeId: Int(nodeId),
         nodesCount: Int(nodesCount),
         wordsCount: Int(wordsCount),
         loopClosureId: Int(loopClosureId),
@@ -36,10 +38,14 @@ final class RTABMapSLAM {
     // MARK: - Public State
 
     /// The map-to-odom correction transform. Apply as: correctedPose = mapToOdom * arkitPose
-    private(set) var mapToOdom: simd_float4x4 = matrix_identity_float4x4
+    var mapToOdom: simd_float4x4 {
+        stateQueue.sync { _mapToOdom }
+    }
 
-    /// Whether the SLAM engine is currently running.
-    private(set) var isRunning = false
+    /// Whether the SLAM engine is currently running (thread-safe).
+    var isRunning: Bool {
+        stateQueue.sync { _isRunning }
+    }
 
     /// Callback when a loop closure is detected.
     /// Parameter: dictionary mapping frame_id (String, e.g. "ws_30") to corrected pose (16 floats, col-major).
@@ -50,10 +56,14 @@ final class RTABMapSLAM {
     private var nativePtr: UnsafeMutableRawPointer?
     private var databasePath: String?
     private let slamQueue = DispatchQueue(label: "com.calabiLens.slam", qos: .userInitiated)
+    private let stateQueue = DispatchQueue(label: "com.calabiLens.slamState")
+    private var _mapToOdom: simd_float4x4 = matrix_identity_float4x4
+    private var _isRunning: Bool = false
 
     /// Map from RTAB-Map node ID → our frame_id for retroactive corrections
     private var nodeIdToFrameId: [Int: UInt64] = [:]
-    private var currentFrameId: UInt64 = 0
+    private var lastProcessedFrameId: UInt64 = 0
+    private var pendingCallbackFrameIds: [UInt64] = []
 
     /// The ARKit odometry pose that was last fed to RTAB-Map.
     /// Needed to compute: mapToOdom = correctedPose * inverse(lastOdometryPose)
@@ -111,7 +121,9 @@ final class RTABMapSLAM {
         openDatabaseNative(ptr, dbPath, true)
 
         nodeIdToFrameId.removeAll()
-        isRunning = true
+        pendingCallbackFrameIds.removeAll()
+        lastProcessedFrameId = 0
+        setIsRunning(true)
 
         print("[RTABMapSLAM] Started with database: \(dbPath)")
     }
@@ -125,7 +137,7 @@ final class RTABMapSLAM {
 
     private func _stop() {
         guard isRunning else { return }
-        isRunning = false
+        setIsRunning(false)
 
         if let ptr = nativePtr {
             destroyNativeApplication(ptr)
@@ -138,9 +150,11 @@ final class RTABMapSLAM {
             databasePath = nil
         }
 
-        mapToOdom = matrix_identity_float4x4
+        setMapToOdom(matrix_identity_float4x4)
         lastOdometryPose = matrix_identity_float4x4
         nodeIdToFrameId.removeAll()
+        pendingCallbackFrameIds.removeAll()
+        lastProcessedFrameId = 0
 
         // Reset relocalization filter state
         prevFilteredPosition = nil
@@ -213,8 +227,13 @@ final class RTABMapSLAM {
         // Copy BGRA pixels into Data
         CVPixelBufferLockBaseAddress(bgra, .readOnly)
         let bgraPtr = CVPixelBufferGetBaseAddress(bgra)!
-        let bgraByteCount = CVPixelBufferGetBytesPerRow(bgra) * targetH
-        let bgraData = Data(bytes: bgraPtr, count: bgraByteCount)
+        let bgraBytesPerRow = CVPixelBufferGetBytesPerRow(bgra)
+        let bgraRowByteCount = targetW * 4
+        var bgraData = Data(capacity: bgraRowByteCount * targetH)
+        let bgraRowPtr = bgraPtr.assumingMemoryBound(to: UInt8.self)
+        for row in 0..<targetH {
+            bgraData.append(bgraRowPtr + row * bgraBytesPerRow, count: bgraRowByteCount)
+        }
         CVPixelBufferUnlockBaseAddress(bgra, .readOnly)
 
         // Scale intrinsics to match downscaled resolution
@@ -227,14 +246,25 @@ final class RTABMapSLAM {
         let cx = intrinsics[2][0] * scaleX
         let cy = intrinsics[2][1] * scaleY
 
-        // Copy depth pixels into Data
+        // Copy depth pixels into tightly-packed Data (strip CVPixelBuffer row padding)
         let depthMap = sceneDepth.depthMap
         CVPixelBufferLockBaseAddress(depthMap, .readOnly)
         let depthPtr = CVPixelBufferGetBaseAddress(depthMap)!
         let depthW = CVPixelBufferGetWidth(depthMap)
         let depthH = CVPixelBufferGetHeight(depthMap)
-        let depthByteCount = depthW * depthH * MemoryLayout<Float>.size
-        let depthData = Data(bytes: depthPtr, count: depthByteCount)
+        let depthBytesPerRow = CVPixelBufferGetBytesPerRow(depthMap)
+        let depthPackedRowBytes = depthW * MemoryLayout<Float>.size
+        let depthData: Data
+        if depthBytesPerRow == depthPackedRowBytes {
+            depthData = Data(bytes: depthPtr, count: depthPackedRowBytes * depthH)
+        } else {
+            var packed = Data(capacity: depthPackedRowBytes * depthH)
+            let src = depthPtr.assumingMemoryBound(to: UInt8.self)
+            for row in 0..<depthH {
+                packed.append(src + row * depthBytesPerRow, count: depthPackedRowBytes)
+            }
+            depthData = packed
+        }
         CVPixelBufferUnlockBaseAddress(depthMap, .readOnly)
 
         let isTrackingNormal: Bool
@@ -278,8 +308,8 @@ final class RTABMapSLAM {
               ARKit pose (col-major, Y-up): t=(\(String(format: "%.4f", transform.columns.3.x)), \(String(format: "%.4f", transform.columns.3.y)), \(String(format: "%.4f", transform.columns.3.z)))
               ARKit pose R col0=(\(String(format: "%.4f", transform.columns.0.x)),\(String(format: "%.4f", transform.columns.0.y)),\(String(format: "%.4f", transform.columns.0.z))) col1=(\(String(format: "%.4f", transform.columns.1.x)),\(String(format: "%.4f", transform.columns.1.y)),\(String(format: "%.4f", transform.columns.1.z))) col2=(\(String(format: "%.4f", transform.columns.2.x)),\(String(format: "%.4f", transform.columns.2.y)),\(String(format: "%.4f", transform.columns.2.z)))
               Tracking: \(camera.trackingState) confidence=\(frame.sceneDepth?.confidenceMap != nil ? "available" : "none")
-              BGRA bytesPerRow=\(CVPixelBufferGetBytesPerRow(bgra)) totalBytes=\(bgraByteCount)
-              Depth bytesPerRow=\(CVPixelBufferGetBytesPerRow(depthMap)) totalBytes=\(depthByteCount)
+              BGRA bytesPerRow=\(bgraBytesPerRow) packedBytesPerRow=\(bgraRowByteCount) totalBytes=\(bgraData.count)
+              Depth bytesPerRow=\(depthBytesPerRow) packedBytesPerRow=\(depthPackedRowBytes) totalBytes=\(depthData.count)
             """)
         }
 
@@ -301,7 +331,8 @@ final class RTABMapSLAM {
     private func _processFrameData(_ data: SLAMFrameData) {
         guard isRunning, let ptr = nativePtr else { return }
 
-        currentFrameId = data.frameId
+        lastProcessedFrameId = data.frameId
+        pendingCallbackFrameIds.append(data.frameId)
 
         var pose = data.pose
 
@@ -402,16 +433,26 @@ final class RTABMapSLAM {
     // MARK: - Stats Callback
 
     fileprivate func handleStatsUpdate(
+        nodeId: Int,
         nodesCount: Int,
         wordsCount: Int,
         loopClosureId: Int,
         x: Float, y: Float, z: Float,
         roll: Float, pitch: Float, yaw: Float
     ) {
-        print("[SLAM] nodes=\(nodesCount) words=\(wordsCount) loopId=\(loopClosureId) pos=(\(String(format: "%.3f", x)),\(String(format: "%.3f", y)),\(String(format: "%.3f", z)))")
+        print("[SLAM] nodeId=\(nodeId) nodes=\(nodesCount) words=\(wordsCount) loopId=\(loopClosureId) pos=(\(String(format: "%.3f", x)),\(String(format: "%.3f", y)),\(String(format: "%.3f", z)))")
 
-        // Store the current frame_id → node_id mapping
-        nodeIdToFrameId[nodesCount] = currentFrameId
+        // Only store a mapping when RTAB-Map actually created a node for this frame.
+        let callbackFrameId: UInt64
+        if pendingCallbackFrameIds.isEmpty {
+            // Fallback for unexpected callback/order anomalies.
+            callbackFrameId = lastProcessedFrameId
+        } else {
+            callbackFrameId = pendingCallbackFrameIds.removeFirst()
+        }
+        if nodeId > 0 {
+            nodeIdToFrameId[nodeId] = callbackFrameId
+        }
 
         // Only update mapToOdom when a loop closure is detected.
         // Without loop closure, RTAB-Map's reported pose is its own odometry estimate
@@ -421,10 +462,22 @@ final class RTABMapSLAM {
             let correctedPose = makeTransform(x: x, y: y, z: z,
                                                roll: roll, pitch: pitch, yaw: yaw)
             let odomInverse = lastOdometryPose.inverse
-            mapToOdom = correctedPose * odomInverse
+            setMapToOdom(correctedPose * odomInverse)
 
             print("[RTABMapSLAM] Loop closure detected (id: \(loopClosureId)), mapToOdom updated")
             handleLoopClosure()
+        }
+    }
+
+    private func setMapToOdom(_ value: simd_float4x4) {
+        stateQueue.sync {
+            _mapToOdom = value
+        }
+    }
+
+    private func setIsRunning(_ value: Bool) {
+        stateQueue.sync {
+            _isRunning = value
         }
     }
 

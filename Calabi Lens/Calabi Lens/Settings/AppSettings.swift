@@ -8,5 +8,6 @@ final class AppSettings: ObservableObject {
     @AppStorage("poseFormat") var poseFormat = PoseFormat.matrix4x4
     @AppStorage("slamMode") var slamMode = SLAMMode.rtabmap
     @AppStorage("slamProcessingRate") var slamProcessingRate = SLAMProcessingRate.high_2hz
-    @AppStorage("confidenceInclusion") var confidenceInclusion: Bool = true
+    // Keep disabled by default for backward-compatible 3-section wire format.
+    @AppStorage("confidenceInclusion") var confidenceInclusion: Bool = false
 }

@@ -235,10 +235,10 @@ public:
         wordsCount_ = (it != statsData.end()) ? static_cast<int>(it->second) : 0;
 
         int loopClosureId = stats.loopClosureId();
+        int lastSignatureId = stats.getLastSignatureData().id();
 
         // --- Diagnostic logging ---
         {
-            int lastSignatureId = stats.getLastSignatureData().id();
             bool isNewNode = (lastSignatureId > 0);
 
             // Loop closure hypothesis
@@ -362,6 +362,7 @@ public:
 
         if (statsCallback_) {
             statsCallback_(
+                lastSignatureId,
                 nodesCount_, wordsCount_, databaseSize_,
                 loopClosureId,
                 x, y, z, roll, pitch, yaw

@@ -23,6 +23,7 @@ extern "C" {
  * Called by RTAB-Map after processing each frame with updated SLAM state.
  *
  * Parameters:
+ *   nodeId            — RTAB-Map node/signature ID for the processed frame (0 if no new node)
  *   nodesCount        — Total nodes in the SLAM graph
  *   wordsCount        — Total visual words
  *   databaseSize      — Database size in MB
@@ -31,6 +32,7 @@ extern "C" {
  *   roll, pitch, yaw  — Corrected orientation (radians)
  */
 typedef void (*StatsCallback)(
+    int nodeId,
     int nodesCount,
     int wordsCount,
     float databaseSize,
