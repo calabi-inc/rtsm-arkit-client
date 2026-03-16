@@ -114,6 +114,13 @@ struct StreamingSettingsSheet: View {
                                 .font(.system(size: 13, design: .monospaced))
                                 .foregroundColor(.secondary)
                         }
+
+                        // Confidence map
+                        Toggle("Include Confidence Map", isOn: $settings.confidenceInclusion)
+                            .disabled(isRecording)
+                        Text("Sends ARKit depth confidence (0=low, 1=medium, 2=high) for server-side filtering")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)

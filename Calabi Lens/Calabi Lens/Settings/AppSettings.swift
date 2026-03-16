@@ -11,4 +11,5 @@ final class AppSettings: ObservableObject {
     @AppStorage("rgbResolution") var rgbResolution = RGBResolution.downscaled
     @AppStorage("slamMode") var slamMode = SLAMMode.rtabmap
     @AppStorage("slamProcessingRate") var slamProcessingRate = SLAMProcessingRate.medium_1hz
+    @AppStorage("confidenceInclusion") var confidenceInclusion: Bool = false
 }

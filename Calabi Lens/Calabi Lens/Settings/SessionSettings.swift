@@ -11,6 +11,7 @@ struct SessionSettings {
     let rgbResolution: RGBResolution
     let slamMode: SLAMMode
     let slamProcessingRate: SLAMProcessingRate
+    let confidenceInclusion: Bool
 
     var depthScale: Double {
         switch depthFormat {
@@ -31,5 +32,6 @@ struct SessionSettings {
         self.rgbResolution = settings.rgbResolution
         self.slamMode = settings.slamMode
         self.slamProcessingRate = settings.slamProcessingRate
+        self.confidenceInclusion = settings.confidenceInclusion
     }
 }

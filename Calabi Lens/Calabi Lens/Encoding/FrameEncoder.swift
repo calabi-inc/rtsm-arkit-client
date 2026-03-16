@@ -26,6 +26,7 @@ final class FrameEncoder {
 
         let rgbData = encodeRGB(pixelBuffer: frame.capturedImage, settings: settings)
         let depthData = encodeDepth(frame: frame, settings: settings)
+        let confidenceData = encodeConfidence(frame: frame, settings: settings)
 
         let header = buildHeader(
             frame: frame,
@@ -33,13 +34,14 @@ final class FrameEncoder {
             frameID: currentFrameID,
             rgbData: rgbData,
             depthData: depthData,
+            confidenceData: confidenceData,
             correctedPose: correctedPose
         )
 
         let encoder = JSONEncoder()
         let jsonData = (try? encoder.encode(header)) ?? Data()
 
-        return packMessage(json: jsonData, rgb: rgbData, depth: depthData)
+        return packMessage(json: jsonData, rgb: rgbData, depth: depthData, confidence: confidenceData)
     }
 
     /// The current frame ID (for SLAM frame mapping).
@@ -222,6 +224,36 @@ final class FrameEncoder {
         return UIImage(cgImage: cgImage).pngData() ?? Data()
     }
 
+    // MARK: - Confidence Encoding
+
+    private func encodeConfidence(frame: ARFrame, settings: SessionSettings) -> Data {
+        guard settings.confidenceInclusion,
+              let confidenceMap = frame.sceneDepth?.confidenceMap else {
+            return Data()
+        }
+
+        CVPixelBufferLockBaseAddress(confidenceMap, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(confidenceMap, .readOnly) }
+
+        let width = CVPixelBufferGetWidth(confidenceMap)
+        let height = CVPixelBufferGetHeight(confidenceMap)
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(confidenceMap)
+        guard let baseAddress = CVPixelBufferGetBaseAddress(confidenceMap) else {
+            return Data()
+        }
+
+        // confidenceMap is kCVPixelFormatType_OneComponent8 (UInt8, values 0/1/2)
+        let ptr = baseAddress.assumingMemoryBound(to: UInt8.self)
+
+        // Copy row-by-row to handle potential row padding
+        var result = Data(capacity: width * height)
+        for y in 0..<height {
+            let rowStart = y * bytesPerRow
+            result.append(ptr + rowStart, count: width)
+        }
+        return result
+    }
+
     // MARK: - Frame Header
 
     private func buildHeader(
@@ -230,6 +262,7 @@ final class FrameEncoder {
         frameID: UInt64,
         rgbData: Data,
         depthData: Data,
+        confidenceData: Data = Data(),
         correctedPose: simd_float4x4? = nil
     ) -> FrameHeader {
         let camera = frame.camera
@@ -299,6 +332,12 @@ final class FrameEncoder {
             reportedIntrinsicsHeight = Int(imageResolution.height)
         }
 
+        // Confidence map info
+        let hasConfidence = !confidenceData.isEmpty
+        let confMap = hasConfidence ? frame.sceneDepth?.confidenceMap : nil
+        let confWidth: Int? = confMap.map { CVPixelBufferGetWidth($0) }
+        let confHeight: Int? = confMap.map { CVPixelBufferGetHeight($0) }
+
         return FrameHeader(
             session_id: settings.sessionID.uuidString,
             frame_id: frameID,
@@ -313,6 +352,9 @@ final class FrameEncoder {
             depth_width: depthWidth,
             depth_height: depthHeight,
             depth_scale: hasDepth ? settings.depthScale : nil,
+            confidence_format: hasConfidence ? "uint8" : nil,
+            confidence_width: confWidth,
+            confidence_height: confHeight,
             fx: scaledFx,
             fy: scaledFy,
             cx: scaledCx,
@@ -346,8 +388,8 @@ final class FrameEncoder {
 
     // MARK: - Binary Packing
 
-    private func packMessage(json: Data, rgb: Data, depth: Data) -> Data {
-        var message = Data(capacity: 12 + json.count + rgb.count + depth.count)
+    private func packMessage(json: Data, rgb: Data, depth: Data, confidence: Data = Data()) -> Data {
+        var message = Data(capacity: 16 + json.count + rgb.count + depth.count + confidence.count)
 
         var jsonLen = UInt32(json.count).littleEndian
         withUnsafeBytes(of: &jsonLen) { message.append(contentsOf: $0) }
@@ -360,6 +402,13 @@ final class FrameEncoder {
         var depthLen = UInt32(depth.count).littleEndian
         withUnsafeBytes(of: &depthLen) { message.append(contentsOf: $0) }
         message.append(depth)
+
+        // Confidence section (optional, backward compatible)
+        if !confidence.isEmpty {
+            var confLen = UInt32(confidence.count).littleEndian
+            withUnsafeBytes(of: &confLen) { message.append(contentsOf: $0) }
+            message.append(confidence)
+        }
 
         return message
     }
@@ -381,6 +430,9 @@ struct FrameHeader: Codable {
     let depth_width: Int?
     let depth_height: Int?
     let depth_scale: Double?
+    let confidence_format: String?
+    let confidence_width: Int?
+    let confidence_height: Int?
     let fx: Double
     let fy: Double
     let cx: Double
