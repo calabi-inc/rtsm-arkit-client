@@ -327,7 +327,16 @@ final class FrameEncoder {
             T_wc: twc,
             tracking_state: trackingStateStr,
             tracking_reason: trackingReasonStr,
-            pose_source: poseSource
+            pose_source: poseSource,
+            device_orientation: {
+                switch UIDevice.current.orientation {
+                case .portrait: return "portrait"
+                case .landscapeLeft: return "landscapeLeft"
+                case .landscapeRight: return "landscapeRight"
+                case .portraitUpsideDown: return "portraitUpsideDown"
+                default: return "unknown"
+                }
+            }()
         )
     }
 
@@ -405,6 +414,7 @@ struct FrameHeader: Codable {
     let tracking_state: String
     let tracking_reason: String?
     let pose_source: String
+    let device_orientation: String
 }
 
 // MARK: - Wire String Extensions

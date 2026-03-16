@@ -22,6 +22,7 @@
 #include <rtabmap/core/util3d_transforms.h>
 #include <rtabmap/core/CameraModel.h>
 #include <rtabmap/core/Memory.h>
+#include <rtabmap/core/Statistics.h>
 #include <rtabmap/utilite/ULogger.h>
 #include <rtabmap/utilite/UEventsHandler.h>
 
@@ -105,10 +106,13 @@ public:
             params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kOptimizerIterations(), "10"));
         }
 
-        // ICP refinement at loop closure
-        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRegStrategy(), "1"));  // ICP
-        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpCorrespondenceRatio(), "0.2"));
-        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpMaxCorrespondenceDistance(), "0.05"));
+        // Registration strategy: 0=visual (default, matches official app)
+        // ICP-only (1) was rejecting all loop closures due to noisy 256x192 depth
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kRegStrategy(), "0"));  // Visual
+
+        // Keep ICP params for proximity detection (uses ICP regardless of kRegStrategy)
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpCorrespondenceRatio(), "0.1"));
+        params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpMaxCorrespondenceDistance(), "0.1"));
         params.insert(rtabmap::ParametersPair(rtabmap::Parameters::kIcpIterations(), "30"));
 
         // Proximity detection
@@ -231,6 +235,113 @@ public:
         wordsCount_ = (it != statsData.end()) ? static_cast<int>(it->second) : 0;
 
         int loopClosureId = stats.loopClosureId();
+
+        // --- Diagnostic logging ---
+        {
+            int lastSignatureId = stats.getLastSignatureData().id();
+            bool isNewNode = (lastSignatureId > 0);
+
+            // Loop closure hypothesis
+            float highestHypValue = 0.0f;
+            int highestHypId = 0;
+            bool rejected = false;
+            auto itHypVal = statsData.find(rtabmap::Statistics::kLoopHighest_hypothesis_value());
+            if (itHypVal != statsData.end()) highestHypValue = itHypVal->second;
+            auto itHypId = statsData.find(rtabmap::Statistics::kLoopHighest_hypothesis_id());
+            if (itHypId != statsData.end()) highestHypId = static_cast<int>(itHypId->second);
+            auto itRej = statsData.find(rtabmap::Statistics::kLoopRejectedHypothesis());
+            if (itRej != statsData.end()) rejected = (itRej->second > 0);
+
+            // Rehearsal (node merging)
+            bool rehearsalMerged = false;
+            auto itReh = statsData.find(rtabmap::Statistics::kMemoryRehearsal_merged());
+            if (itReh != statsData.end()) rehearsalMerged = (itReh->second > 0);
+
+            // Proximity detection
+            int proximityId = 0;
+            auto itProx = statsData.find(rtabmap::Statistics::kProximitySpace_last_detection_id());
+            if (itProx != statsData.end()) proximityId = static_cast<int>(itProx->second);
+
+            // Processing time
+            float totalTime = 0.0f;
+            auto itTime = statsData.find(rtabmap::Statistics::kTimingTotal());
+            if (itTime != statsData.end()) totalTime = itTime->second;
+
+            // Map correction status
+            bool mapCorrIsIdentity = stats.mapCorrection().isIdentity();
+
+            // Per-frame summary
+            printf("[SLAM-CPP] sigId=%d newNode=%d words=%d | "
+                   "hyp: id=%d val=%.3f thr=0.11 %s | "
+                   "loop=%d prox=%d rehearsed=%d | "
+                   "mapCorr=%s | %.0fms | "
+                   "rtabPose=(%.3f,%.3f,%.3f) trkQ=%d\n",
+                   lastSignatureId, isNewNode ? 1 : 0, wordsCount_,
+                   highestHypId, highestHypValue,
+                   rejected ? "REJECTED" : (loopClosureId > 0 ? "ACCEPTED" : "-"),
+                   loopClosureId, proximityId, rehearsalMerged ? 1 : 0,
+                   mapCorrIsIdentity ? "identity" : "MODIFIED",
+                   totalTime,
+                   cameraPose.x(), cameraPose.y(), cameraPose.z(),
+                   trackingQuality);
+
+            // Full data sheet every 20 signatures for server alignment
+            if (lastSignatureId > 0 && lastSignatureId % 20 == 1) {
+                // Depth stats
+                double depthMin = 9999, depthMax = 0, depthSum = 0;
+                int validDepth = 0;
+                for (int r = 0; r < depth.rows; r++) {
+                    const float* row = depth.ptr<float>(r);
+                    for (int c = 0; c < depth.cols; c++) {
+                        float v = row[c];
+                        if (v > 0 && std::isfinite(v)) {
+                            if (v < depthMin) depthMin = v;
+                            if (v > depthMax) depthMax = v;
+                            depthSum += v;
+                            validDepth++;
+                        }
+                    }
+                }
+                double depthMean = validDepth > 0 ? depthSum / validDepth : 0;
+
+                // Map correction matrix
+                const rtabmap::Transform& mc = stats.mapCorrection();
+
+                printf("[SLAM-DATA-SHEET-CPP] sigId=%d\n"
+                       "  RGB: %dx%d (BGR, CV_8UC3 after conversion from BGRA)\n"
+                       "  Depth: %dx%d format=CV_32FC1 unit=meters\n"
+                       "  Depth stats: min=%.3fm max=%.3fm mean=%.3fm valid=%d/%d\n"
+                       "  Intrinsics (for %dx%d): fx=%.2f fy=%.2f cx=%.2f cy=%.2f\n"
+                       "  CameraModel localTransform (opticalRotation):\n"
+                       "    [%.1f %.1f %.1f %.1f]\n"
+                       "    [%.1f %.1f %.1f %.1f]\n"
+                       "    [%.1f %.1f %.1f %.1f]\n"
+                       "  Pose in RTABMap frame (Z-up, X-fwd):\n"
+                       "    t=(%.4f, %.4f, %.4f)\n"
+                       "    R=[%.4f %.4f %.4f; %.4f %.4f %.4f; %.4f %.4f %.4f]\n"
+                       "  MapCorrection:\n"
+                       "    t=(%.4f, %.4f, %.4f) %s\n"
+                       "  Covariance: %s (trkQ=%d)\n"
+                       "  RegStrategy=0 (visual) | Optimizer=GTSAM | GravitySigma=0.2\n",
+                       lastSignatureId,
+                       bgr.cols, bgr.rows,
+                       depth.cols, depth.rows,
+                       depthMin, depthMax, depthMean, validDepth, depth.rows * depth.cols,
+                       rgbW, rgbH, fx, fy, cx, cy,
+                       opticalRotation.r11(), opticalRotation.r12(), opticalRotation.r13(), opticalRotation.o14(),
+                       opticalRotation.r21(), opticalRotation.r22(), opticalRotation.r23(), opticalRotation.o24(),
+                       opticalRotation.r31(), opticalRotation.r32(), opticalRotation.r33(), opticalRotation.o34(),
+                       cameraPose.x(), cameraPose.y(), cameraPose.z(),
+                       cameraPose.r11(), cameraPose.r12(), cameraPose.r13(),
+                       cameraPose.r21(), cameraPose.r22(), cameraPose.r23(),
+                       cameraPose.r31(), cameraPose.r32(), cameraPose.r33(),
+                       mc.x(), mc.y(), mc.z(),
+                       mapCorrIsIdentity ? "IDENTITY" : "MODIFIED",
+                       trackingQuality == 2 ? "normal(0.00001,roll/pitch*0.01)" :
+                       "degraded(0.0001,roll/pitch*0.01)",
+                       trackingQuality);
+            }
+        }
 
         // Get corrected pose (in RTABMap frame), convert back to ARKit frame
         rtabmap::Transform correctedRtabmap = stats.mapCorrection() * cameraPose;

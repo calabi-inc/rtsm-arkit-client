@@ -240,6 +240,49 @@ final class RTABMapSLAM {
         let isTrackingNormal: Bool
         if case .normal = camera.trackingState { isTrackingNormal = true } else { isTrackingNormal = false }
 
+        // --- Data sheet: print every 60 SLAM frames for server alignment verification ---
+        if frameId % 60 == 0 {
+            // Depth stats (sample from copied data)
+            let depthFloatCount = depthW * depthH
+            var depthMin: Float = .greatestFiniteMagnitude
+            var depthMax: Float = 0
+            var depthSum: Double = 0
+            var validCount = 0
+            depthData.withUnsafeBytes { raw in
+                let floats = raw.bindMemory(to: Float.self)
+                for i in 0..<depthFloatCount {
+                    let v = floats[i]
+                    if v > 0 && v.isFinite {
+                        depthMin = min(depthMin, v)
+                        depthMax = max(depthMax, v)
+                        depthSum += Double(v)
+                        validCount += 1
+                    }
+                }
+            }
+            let depthMean = validCount > 0 ? Float(depthSum / Double(validCount)) : 0
+
+            // Original (pre-scale) intrinsics
+            let origFx = intrinsics[0][0]
+            let origFy = intrinsics[1][1]
+            let origCx = intrinsics[2][0]
+            let origCy = intrinsics[2][1]
+
+            print("""
+            [SLAM-DATA-SHEET] frameId=\(frameId) timestamp=\(String(format: "%.6f", frame.timestamp))
+              RGB: \(CVPixelBufferGetWidth(frame.capturedImage))x\(CVPixelBufferGetHeight(frame.capturedImage)) (YCbCr) → \(targetW)x\(targetH) (BGRA for SLAM)
+              Depth: \(depthW)x\(depthH) format=Float32 unit=meters
+              Depth stats: min=\(String(format: "%.3f", depthMin))m max=\(String(format: "%.3f", depthMax))m mean=\(String(format: "%.3f", depthMean))m valid=\(validCount)/\(depthFloatCount)
+              Intrinsics (original \(CVPixelBufferGetWidth(frame.capturedImage))x\(CVPixelBufferGetHeight(frame.capturedImage))): fx=\(String(format: "%.2f", origFx)) fy=\(String(format: "%.2f", origFy)) cx=\(String(format: "%.2f", origCx)) cy=\(String(format: "%.2f", origCy))
+              Intrinsics (scaled \(targetW)x\(targetH)): fx=\(String(format: "%.2f", fx)) fy=\(String(format: "%.2f", fy)) cx=\(String(format: "%.2f", cx)) cy=\(String(format: "%.2f", cy))
+              ARKit pose (col-major, Y-up): t=(\(String(format: "%.4f", transform.columns.3.x)), \(String(format: "%.4f", transform.columns.3.y)), \(String(format: "%.4f", transform.columns.3.z)))
+              ARKit pose R col0=(\(String(format: "%.4f", transform.columns.0.x)),\(String(format: "%.4f", transform.columns.0.y)),\(String(format: "%.4f", transform.columns.0.z))) col1=(\(String(format: "%.4f", transform.columns.1.x)),\(String(format: "%.4f", transform.columns.1.y)),\(String(format: "%.4f", transform.columns.1.z))) col2=(\(String(format: "%.4f", transform.columns.2.x)),\(String(format: "%.4f", transform.columns.2.y)),\(String(format: "%.4f", transform.columns.2.z)))
+              Tracking: \(camera.trackingState) confidence=\(frame.sceneDepth?.confidenceMap != nil ? "available" : "none")
+              BGRA bytesPerRow=\(CVPixelBufferGetBytesPerRow(bgra)) totalBytes=\(bgraByteCount)
+              Depth bytesPerRow=\(CVPixelBufferGetBytesPerRow(depthMap)) totalBytes=\(depthByteCount)
+            """)
+        }
+
         let frameData = SLAMFrameData(
             pose: pose, transform: transform,
             bgraPixels: bgraData, rgbW: Int32(targetW), rgbH: Int32(targetH),
