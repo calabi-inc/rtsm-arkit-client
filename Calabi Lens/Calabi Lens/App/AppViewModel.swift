@@ -32,35 +32,40 @@ final class AppViewModel: ObservableObject {
     }
 
     private func wireCallbacks() {
-        // Frame pipeline: capture → [SLAM] → encode → stream
+        // Frame pipeline: capture → extract (delegate thread) → pack (encodeQueue) → stream
         captureManager.onFrame = { [weak self] frame in
             guard let self, let sessionSettings = self.currentSessionSettings else { return }
-            self.encodeQueue.async {
-                var correctedPose: simd_float4x4? = nil
 
-                if let slam = self.rtabMapSLAM, slam.isRunning {
-                    // Feed frame to RTAB-Map at configured cadence
-                    let interval = sessionSettings.slamProcessingRate.intervalSeconds
-                    let now = frame.timestamp
-                    if interval == 0 || (now - self.lastSLAMProcessTime) >= interval {
-                        self.lastSLAMProcessTime = now
-                        print("[DEBUG] Sending frame to SLAM, frameId=\(self.encoder.currentFrameID)")
-                        slam.processFrame(frame: frame, frameId: self.encoder.currentFrameID)
-                    }
-
-                    // Apply mapToOdom correction to current ARKit pose:
-                    // correctedPose = mapToOdom * arkitPose
-                    correctedPose = slam.mapToOdom * frame.camera.transform
-                } else {
-                    print("[DEBUG] SLAM not running, isRunning=\(self.rtabMapSLAM?.isRunning ?? false)")
+            // Feed frame to SLAM on the delegate thread (data extraction is synchronous,
+            // heavy processing dispatches to slamQueue — does NOT block here)
+            if let slam = self.rtabMapSLAM, slam.isRunning {
+                let interval = sessionSettings.slamProcessingRate.intervalSeconds
+                let now = frame.timestamp
+                if interval == 0 || (now - self.lastSLAMProcessTime) >= interval {
+                    self.lastSLAMProcessTime = now
+                    slam.processFrame(frame: frame, frameId: self.encoder.currentFrameID)
                 }
+            }
 
-                let data = self.encoder.encode(
-                    frame: frame,
-                    settings: sessionSettings,
-                    correctedPose: correctedPose
-                )
-                print("[DEBUG] Encoded frame, size=\(data.count) bytes, enqueueing to streamer")
+            // Capture the current SLAM correction
+            let correctedPose: simd_float4x4?
+            if let slam = self.rtabMapSLAM, slam.isRunning {
+                correctedPose = slam.mapToOdom * frame.camera.transform
+            } else {
+                correctedPose = nil
+            }
+
+            // Extract & encode all pixel data NOW on the delegate thread.
+            // After this call, the ARFrame can be released — no references retained.
+            let extracted = self.encoder.extract(
+                frame: frame,
+                settings: sessionSettings,
+                correctedPose: correctedPose
+            )
+
+            // Only lightweight packing (JSON + binary assembly) goes to the queue
+            self.encodeQueue.async {
+                let data = self.encoder.pack(extracted)
                 self.streamer.enqueue(data)
             }
         }

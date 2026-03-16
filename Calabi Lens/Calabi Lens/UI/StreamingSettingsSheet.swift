@@ -44,39 +44,18 @@ struct StreamingSettingsSheet: View {
                     // RGB Encoding
                     sectionHeader("RGB ENCODING")
                     VStack(alignment: .leading, spacing: 10) {
-                        Picker("RGB Format", selection: $settings.rgbFormat) {
-                            Text("JPEG \u{2605}").tag(RGBFormat.jpeg)
-                            Text("PNG").tag(RGBFormat.png)
-                            Text("Raw BGRA").tag(RGBFormat.rawBGRA)
-                        }
-                        .pickerStyle(.segmented)
-                        .disabled(isRecording)
-
-                        if settings.rgbFormat == .jpeg {
-                            HStack {
-                                Text("JPEG Quality")
-                                    .foregroundColor(.primary)
-                                Spacer()
-                                Text("\(Int(settings.jpegQuality))")
-                                    .foregroundColor(.blue)
-                                    .fontWeight(.semibold)
-                            }
-                            Slider(value: $settings.jpegQuality, in: 50...95, step: 1)
-                                .disabled(isRecording)
-                            HStack {
-                                Text("50").font(.system(size: 10)).foregroundColor(.secondary)
-                                Spacer()
-                                Text("95").font(.system(size: 10)).foregroundColor(.secondary)
-                            }
+                        HStack {
+                            Text("Format")
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text("NV12")
+                                .foregroundColor(.blue)
+                                .fontWeight(.semibold)
                         }
 
-                        // RGB Resolution
-                        Picker("Resolution", selection: $settings.rgbResolution) {
-                            Text("640\u{00D7}480 \u{2605}").tag(RGBResolution.downscaled)
-                            Text("Original").tag(RGBResolution.original)
-                        }
-                        .pickerStyle(.segmented)
-                        .disabled(isRecording)
+                        Text("Raw YCbCr from ARKit \u{2014} zero encoding cost. Server decodes with cv2.cvtColor(COLOR_YUV2BGR_NV12).")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)

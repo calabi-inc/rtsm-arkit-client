@@ -1,11 +1,5 @@
 import Foundation
 
-enum RGBFormat: String, CaseIterable {
-    case jpeg
-    case png
-    case rawBGRA
-}
-
 enum DepthInclusion: String, CaseIterable {
     case auto
     case on
@@ -21,11 +15,6 @@ enum DepthFormat: String, CaseIterable {
 enum PoseFormat: String, CaseIterable {
     case matrix4x4
     case quatTranslation
-}
-
-enum RGBResolution: String, CaseIterable {
-    case original
-    case downscaled
 }
 
 enum SLAMMode: String, CaseIterable {

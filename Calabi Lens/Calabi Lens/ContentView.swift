@@ -203,12 +203,7 @@ private struct ShutterButtonView: View {
 
     private var settingsSummary: String {
         let hz = Int(settings.captureRate)
-        let rgb: String
-        switch settings.rgbFormat {
-        case .jpeg: rgb = "JPEG \(Int(settings.jpegQuality))"
-        case .png: rgb = "PNG"
-        case .rawBGRA: rgb = "BGRA"
-        }
+        let rgb = "NV12"
         let depth: String
         switch settings.depthFormat {
         case .uint16mm: depth = "uint16"

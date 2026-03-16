@@ -59,6 +59,13 @@ final class RTABMapSLAM {
     /// Needed to compute: mapToOdom = correctedPose * inverse(lastOdometryPose)
     private var lastOdometryPose: simd_float4x4 = matrix_identity_float4x4
 
+    /// Reusable CIContext for YCbCr→BGRA conversion (expensive to create)
+    private let ciContext = CIContext(options: [.useSoftwareRenderer: false])
+
+    /// Target resolution for SLAM processing (full-res is way too slow on device)
+    private static let slamWidth: Int = 480
+    private static let slamHeight: Int = 360
+
     // MARK: - Lifecycle
 
     /// Start the SLAM engine. Creates a fresh database in the temp directory.
@@ -130,86 +137,126 @@ final class RTABMapSLAM {
 
     // MARK: - Frame Processing
 
-    /// Process a single frame through RTAB-Map SLAM.
-    ///
-    /// Call this at the configured SLAM cadence (not every ARKit frame).
-    /// The `mapToOdom` transform is updated after processing.
-    ///
-    /// - Parameters:
-    ///   - frame: The ARKit frame to process
-    ///   - frameId: The frame_id from the encoding pipeline (for mapping corrections)
-    func processFrame(frame: ARFrame, frameId: UInt64) {
-        slamQueue.async { [weak self] in
-            self?._processFrame(frame: frame, frameId: frameId)
-        }
+    /// Extracted frame data — copied off the ARFrame so we don't retain it across queues.
+    private struct SLAMFrameData {
+        let pose: [Float]           // 16 floats, col-major
+        let transform: simd_float4x4
+        let bgraPixels: Data        // downscaled BGRA bytes
+        let rgbW: Int32
+        let rgbH: Int32
+        let depthPixels: Data       // float32 meters
+        let depthW: Int32
+        let depthH: Int32
+        let fx: Float, fy: Float, cx: Float, cy: Float
+        let timestamp: Double
+        let frameId: UInt64
     }
 
-    private func _processFrame(frame: ARFrame, frameId: UInt64) {
-        guard isRunning, let ptr = nativePtr else { return }
+    /// Process a single frame through RTAB-Map SLAM.
+    ///
+    /// Extracts pixel data synchronously (releasing the ARFrame), then dispatches
+    /// the heavy RTAB-Map processing to the SLAM queue.
+    func processFrame(frame: ARFrame, frameId: UInt64) {
+        guard isRunning else { return }
         guard let sceneDepth = frame.sceneDepth else { return }
 
-        currentFrameId = frameId
-
+        // --- Extract everything from ARFrame on the caller's thread ---
         let camera = frame.camera
         let transform = camera.transform
         let intrinsics = camera.intrinsics
 
-        // Store the odometry pose for mapToOdom computation
-        lastOdometryPose = transform
-
-        // Extract column-major 4x4 pose
-        var pose: [Float] = [Float](repeating: 0, count: 16)
+        // Column-major 4x4 pose
+        var pose = [Float](repeating: 0, count: 16)
         for col in 0..<4 {
             for row in 0..<4 {
                 pose[col * 4 + row] = transform[col][row]
             }
         }
 
-        // Convert YCbCr (NV12) capturedImage to BGRA using CoreImage
-        let pixelBuffer = frame.capturedImage
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        let rgbW = Int32(CVPixelBufferGetWidth(pixelBuffer))
-        let rgbH = Int32(CVPixelBufferGetHeight(pixelBuffer))
+        // Downscale YCbCr → BGRA at SLAM resolution
+        let targetW = Self.slamWidth
+        let targetH = Self.slamHeight
+        let ciImage = CIImage(cvPixelBuffer: frame.capturedImage)
+            .transformed(by: CGAffineTransform(
+                scaleX: CGFloat(targetW) / CGFloat(CVPixelBufferGetWidth(frame.capturedImage)),
+                y: CGFloat(targetH) / CGFloat(CVPixelBufferGetHeight(frame.capturedImage))
+            ))
 
-        // Render CIImage to a BGRA pixel buffer
         var bgraBuffer: CVPixelBuffer?
         let attrs: [String: Any] = [
             kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
-            kCVPixelBufferWidthKey as String: Int(rgbW),
-            kCVPixelBufferHeightKey as String: Int(rgbH),
+            kCVPixelBufferWidthKey as String: targetW,
+            kCVPixelBufferHeightKey as String: targetH,
         ]
-        CVPixelBufferCreate(kCFAllocatorDefault, Int(rgbW), Int(rgbH),
+        CVPixelBufferCreate(kCFAllocatorDefault, targetW, targetH,
                             kCVPixelFormatType_32BGRA, attrs as CFDictionary, &bgraBuffer)
         guard let bgra = bgraBuffer else { return }
-
-        let ciContext = CIContext(options: [.useSoftwareRenderer: false])
         ciContext.render(ciImage, to: bgra)
 
+        // Copy BGRA pixels into Data
         CVPixelBufferLockBaseAddress(bgra, .readOnly)
-        let rgbData = CVPixelBufferGetBaseAddress(bgra)!
-            .assumingMemoryBound(to: UInt8.self)
+        let bgraPtr = CVPixelBufferGetBaseAddress(bgra)!
+        let bgraByteCount = CVPixelBufferGetBytesPerRow(bgra) * targetH
+        let bgraData = Data(bytes: bgraPtr, count: bgraByteCount)
+        CVPixelBufferUnlockBaseAddress(bgra, .readOnly)
 
-        // Get depth data (float32 meters)
+        // Scale intrinsics to match downscaled resolution
+        let origW = Float(CVPixelBufferGetWidth(frame.capturedImage))
+        let origH = Float(CVPixelBufferGetHeight(frame.capturedImage))
+        let scaleX = Float(targetW) / origW
+        let scaleY = Float(targetH) / origH
+        let fx = intrinsics[0][0] * scaleX
+        let fy = intrinsics[1][1] * scaleY
+        let cx = intrinsics[2][0] * scaleX
+        let cy = intrinsics[2][1] * scaleY
+
+        // Copy depth pixels into Data
         let depthMap = sceneDepth.depthMap
         CVPixelBufferLockBaseAddress(depthMap, .readOnly)
-        let depthData = CVPixelBufferGetBaseAddress(depthMap)!
-            .assumingMemoryBound(to: Float.self)
-        let depthW = Int32(CVPixelBufferGetWidth(depthMap))
-        let depthH = Int32(CVPixelBufferGetHeight(depthMap))
+        let depthPtr = CVPixelBufferGetBaseAddress(depthMap)!
+        let depthW = CVPixelBufferGetWidth(depthMap)
+        let depthH = CVPixelBufferGetHeight(depthMap)
+        let depthByteCount = depthW * depthH * MemoryLayout<Float>.size
+        let depthData = Data(bytes: depthPtr, count: depthByteCount)
+        CVPixelBufferUnlockBaseAddress(depthMap, .readOnly)
 
-        // Post to RTAB-Map
-        postOdometryEventNative(
-            ptr,
-            &pose,
-            rgbData, rgbW, rgbH,
-            depthData, depthW, depthH,
-            intrinsics[0][0], intrinsics[1][1],
-            intrinsics[2][0], intrinsics[2][1],
-            frame.timestamp
+        let frameData = SLAMFrameData(
+            pose: pose, transform: transform,
+            bgraPixels: bgraData, rgbW: Int32(targetW), rgbH: Int32(targetH),
+            depthPixels: depthData, depthW: Int32(depthW), depthH: Int32(depthH),
+            fx: fx, fy: fy, cx: cx, cy: cy,
+            timestamp: frame.timestamp, frameId: frameId
         )
 
-        CVPixelBufferUnlockBaseAddress(bgra, .readOnly)
-        CVPixelBufferUnlockBaseAddress(depthMap, .readOnly)
+        // --- Dispatch heavy processing (no ARFrame reference held) ---
+        slamQueue.async { [weak self] in
+            self?._processFrameData(frameData)
+        }
+    }
+
+    private func _processFrameData(_ data: SLAMFrameData) {
+        guard isRunning, let ptr = nativePtr else { return }
+
+        currentFrameId = data.frameId
+        lastOdometryPose = data.transform
+
+        var pose = data.pose
+
+        data.bgraPixels.withUnsafeBytes { bgraRaw in
+            data.depthPixels.withUnsafeBytes { depthRaw in
+                let rgbPtr = bgraRaw.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                let depthPtr = depthRaw.baseAddress!.assumingMemoryBound(to: Float.self)
+
+                postOdometryEventNative(
+                    ptr,
+                    &pose,
+                    rgbPtr, data.rgbW, data.rgbH,
+                    depthPtr, data.depthW, data.depthH,
+                    data.fx, data.fy, data.cx, data.cy,
+                    data.timestamp
+                )
+            }
+        }
     }
 
     // MARK: - Stats Callback
@@ -221,7 +268,8 @@ final class RTABMapSLAM {
         x: Float, y: Float, z: Float,
         roll: Float, pitch: Float, yaw: Float
     ) {
-        print("[RTABMapSLAM] handleStatsUpdate: nodes=\(nodesCount) loopId=\(loopClosureId) pos=(\(x),\(y),\(z))")
+        print("[SLAM] nodes=\(nodesCount) words=\(wordsCount) loopId=\(loopClosureId) pos=(\(String(format: "%.3f", x)),\(String(format: "%.3f", y)),\(String(format: "%.3f", z)))")
+
         // Build corrected pose from Euler angles
         let correctedPose = makeTransform(x: x, y: y, z: z,
                                            roll: roll, pitch: pitch, yaw: yaw)
