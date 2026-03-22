@@ -338,8 +338,16 @@ final class FrameEncoder {
                 case .portraitUpsideDown: return "portraitUpsideDown"
                 default: return "unknown"
                 }
-            }()
+            }(),
+            image_rotation: Self.gravityAlignedRotation(from: camera.transform)
         )
+    }
+
+    /// Degrees of clockwise rotation to apply to the raw image to make it gravity-aligned.
+    private static func gravityAlignedRotation(from transform: simd_float4x4) -> Double {
+        let gx = Double(-transform.columns.0.y)
+        let gy = Double(-transform.columns.1.y)
+        return atan2(-gx, -gy) * 180.0 / .pi
     }
 
     private static func currentImageOrientation() -> String {
@@ -428,6 +436,7 @@ struct FrameHeader: Codable {
     let tracking_reason: String?
     let pose_source: String
     let device_orientation: String
+    let image_rotation: Double
 }
 
 // MARK: - Wire String Extensions
