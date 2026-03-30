@@ -3,12 +3,12 @@ import Foundation
 struct SessionSettings {
     let sessionID: UUID
     let captureRate: Double
-    let rgbFormat: RGBFormat
-    let jpegQuality: Double
     let depthInclusion: DepthInclusion
     let depthFormat: DepthFormat
     let poseFormat: PoseFormat
-    let rgbResolution: RGBResolution
+    let slamMode: SLAMMode
+    let slamProcessingRate: SLAMProcessingRate
+    let confidenceInclusion: Bool
 
     var depthScale: Double {
         switch depthFormat {
@@ -21,11 +21,11 @@ struct SessionSettings {
     init(from settings: AppSettings) {
         self.sessionID = UUID()
         self.captureRate = settings.captureRate
-        self.rgbFormat = settings.rgbFormat
-        self.jpegQuality = settings.jpegQuality
         self.depthInclusion = settings.depthInclusion
         self.depthFormat = settings.depthFormat
         self.poseFormat = settings.poseFormat
-        self.rgbResolution = settings.rgbResolution
+        self.slamMode = settings.slamMode
+        self.slamProcessingRate = settings.slamProcessingRate
+        self.confidenceInclusion = settings.confidenceInclusion
     }
 }

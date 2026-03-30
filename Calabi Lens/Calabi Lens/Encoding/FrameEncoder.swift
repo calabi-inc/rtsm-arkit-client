@@ -3,89 +3,95 @@ import UIKit
 
 final class FrameEncoder {
 
-    private static let targetRGBWidth = 640
-    private static let targetRGBHeight = 480
-
     private var frameID: UInt64 = 0
-    private let ciContext = CIContext()
 
     func resetFrameID() {
         frameID = 0
     }
 
-    func encode(frame: ARFrame, settings: SessionSettings) -> Data {
-        let currentFrameID = frameID
+    /// Consume and return the next frame ID. Each call returns a unique value.
+    func nextFrameID() -> UInt64 {
+        let id = frameID
         frameID += 1
+        return id
+    }
 
-        let rgbData = encodeRGB(pixelBuffer: frame.capturedImage, settings: settings)
+    // MARK: - Extracted Frame (lightweight, no ARFrame reference)
+
+    struct ExtractedFrame {
+        let rgbData: Data
+        let depthData: Data
+        let confidenceData: Data
+        let header: FrameHeader
+    }
+
+    /// Extract all data from an ARFrame synchronously. Call on the delegate thread.
+    /// After this returns, the ARFrame can be released — no references are retained.
+    func extract(frame: ARFrame, settings: SessionSettings, frameID: UInt64, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
+        let rgbData = encodeNV12(pixelBuffer: frame.capturedImage)
         let depthData = encodeDepth(frame: frame, settings: settings)
+        let confidenceData = encodeConfidence(frame: frame, settings: settings)
 
         let header = buildHeader(
             frame: frame,
             settings: settings,
-            frameID: currentFrameID,
+            frameID: frameID,
             rgbData: rgbData,
-            depthData: depthData
+            depthData: depthData,
+            confidenceData: confidenceData,
+            correctedPose: correctedPose
         )
 
+        return ExtractedFrame(rgbData: rgbData, depthData: depthData, confidenceData: confidenceData, header: header)
+    }
+
+    /// Pack an extracted frame into binary wire format. Safe to call on any queue.
+    func pack(_ extracted: ExtractedFrame) -> Data {
         let encoder = JSONEncoder()
-        let jsonData = (try? encoder.encode(header)) ?? Data()
-
-        return packMessage(json: jsonData, rgb: rgbData, depth: depthData)
+        let jsonData = (try? encoder.encode(extracted.header)) ?? Data()
+        return packMessage(json: jsonData, rgb: extracted.rgbData, depth: extracted.depthData, confidence: extracted.confidenceData)
     }
 
-    // MARK: - RGB Encoding
+    // MARK: - NV12 (zero-cost raw copy)
 
-    private func encodeRGB(pixelBuffer: CVPixelBuffer, settings: SessionSettings) -> Data {
-        let ciImage = ciImageForRGB(pixelBuffer: pixelBuffer, settings: settings)
+    /// Copy raw NV12 biplanar data directly from ARKit's capturedImage.
+    /// Layout: [Y plane: w*h bytes] [UV plane: w*h/2 bytes (interleaved CbCr)]
+    /// Total: w * h * 1.5 bytes. Zero conversion cost.
+    private func encodeNV12(pixelBuffer: CVPixelBuffer) -> Data {
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
 
-        switch settings.rgbFormat {
-        case .jpeg:
-            return encodeJPEG(ciImage: ciImage, quality: settings.jpegQuality / 100.0)
-        case .png:
-            return encodePNG(ciImage: ciImage)
-        case .rawBGRA:
-            return encodeRawBGRA(ciImage: ciImage)
+        let planeCount = CVPixelBufferGetPlaneCount(pixelBuffer)
+        guard planeCount >= 2 else { return Data() }
+
+        // Y plane (plane 0)
+        let yBase = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)!
+        let yBytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+        let yHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
+        let yWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
+
+        // UV plane (plane 1, interleaved CbCr)
+        let uvBase = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1)!
+        let uvBytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1)
+        let uvHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 1)
+        let uvWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 1)
+
+        // Total: Y (w*h) + UV (w*h/2)
+        var result = Data(capacity: yWidth * yHeight + uvWidth * 2 * uvHeight)
+
+        // Copy Y plane row-by-row (handles row padding)
+        let yPtr = yBase.assumingMemoryBound(to: UInt8.self)
+        for row in 0..<yHeight {
+            result.append(yPtr + row * yBytesPerRow, count: yWidth)
         }
-    }
 
-    private func ciImageForRGB(pixelBuffer: CVPixelBuffer, settings: SessionSettings) -> CIImage {
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-        guard settings.rgbResolution == .downscaled else { return ciImage }
-
-        let scaleX = CGFloat(Self.targetRGBWidth) / ciImage.extent.width
-        let scaleY = CGFloat(Self.targetRGBHeight) / ciImage.extent.height
-        return ciImage.transformed(by: CGAffineTransform(scaleX: scaleX, y: scaleY))
-    }
-
-    private func encodeJPEG(ciImage: CIImage, quality: Double) -> Data {
-        guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
-            return Data()
+        // Copy UV plane row-by-row
+        let uvPtr = uvBase.assumingMemoryBound(to: UInt8.self)
+        for row in 0..<uvHeight {
+            result.append(uvPtr + row * uvBytesPerRow, count: uvWidth * 2)
         }
-        return UIImage(cgImage: cgImage).jpegData(compressionQuality: CGFloat(quality)) ?? Data()
-    }
 
-    private func encodePNG(ciImage: CIImage) -> Data {
-        guard let cgImage = ciContext.createCGImage(ciImage, from: ciImage.extent) else {
-            return Data()
-        }
-        return UIImage(cgImage: cgImage).pngData() ?? Data()
-    }
-
-    private func encodeRawBGRA(ciImage: CIImage) -> Data {
-        let width = Int(ciImage.extent.width)
-        let height = Int(ciImage.extent.height)
-        let rowBytes = width * 4
-        var buffer = [UInt8](repeating: 0, count: height * rowBytes)
-        buffer.withUnsafeMutableBytes { ptr in
-            ciContext.render(ciImage,
-                            toBitmap: ptr.baseAddress!,
-                            rowBytes: rowBytes,
-                            bounds: ciImage.extent,
-                            format: .BGRA8,
-                            colorSpace: CGColorSpaceCreateDeviceRGB())
-        }
-        return Data(buffer)
+        return result
     }
 
     // MARK: - Depth Encoding
@@ -211,6 +217,36 @@ final class FrameEncoder {
         return UIImage(cgImage: cgImage).pngData() ?? Data()
     }
 
+    // MARK: - Confidence Encoding
+
+    private func encodeConfidence(frame: ARFrame, settings: SessionSettings) -> Data {
+        guard settings.confidenceInclusion,
+              let confidenceMap = frame.sceneDepth?.confidenceMap else {
+            return Data()
+        }
+
+        CVPixelBufferLockBaseAddress(confidenceMap, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(confidenceMap, .readOnly) }
+
+        let width = CVPixelBufferGetWidth(confidenceMap)
+        let height = CVPixelBufferGetHeight(confidenceMap)
+        let bytesPerRow = CVPixelBufferGetBytesPerRow(confidenceMap)
+        guard let baseAddress = CVPixelBufferGetBaseAddress(confidenceMap) else {
+            return Data()
+        }
+
+        // confidenceMap is kCVPixelFormatType_OneComponent8 (UInt8, values 0/1/2)
+        let ptr = baseAddress.assumingMemoryBound(to: UInt8.self)
+
+        // Copy row-by-row to handle potential row padding
+        var result = Data(capacity: width * height)
+        for y in 0..<height {
+            let rowStart = y * bytesPerRow
+            result.append(ptr + rowStart, count: width)
+        }
+        return result
+    }
+
     // MARK: - Frame Header
 
     private func buildHeader(
@@ -218,15 +254,17 @@ final class FrameEncoder {
         settings: SessionSettings,
         frameID: UInt64,
         rgbData: Data,
-        depthData: Data
+        depthData: Data,
+        confidenceData: Data = Data(),
+        correctedPose: simd_float4x4? = nil
     ) -> FrameHeader {
         let camera = frame.camera
         let intrinsics = camera.intrinsics
-        let imageResolution = camera.imageResolution
         let pixelBuffer = frame.capturedImage
 
-        // Pose
-        let transform = camera.transform
+        // Pose — use corrected SLAM pose if provided, otherwise raw ARKit VIO
+        let transform = correctedPose ?? camera.transform
+        let poseSource = correctedPose != nil ? "rtabmap_slam" : "arkit_vio"
         let twc: [Double]
         switch settings.poseFormat {
         case .matrix4x4:
@@ -254,64 +292,73 @@ final class FrameEncoder {
         let depthWidth: Int? = depthMap.map { CVPixelBufferGetWidth($0) }
         let depthHeight: Int? = depthMap.map { CVPixelBufferGetHeight($0) }
 
-        // RGB dimensions and intrinsics scaling
-        let rgbWidth: Int
-        let rgbHeight: Int
-        let scaledFx: Double
-        let scaledFy: Double
-        let scaledCx: Double
-        let scaledCy: Double
-        let reportedIntrinsicsWidth: Int
-        let reportedIntrinsicsHeight: Int
+        // RGB dimensions — always original resolution (NV12 is raw, no downscaling)
+        let rgbWidth = CVPixelBufferGetWidth(pixelBuffer)
+        let rgbHeight = CVPixelBufferGetHeight(pixelBuffer)
 
-        if settings.rgbResolution == .downscaled {
-            rgbWidth = Self.targetRGBWidth
-            rgbHeight = Self.targetRGBHeight
-            let intrinsicsScaleX = Double(Self.targetRGBWidth) / Double(imageResolution.width)
-            let intrinsicsScaleY = Double(Self.targetRGBHeight) / Double(imageResolution.height)
-            scaledFx = Double(intrinsics[0][0]) * intrinsicsScaleX
-            scaledFy = Double(intrinsics[1][1]) * intrinsicsScaleY
-            scaledCx = Double(intrinsics[2][0]) * intrinsicsScaleX
-            scaledCy = Double(intrinsics[2][1]) * intrinsicsScaleY
-            reportedIntrinsicsWidth = Self.targetRGBWidth
-            reportedIntrinsicsHeight = Self.targetRGBHeight
-        } else {
-            rgbWidth = CVPixelBufferGetWidth(pixelBuffer)
-            rgbHeight = CVPixelBufferGetHeight(pixelBuffer)
-            scaledFx = Double(intrinsics[0][0])
-            scaledFy = Double(intrinsics[1][1])
-            scaledCx = Double(intrinsics[2][0])
-            scaledCy = Double(intrinsics[2][1])
-            reportedIntrinsicsWidth = Int(imageResolution.width)
-            reportedIntrinsicsHeight = Int(imageResolution.height)
-        }
+        // Confidence map info
+        let hasConfidence = !confidenceData.isEmpty
+        let confMap = hasConfidence ? frame.sceneDepth?.confidenceMap : nil
+        let confWidth: Int? = confMap.map { CVPixelBufferGetWidth($0) }.flatMap { $0 > 0 ? $0 : nil }
+        let confHeight: Int? = confMap.map { CVPixelBufferGetHeight($0) }.flatMap { $0 > 0 ? $0 : nil }
+        let hasConfidenceMetadata = confWidth != nil && confHeight != nil
 
         return FrameHeader(
             session_id: settings.sessionID.uuidString,
             frame_id: frameID,
             timestamp_ns: UInt64(frame.timestamp * 1e9),
             unix_timestamp: Date().timeIntervalSince1970,
-            rgb_format: settings.rgbFormat.wireString,
+            rgb_format: "nv12",
             rgb_width: rgbWidth,
             rgb_height: rgbHeight,
-            image_orientation: "landscapeRight",
-            jpeg_quality: settings.rgbFormat == .jpeg ? settings.jpegQuality : nil,
+            image_orientation: Self.currentImageOrientation(),
             depth_format: hasDepth ? settings.depthFormat.wireString : nil,
             depth_width: depthWidth,
             depth_height: depthHeight,
             depth_scale: hasDepth ? settings.depthScale : nil,
-            fx: scaledFx,
-            fy: scaledFy,
-            cx: scaledCx,
-            cy: scaledCy,
-            intrinsics_width: reportedIntrinsicsWidth,
-            intrinsics_height: reportedIntrinsicsHeight,
+            confidence_format: hasConfidence && hasConfidenceMetadata ? "uint8" : nil,
+            confidence_width: confWidth,
+            confidence_height: confHeight,
+            fx: Double(intrinsics[0][0]),
+            fy: Double(intrinsics[1][1]),
+            cx: Double(intrinsics[2][0]),
+            cy: Double(intrinsics[2][1]),
+            intrinsics_width: rgbWidth,
+            intrinsics_height: rgbHeight,
             pose_format: settings.poseFormat.wireString,
             T_wc: twc,
             tracking_state: trackingStateStr,
             tracking_reason: trackingReasonStr,
-            pose_source: "arkit_vio"
+            pose_source: poseSource,
+            device_orientation: {
+                switch UIDevice.current.orientation {
+                case .portrait: return "portrait"
+                case .landscapeLeft: return "landscapeLeft"
+                case .landscapeRight: return "landscapeRight"
+                case .portraitUpsideDown: return "portraitUpsideDown"
+                default: return "unknown"
+                }
+            }(),
+            image_rotation: Self.gravityAlignedRotation(from: camera.transform)
         )
+    }
+
+    /// Degrees of clockwise rotation to apply to the raw image to make it gravity-aligned.
+    private static func gravityAlignedRotation(from transform: simd_float4x4) -> Double {
+        let gx = Double(-transform.columns.0.y)
+        let gy = Double(-transform.columns.1.y)
+        return atan2(-gx, -gy) * 180.0 / .pi
+    }
+
+    private static func currentImageOrientation() -> String {
+        let orientation = UIDevice.current.orientation
+        switch orientation {
+        case .portrait: return "portrait"
+        case .landscapeLeft: return "landscapeLeft"
+        case .landscapeRight: return "landscapeRight"
+        case .portraitUpsideDown: return "portraitUpsideDown"
+        default: return "landscapeRight"
+        }
     }
 
     private func trackingStateStrings(_ state: ARCamera.TrackingState) -> (String, String?) {
@@ -333,8 +380,8 @@ final class FrameEncoder {
 
     // MARK: - Binary Packing
 
-    private func packMessage(json: Data, rgb: Data, depth: Data) -> Data {
-        var message = Data(capacity: 12 + json.count + rgb.count + depth.count)
+    private func packMessage(json: Data, rgb: Data, depth: Data, confidence: Data = Data()) -> Data {
+        var message = Data(capacity: 16 + json.count + rgb.count + depth.count + confidence.count)
 
         var jsonLen = UInt32(json.count).littleEndian
         withUnsafeBytes(of: &jsonLen) { message.append(contentsOf: $0) }
@@ -347,6 +394,13 @@ final class FrameEncoder {
         var depthLen = UInt32(depth.count).littleEndian
         withUnsafeBytes(of: &depthLen) { message.append(contentsOf: $0) }
         message.append(depth)
+
+        // Confidence section (optional, backward compatible)
+        if !confidence.isEmpty {
+            var confLen = UInt32(confidence.count).littleEndian
+            withUnsafeBytes(of: &confLen) { message.append(contentsOf: $0) }
+            message.append(confidence)
+        }
 
         return message
     }
@@ -363,11 +417,13 @@ struct FrameHeader: Codable {
     let rgb_width: Int
     let rgb_height: Int
     let image_orientation: String
-    let jpeg_quality: Double?
     let depth_format: String?
     let depth_width: Int?
     let depth_height: Int?
     let depth_scale: Double?
+    let confidence_format: String?
+    let confidence_width: Int?
+    let confidence_height: Int?
     let fx: Double
     let fy: Double
     let cx: Double
@@ -379,19 +435,11 @@ struct FrameHeader: Codable {
     let tracking_state: String
     let tracking_reason: String?
     let pose_source: String
+    let device_orientation: String
+    let image_rotation: Double
 }
 
 // MARK: - Wire String Extensions
-
-extension RGBFormat {
-    var wireString: String {
-        switch self {
-        case .jpeg: return "jpeg"
-        case .png: return "png"
-        case .rawBGRA: return "bgra"
-        }
-    }
-}
 
 extension DepthFormat {
     var wireString: String {

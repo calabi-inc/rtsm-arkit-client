@@ -10,3 +10,13 @@ DerivedData/
 __pycache__/
 *.py[cod]
 *.cpython-*
+
+# RTABMap build artifacts (sources, intermediates, and output libraries)
+Calabi Lens/RTABMap/build/build_tmp/
+Calabi Lens/RTABMap/build/output/
+
+# Xcode DerivedData (can appear inside project too)
+**/DerivedData/
+
+# Claude Code local config
+.claude/
