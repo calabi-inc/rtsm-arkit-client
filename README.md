@@ -198,8 +198,3 @@ When SLAM mode is set to **RTAB-Map**, the app runs RTAB-Map as a headless on-de
 SLAM-corrected poses are streamed with `pose_source: "rtabmap_slam"`. When a loop closure is detected, the app sends a `pose_corrections` text message over WebSocket containing optimized poses for all keyframes.
 
 For build and setup instructions, see [RTABMap/README.md](Calabi%20Lens/RTABMap/README.md).
-
-## Future Extensions
-
-- The `tracking_state` and `tracking_reason` fields let the receiver detect and handle degraded tracking conditions (e.g. skip frames where tracking is limited or not available).
-- Confidence map data can be used server-side for filtering low-confidence depth measurements.
