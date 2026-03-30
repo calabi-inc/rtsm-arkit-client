@@ -2,11 +2,11 @@
 
 This repository (`rtsm-arkit-client`) contains the client app for Calabi Lens.
 
-ARKit sensor streaming app for the RTSM ecosystem. Calabi Lens captures RGB frames, LiDAR depth (optional), camera pose, and intrinsics from an iPhone and streams them in real time over WebSocket to a server on the local network.
+ARKit sensor streaming app for the RTSM ecosystem. Calabi Lens captures RGB frames, LiDAR depth (optional), camera pose, and intrinsics from an iPhone and streams them in real time over WebSocket to a server on the local network. Includes on-device RTAB-Map SLAM for loop closure detection and pose graph optimization.
 
-**Streams:** RGB image, depth map (optional), 6-DoF camera pose (T\_wc), camera intrinsics, and ARKit tracking state.
+**Streams:** RGB image, depth map (optional), confidence map (optional), 6-DoF camera pose (T\_wc — raw ARKit or SLAM-corrected), camera intrinsics, and tracking state.
 
-**Platform:** iOS 16+, iPhone, Swift / SwiftUI.
+**Platform:** iOS 16+, iPhone with LiDAR (recommended), Swift / SwiftUI.
 
 ## Requirements
 
@@ -17,7 +17,7 @@ ARKit sensor streaming app for the RTSM ecosystem. Calabi Lens captures RGB fram
 | LiDAR | Optional — depth is auto-detected. Non-LiDAR devices stream RGB + pose only. |
 | Server | Running on the same LAN Wi-Fi (5 GHz recommended for stability) |
 
-No third-party Swift dependencies. The project uses only Apple frameworks.
+No third-party Swift dependencies at runtime. RTAB-Map SLAM requires pre-built C++ static libraries — see [RTABMap/README.md](Calabi%20Lens/RTABMap/README.md) for build instructions.
 
 ## How to Run
 
@@ -37,11 +37,14 @@ Tap the gear icon (top-right) to open the Streaming Settings sheet. Settings per
 | Setting | Options | Default | Notes |
 |---|---|---|---|
 | Capture Rate | 5 / 10 / 15 / 20 Hz | **10 Hz** | Slider with discrete ticks |
-| RGB Format | JPEG, PNG, Raw BGRA | **JPEG** | JPEG is fastest encode and lowest bandwidth |
+| RGB Format | NV12 | **NV12** | Extracted directly from ARFrame pixel buffer |
 | JPEG Quality | 50 – 95 | **75** | Shown only when RGB Format = JPEG |
 | Depth Inclusion | Auto, On, Off | **Auto** | Auto includes depth when LiDAR is available |
 | Depth Format | uint16 mm, float32 m, PNG-uint16 | **uint16 mm** | `depth_scale` is derived automatically |
+| Confidence Map | On, Off | **Off** | Streams ARKit depth confidence alongside depth |
 | Pose Format | 4x4 column-major matrix, Quaternion + translation | **4x4 matrix** | 4x4 is most compatible with Open3D / RTAB-Map / OpenCV |
+| SLAM Mode | Off, RTAB-Map | **RTAB-Map** | On-device SLAM with loop closure and pose graph optimization |
+| SLAM Processing Rate | 0.5 – 10 Hz | **2 Hz** | How often frames are fed to the SLAM engine |
 
 **Depth scale:** `0.001` for uint16 mm and PNG-uint16, `1.0` for float32 m. Included in every frame header.
 
@@ -98,7 +101,12 @@ Every frame header is a JSON object with the following fields:
 | `T_wc` | `[float64]` | Camera-to-world transform. 16 elements (4x4 column-major) or 7 elements `[qx, qy, qz, qw, tx, ty, tz]`. |
 | `tracking_state` | `string` | `"normal"`, `"limited"`, or `"not_available"` |
 | `tracking_reason` | `string?` | Reason when Limited: `"initializing"`, `"excessive_motion"`, `"insufficient_features"`, `"relocalizing"`. `null` when Normal or Not Available. |
-| `pose_source` | `string` | Always `"arkit_vio"` in v0.1 |
+| `confidence_format` | `string?` | `"uint8"` or `null` if confidence not included |
+| `confidence_width` | `int?` | Confidence map width. `null` if not included. |
+| `confidence_height` | `int?` | Confidence map height. `null` if not included. |
+| `image_rotation` | `float64?` | Gravity-aligned rotation angle in radians |
+| `device_orientation` | `string?` | Device orientation at capture time |
+| `pose_source` | `string` | `"arkit_vio"` (raw ARKit) or `"rtabmap_slam"` (SLAM-corrected) |
 
 ### Example JSON Header
 
@@ -179,10 +187,19 @@ python receiver_stub.py ws://192.168.1.100:9000/stream
 
 Both scripts parse the same binary frame format and print frame metadata (frame ID, timestamp, tracking state, RGB size, depth size), with periodic throughput summaries.
 
+## On-Device SLAM (RTAB-Map)
+
+When SLAM mode is set to **RTAB-Map**, the app runs RTAB-Map as a headless on-device SLAM engine alongside ARKit. This provides:
+
+- **Loop closure detection** — recognizes previously visited locations using bag-of-words matching
+- **ICP refinement** — refines pose estimates at loop closure seams using depth data
+- **Pose graph optimization** — uses GTSAM to globally optimize the trajectory
+
+SLAM-corrected poses are streamed with `pose_source: "rtabmap_slam"`. When a loop closure is detected, the app sends a `pose_corrections` text message over WebSocket containing optimized poses for all keyframes.
+
+For build and setup instructions, see [RTABMap/README.md](Calabi%20Lens/RTABMap/README.md).
+
 ## Future Extensions
 
-The `pose_source` field is always `"arkit_vio"` in v0.1, indicating raw ARKit visual-inertial odometry. The `tracking_state` field is included in every frame to support future corrected-pose swap-in workflows:
-
-- A server-side SLAM system (e.g. RTAB-Map, loop closure pipeline) could consume the raw VIO poses and return corrected poses.
-- A future version of the app could accept corrected poses and set `pose_source` to a different value (e.g. `"rtabmap_corrected"`), allowing downstream consumers to distinguish raw VIO from loop-closed poses.
 - The `tracking_state` and `tracking_reason` fields let the receiver detect and handle degraded tracking conditions (e.g. skip frames where tracking is limited or not available).
+- Confidence map data can be used server-side for filtering low-confidence depth measurements.
