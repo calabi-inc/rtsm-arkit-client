@@ -25,10 +25,10 @@ final class FrameEncoder {
         let header: FrameHeader
     }
 
-    /// Extract all data from an ARFrame synchronously. Call on the delegate thread.
+    /// Extract depth/confidence from an ARFrame and assemble with pre-encoded RGB data.
+    /// The rgbData parameter should contain H.264 Annex B NAL units from H264Encoder.
     /// After this returns, the ARFrame can be released — no references are retained.
-    func extract(frame: ARFrame, settings: SessionSettings, frameID: UInt64, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
-        let rgbData = encodeNV12(pixelBuffer: frame.capturedImage)
+    func extract(frame: ARFrame, settings: SessionSettings, frameID: UInt64, rgbData: Data, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
         let depthData = encodeDepth(frame: frame, settings: settings)
         let confidenceData = encodeConfidence(frame: frame, settings: settings)
 
@@ -50,48 +50,6 @@ final class FrameEncoder {
         let encoder = JSONEncoder()
         let jsonData = (try? encoder.encode(extracted.header)) ?? Data()
         return packMessage(json: jsonData, rgb: extracted.rgbData, depth: extracted.depthData, confidence: extracted.confidenceData)
-    }
-
-    // MARK: - NV12 (zero-cost raw copy)
-
-    /// Copy raw NV12 biplanar data directly from ARKit's capturedImage.
-    /// Layout: [Y plane: w*h bytes] [UV plane: w*h/2 bytes (interleaved CbCr)]
-    /// Total: w * h * 1.5 bytes. Zero conversion cost.
-    private func encodeNV12(pixelBuffer: CVPixelBuffer) -> Data {
-        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
-        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
-
-        let planeCount = CVPixelBufferGetPlaneCount(pixelBuffer)
-        guard planeCount >= 2 else { return Data() }
-
-        // Y plane (plane 0)
-        let yBase = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0)!
-        let yBytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
-        let yHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 0)
-        let yWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 0)
-
-        // UV plane (plane 1, interleaved CbCr)
-        let uvBase = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 1)!
-        let uvBytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 1)
-        let uvHeight = CVPixelBufferGetHeightOfPlane(pixelBuffer, 1)
-        let uvWidth = CVPixelBufferGetWidthOfPlane(pixelBuffer, 1)
-
-        // Total: Y (w*h) + UV (w*h/2)
-        var result = Data(capacity: yWidth * yHeight + uvWidth * 2 * uvHeight)
-
-        // Copy Y plane row-by-row (handles row padding)
-        let yPtr = yBase.assumingMemoryBound(to: UInt8.self)
-        for row in 0..<yHeight {
-            result.append(yPtr + row * yBytesPerRow, count: yWidth)
-        }
-
-        // Copy UV plane row-by-row
-        let uvPtr = uvBase.assumingMemoryBound(to: UInt8.self)
-        for row in 0..<uvHeight {
-            result.append(uvPtr + row * uvBytesPerRow, count: uvWidth * 2)
-        }
-
-        return result
     }
 
     // MARK: - Depth Encoding
@@ -292,7 +250,7 @@ final class FrameEncoder {
         let depthWidth: Int? = depthMap.map { CVPixelBufferGetWidth($0) }
         let depthHeight: Int? = depthMap.map { CVPixelBufferGetHeight($0) }
 
-        // RGB dimensions — always original resolution (NV12 is raw, no downscaling)
+        // RGB dimensions — original capture resolution (H.264 preserves dimensions)
         let rgbWidth = CVPixelBufferGetWidth(pixelBuffer)
         let rgbHeight = CVPixelBufferGetHeight(pixelBuffer)
 
@@ -308,7 +266,7 @@ final class FrameEncoder {
             frame_id: frameID,
             timestamp_ns: UInt64(frame.timestamp * 1e9),
             unix_timestamp: Date().timeIntervalSince1970,
-            rgb_format: "nv12",
+            rgb_format: "h264",
             rgb_width: rgbWidth,
             rgb_height: rgbHeight,
             image_orientation: Self.currentImageOrientation(),

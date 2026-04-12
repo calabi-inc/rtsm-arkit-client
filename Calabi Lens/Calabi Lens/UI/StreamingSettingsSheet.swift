@@ -20,11 +20,11 @@ struct StreamingSettingsSheet: View {
                             Text("\(Int(settings.captureRate)) Hz")
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
-                            if settings.captureRate == 10 {
+                            if settings.captureRate == 20 {
                                 defaultBadge
                             }
                         }
-                        Slider(value: $settings.captureRate, in: 5...20, step: 5)
+                        Slider(value: $settings.captureRate, in: 5...30, step: 5)
                             .disabled(isRecording)
                         HStack {
                             Text("5 Hz").font(.system(size: 10)).foregroundColor(.secondary)
@@ -34,10 +34,22 @@ struct StreamingSettingsSheet: View {
                             Text("15 Hz").font(.system(size: 10)).foregroundColor(.secondary)
                             Spacer()
                             Text("20 Hz").font(.system(size: 10)).foregroundColor(.secondary)
+                            Spacer()
+                            Text("25 Hz").font(.system(size: 10)).foregroundColor(.secondary)
+                            Spacer()
+                            Text("30 Hz").font(.system(size: 10)).foregroundColor(.secondary)
                         }
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
+                    .onAppear {
+                        // Clamp stale AppStorage values from the old 5-20 range
+                        let clamped = min(30, max(5, settings.captureRate))
+                        let rounded = (clamped / 5).rounded() * 5
+                        if settings.captureRate != rounded {
+                            settings.captureRate = rounded
+                        }
+                    }
 
                     divider
 
