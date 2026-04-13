@@ -1,5 +1,35 @@
 import Foundation
 
+enum RGBEncoding: String, CaseIterable {
+    case h264
+    case nv12
+    case jpeg
+
+    var displayName: String {
+        switch self {
+        case .h264: return "H.264"
+        case .nv12: return "NV12"
+        case .jpeg: return "JPEG"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .h264: return "Hardware-accelerated H.264 via VideoToolbox. Best for RTSM — compact, low latency, natively supported downstream."
+        case .nv12: return "Raw YCbCr from ARKit — zero encoding cost, large frames. Server decodes with cv2.cvtColor(COLOR_YUV2BGR_NV12)."
+        case .jpeg: return "JPEG compression — moderate size, widely compatible. Higher CPU than H.264."
+        }
+    }
+
+    var wireString: String {
+        switch self {
+        case .h264: return "h264"
+        case .nv12: return "nv12"
+        case .jpeg: return "jpeg"
+        }
+    }
+}
+
 enum DepthInclusion: String, CaseIterable {
     case auto
     case on

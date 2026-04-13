@@ -56,18 +56,21 @@ struct StreamingSettingsSheet: View {
                     // RGB Encoding
                     sectionHeader("RGB ENCODING")
                     VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Text("Format")
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Text("NV12")
-                                .foregroundColor(.blue)
-                                .fontWeight(.semibold)
+                        Picker("RGB Format", selection: $settings.rgbEncoding) {
+                            Text("H.264 \u{2605}").tag(RGBEncoding.h264)
+                            Text("NV12").tag(RGBEncoding.nv12)
+                            Text("JPEG").tag(RGBEncoding.jpeg)
                         }
+                        .pickerStyle(.segmented)
+                        .disabled(isRecording)
 
-                        Text("Raw YCbCr from ARKit \u{2014} zero encoding cost. Server decodes with cv2.cvtColor(COLOR_YUV2BGR_NV12).")
+                        Text(settings.rgbEncoding.description)
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
+
+                        if settings.rgbEncoding == .h264 {
+                            defaultBadge
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)

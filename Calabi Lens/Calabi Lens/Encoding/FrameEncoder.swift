@@ -26,7 +26,8 @@ final class FrameEncoder {
     }
 
     /// Extract depth/confidence from an ARFrame and assemble with pre-encoded RGB data.
-    /// The rgbData parameter should contain H.264 Annex B NAL units from H264Encoder.
+    /// The rgbData parameter contains encoded RGB in the format specified by settings.rgbEncoding
+    /// (H.264 Annex B NAL units, raw NV12 planes, or JPEG).
     /// After this returns, the ARFrame can be released — no references are retained.
     func extract(frame: ARFrame, settings: SessionSettings, frameID: UInt64, rgbData: Data, correctedPose: simd_float4x4? = nil) -> ExtractedFrame {
         let depthData = encodeDepth(frame: frame, settings: settings)
@@ -250,7 +251,7 @@ final class FrameEncoder {
         let depthWidth: Int? = depthMap.map { CVPixelBufferGetWidth($0) }
         let depthHeight: Int? = depthMap.map { CVPixelBufferGetHeight($0) }
 
-        // RGB dimensions — original capture resolution (H.264 preserves dimensions)
+        // RGB dimensions — original capture resolution (all encoders preserve dimensions)
         let rgbWidth = CVPixelBufferGetWidth(pixelBuffer)
         let rgbHeight = CVPixelBufferGetHeight(pixelBuffer)
 
@@ -266,7 +267,7 @@ final class FrameEncoder {
             frame_id: frameID,
             timestamp_ns: UInt64(frame.timestamp * 1e9),
             unix_timestamp: Date().timeIntervalSince1970,
-            rgb_format: "h264",
+            rgb_format: settings.rgbEncoding.wireString,
             rgb_width: rgbWidth,
             rgb_height: rgbHeight,
             image_orientation: Self.currentImageOrientation(),

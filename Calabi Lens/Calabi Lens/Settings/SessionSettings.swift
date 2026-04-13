@@ -3,6 +3,7 @@ import Foundation
 struct SessionSettings {
     let sessionID: UUID
     let captureRate: Double
+    let rgbEncoding: RGBEncoding
     let depthInclusion: DepthInclusion
     let depthFormat: DepthFormat
     let poseFormat: PoseFormat
@@ -21,6 +22,7 @@ struct SessionSettings {
     init(from settings: AppSettings) {
         self.sessionID = UUID()
         self.captureRate = settings.captureRate
+        self.rgbEncoding = settings.rgbEncoding
         self.depthInclusion = settings.depthInclusion
         self.depthFormat = settings.depthFormat
         self.poseFormat = settings.poseFormat

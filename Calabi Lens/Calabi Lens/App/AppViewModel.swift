@@ -107,21 +107,32 @@ final class AppViewModel: ObservableObject {
 
                 defer { self.frameSemaphore.signal() }
 
-                // Lazily create H264Encoder on first frame (must be on encodeQueue)
-                if self.h264Encoder == nil {
-                    self.h264Encoder = H264Encoder(width: pixelWidth, height: pixelHeight)
-                }
-
-                // H.264 hardware encode (~2ms on A-series ASIC)
+                // Encode RGB based on the chosen format
                 let rgbData: Data
-                if let h264 = self.h264Encoder, h264.isReady {
-                    rgbData = h264.encode(pixelBuffer: frame.capturedImage, timestamp: frame.timestamp)
-                } else {
-                    print("[AppViewModel] H264Encoder not ready, skipping frame \(fid)")
-                    return
+                switch sessionSettings.rgbEncoding {
+                case .h264:
+                    // Lazily create H264Encoder on first frame (must be on encodeQueue)
+                    if self.h264Encoder == nil {
+                        self.h264Encoder = H264Encoder(width: pixelWidth, height: pixelHeight)
+                    }
+                    // H.264 hardware encode (~2ms on A-series ASIC)
+                    if let h264 = self.h264Encoder, h264.isReady {
+                        rgbData = h264.encode(pixelBuffer: frame.capturedImage, timestamp: frame.timestamp)
+                    } else {
+                        print("[AppViewModel] H264Encoder not ready, skipping frame \(fid)")
+                        return
+                    }
+
+                case .nv12:
+                    // Raw NV12 — copy the full pixel buffer planes as-is
+                    rgbData = Self.extractNV12(from: frame.capturedImage)
+
+                case .jpeg:
+                    // JPEG compression via CoreImage
+                    rgbData = Self.extractJPEG(from: frame.capturedImage)
                 }
 
-                // Extract depth + confidence + build header + pack (same as before)
+                // Extract depth + confidence + build header + pack
                 let extracted = self.encoder.extract(
                     frame: frame,
                     settings: sessionSettings,
@@ -309,6 +320,50 @@ final class AppViewModel: ObservableObject {
         metrics.freezeMetrics()
         currentSessionSettings = nil
         appState = .idle
+    }
+
+    // MARK: - RGB Encoding Helpers
+
+    /// Extract raw NV12 (YCbCr bi-planar) bytes from an ARKit pixel buffer.
+    private static func extractNV12(from pixelBuffer: CVPixelBuffer) -> Data {
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+        let planeCount = CVPixelBufferGetPlaneCount(pixelBuffer)
+        var result = Data()
+        for plane in 0..<planeCount {
+            let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, plane)
+            let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, plane)
+            let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, plane)
+            guard let base = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, plane) else { continue }
+
+            // Plane 0 (Y): 1 byte per pixel, Plane 1 (CbCr): 2 bytes per pixel
+            let bytesPerPixel = (plane == 0) ? 1 : 2
+            let rowBytes = width * bytesPerPixel
+
+            if rowBytes == bytesPerRow {
+                // No padding — fast path
+                result.append(base.assumingMemoryBound(to: UInt8.self), count: height * bytesPerRow)
+            } else {
+                // Copy row-by-row to strip padding
+                let ptr = base.assumingMemoryBound(to: UInt8.self)
+                for y in 0..<height {
+                    result.append(ptr + y * bytesPerRow, count: rowBytes)
+                }
+            }
+        }
+        return result
+    }
+
+    /// Compress a pixel buffer to JPEG using CIImage → UIImage pipeline.
+    private static func extractJPEG(from pixelBuffer: CVPixelBuffer, quality: CGFloat = 0.8) -> Data {
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            return Data()
+        }
+        let uiImage = UIImage(cgImage: cgImage)
+        return uiImage.jpegData(compressionQuality: quality) ?? Data()
     }
 
     // MARK: - H264 Encoder Lifecycle
