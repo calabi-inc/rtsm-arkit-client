@@ -20,7 +20,7 @@ struct StreamingSettingsSheet: View {
                             Text("\(Int(settings.captureRate)) Hz")
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
-                            if settings.captureRate == 20 {
+                            if settings.captureRate == 10 {
                                 defaultBadge
                             }
                         }
@@ -57,8 +57,8 @@ struct StreamingSettingsSheet: View {
                     sectionHeader("RGB ENCODING")
                     VStack(alignment: .leading, spacing: 10) {
                         Picker("RGB Format", selection: $settings.rgbEncoding) {
-                            Text("H.264 \u{2605}").tag(RGBEncoding.h264)
-                            Text("NV12").tag(RGBEncoding.nv12)
+                            Text("NV12 \u{2605}").tag(RGBEncoding.nv12)
+                            Text("H.264").tag(RGBEncoding.h264)
                             Text("JPEG").tag(RGBEncoding.jpeg)
                         }
                         .pickerStyle(.segmented)
@@ -68,7 +68,7 @@ struct StreamingSettingsSheet: View {
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
 
-                        if settings.rgbEncoding == .h264 {
+                        if settings.rgbEncoding == .nv12 {
                             defaultBadge
                         }
                     }
