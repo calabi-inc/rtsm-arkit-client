@@ -2,7 +2,8 @@ import SwiftUI
 
 final class AppSettings: ObservableObject {
     @AppStorage("serverURL") var serverURL: String = "ws://192.168.1.100:8765/stream"
-    @AppStorage("captureRate") var captureRate: Double = 10.0
+    @AppStorage("captureRate") var captureRate: Double = 20.0
+    @AppStorage("rgbEncoding") var rgbEncoding = RGBEncoding.h264
     @AppStorage("depthInclusion") var depthInclusion = DepthInclusion.auto
     @AppStorage("depthFormat") var depthFormat = DepthFormat.uint16mm
     @AppStorage("poseFormat") var poseFormat = PoseFormat.matrix4x4

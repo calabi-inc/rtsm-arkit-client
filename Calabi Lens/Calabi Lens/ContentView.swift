@@ -127,7 +127,7 @@ private struct ShutterButtonView: View {
     let appState: AppState
     let trackingState: ARCamera.TrackingState
     @ObservedObject var metrics: MetricsTracker
-    let settings: AppSettings
+    @ObservedObject var settings: AppSettings
     let onRecord: () -> Void
     let onStop: () -> Void
 
@@ -203,7 +203,7 @@ private struct ShutterButtonView: View {
 
     private var settingsSummary: String {
         let hz = Int(settings.captureRate)
-        let rgb = "NV12"
+        let rgb = settings.rgbEncoding.displayName
         let depth: String
         switch settings.depthFormat {
         case .uint16mm: depth = "uint16"

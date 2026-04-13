@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		591D30C12F8C97990061A722 /* H264Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591D30C02F8C97990061A722 /* H264Encoder.swift */; };
 		5930998D2F6799FA00CDABE8 /* libamd.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DB2F67993300CDABE8 /* libamd.a */; };
 		5930998E2F6799FA00CDABE8 /* libboost_atomic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DC2F67993300CDABE8 /* libboost_atomic.a */; };
 		5930998F2F6799FA00CDABE8 /* libboost_chrono.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 593098DD2F67993300CDABE8 /* libboost_chrono.a */; };
@@ -131,6 +132,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		591D30C02F8C97990061A722 /* H264Encoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = H264Encoder.swift; sourceTree = "<group>"; };
 		5930982B2F67993300CDABE8 /* AMDConfig.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfig.cmake; sourceTree = "<group>"; };
 		5930982C2F67993300CDABE8 /* AMDConfigVersion.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = AMDConfigVersion.cmake; sourceTree = "<group>"; };
 		5930982D2F67993300CDABE8 /* AMDTargets-release.cmake */ = {isa = PBXFileReference; lastKnownFileType = text; path = "AMDTargets-release.cmake"; sourceTree = "<group>"; };
@@ -1623,6 +1625,7 @@
 		59C017802F483DC500A64702 /* Encoding */ = {
 			isa = PBXGroup;
 			children = (
+				591D30C02F8C97990061A722 /* H264Encoder.swift */,
 				59C017C02F4B000100A64702 /* FrameEncoder.swift */,
 			);
 			path = Encoding;
@@ -1775,6 +1778,7 @@
 				59C0178A2F4A000100A64702 /* WebSocketStreamer.swift in Sources */,
 				59C0178B2F4A000100A64702 /* MetricsTracker.swift in Sources */,
 				59CBFD7F2F67A4AA003811C8 /* RTABMapSLAM.swift in Sources */,
+				591D30C12F8C97990061A722 /* H264Encoder.swift in Sources */,
 				59C017D02F4B000100A64702 /* FrameEncoder.swift in Sources */,
 				59C017D12F4B000100A64702 /* AppViewModel.swift in Sources */,
 				59C017D22F4B000100A64702 /* NetworkConfigSheet.swift in Sources */,

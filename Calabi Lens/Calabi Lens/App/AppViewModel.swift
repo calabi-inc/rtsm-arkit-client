@@ -24,6 +24,8 @@ final class AppViewModel: ObservableObject {
     private var currentSessionSettings: SessionSettings?
     private var rtabMapSLAM: RTABMapSLAM?
     private var lastSLAMProcessTime: TimeInterval = 0
+    private var h264Encoder: H264Encoder?
+    private let frameSemaphore = DispatchSemaphore(value: 3)
 
     // MARK: - Init
 
@@ -32,7 +34,7 @@ final class AppViewModel: ObservableObject {
     }
 
     private func wireCallbacks() {
-        // Frame pipeline: capture → extract (delegate thread) → pack (encodeQueue) → stream
+        // Frame pipeline: capture → delegate thread (lightweight) → encodeQueue (H.264 + extract + pack) → stream
         captureManager.onFrame = { [weak self] frame in
             guard let self, let sessionSettings = self.currentSessionSettings else { return }
 
@@ -50,7 +52,7 @@ final class AppViewModel: ObservableObject {
                 }
             }
 
-            // Capture the current SLAM correction
+            // Capture the current SLAM correction (lightweight — just a matrix read)
             let mapToOdomSnapshot: simd_float4x4?
             if let slam = self.rtabMapSLAM, slam.isRunning {
                 mapToOdomSnapshot = slam.mapToOdom
@@ -86,19 +88,62 @@ final class AppViewModel: ObservableObject {
                 print("[FRAME \(fid)] arkit=(\(String(format: "%.3f,%.3f,%.3f", arkitPos.0, arkitPos.1, arkitPos.2))) sent=(\(String(format: "%.3f,%.3f,%.3f", sentPos.0, sentPos.1, sentPos.2))) mapToOdom=\(mapToOdomState) rgb=\(rgbW)x\(rgbH) depth=\(depthW)x\(depthH) fx=\(String(format: "%.1f", intr[0][0])) fy=\(String(format: "%.1f", intr[1][1])) cx=\(String(format: "%.1f", intr[2][0])) cy=\(String(format: "%.1f", intr[2][1]))")
             }
 
-            // Extract & encode all pixel data NOW on the delegate thread.
-            // After this call, the ARFrame can be released — no references retained.
-            let extracted = self.encoder.extract(
-                frame: frame,
-                settings: sessionSettings,
-                frameID: fid,
-                correctedPose: correctedPose
-            )
+            // Back-pressure: skip frame if encodeQueue has 3 frames in-flight.
+            // Non-blocking — returns immediately if semaphore count is 0.
+            guard self.frameSemaphore.wait(timeout: .now()) == .success else {
+                return
+            }
 
-            // Only lightweight packing (JSON + binary assembly) goes to the queue
-            self.encodeQueue.async {
+            // Capture pixel dimensions on delegate thread for lazy encoder creation
+            let pixelWidth = CVPixelBufferGetWidth(frame.capturedImage)
+            let pixelHeight = CVPixelBufferGetHeight(frame.capturedImage)
+
+            // Dispatch all heavy work (H.264 encode + depth/confidence extraction + pack)
+            // to the serial encodeQueue. The ARFrame is captured (retained) by the closure
+            // and released when the closure completes.
+            // IMPORTANT: h264Encoder is ONLY accessed on encodeQueue to avoid races.
+            self.encodeQueue.async { [weak self] in
+                guard let self else { return }
+
+                defer { self.frameSemaphore.signal() }
+
+                // Encode RGB based on the chosen format
+                let rgbData: Data
+                switch sessionSettings.rgbEncoding {
+                case .h264:
+                    // Lazily create H264Encoder on first frame (must be on encodeQueue)
+                    if self.h264Encoder == nil {
+                        self.h264Encoder = H264Encoder(width: pixelWidth, height: pixelHeight)
+                    }
+                    // H.264 hardware encode (~2ms on A-series ASIC)
+                    if let h264 = self.h264Encoder, h264.isReady {
+                        rgbData = h264.encode(pixelBuffer: frame.capturedImage, timestamp: frame.timestamp)
+                    } else {
+                        print("[AppViewModel] H264Encoder not ready, skipping frame \(fid)")
+                        return
+                    }
+
+                case .nv12:
+                    // Raw NV12 — copy the full pixel buffer planes as-is
+                    rgbData = Self.extractNV12(from: frame.capturedImage)
+
+                case .jpeg:
+                    // JPEG compression via CoreImage
+                    rgbData = Self.extractJPEG(from: frame.capturedImage)
+                }
+
+                // Extract depth + confidence + build header + pack
+                let extracted = self.encoder.extract(
+                    frame: frame,
+                    settings: sessionSettings,
+                    frameID: fid,
+                    rgbData: rgbData,
+                    correctedPose: correctedPose
+                )
+
                 let data = self.encoder.pack(extracted)
                 self.streamer.enqueue(data)
+                // frame goes out of scope here → ARFrame released → CVPixelBuffers returned to pool
             }
         }
 
@@ -172,6 +217,7 @@ final class AppViewModel: ObservableObject {
                 captureManager.setStreaming(enabled: false, sessionSettings: nil)
                 rtabMapSLAM?.stop()
                 rtabMapSLAM = nil
+                tearDownH264Encoder()
                 streamer.disableReconnect()
                 streamer.stopPing()
                 metrics.freezeMetrics()
@@ -182,6 +228,7 @@ final class AppViewModel: ObservableObject {
                 captureManager.setStreaming(enabled: false, sessionSettings: nil)
                 rtabMapSLAM?.stop()
                 rtabMapSLAM = nil
+                tearDownH264Encoder()
                 streamer.disableReconnect()
                 streamer.stopPing()
                 metrics.freezeMetrics()
@@ -251,6 +298,7 @@ final class AppViewModel: ObservableObject {
         captureManager.setStreaming(enabled: false, sessionSettings: nil)
         rtabMapSLAM?.stop()
         rtabMapSLAM = nil
+        tearDownH264Encoder()
         streamer.disableReconnect()
         streamer.stopPing()
         streamer.flushAndDisconnect()
@@ -265,12 +313,68 @@ final class AppViewModel: ObservableObject {
         captureManager.setStreaming(enabled: false, sessionSettings: nil)
         rtabMapSLAM?.stop()
         rtabMapSLAM = nil
+        tearDownH264Encoder()
         streamer.disableReconnect()
         streamer.stopPing()
         streamer.disconnect() // abort, not flush
         metrics.freezeMetrics()
         currentSessionSettings = nil
         appState = .idle
+    }
+
+    // MARK: - RGB Encoding Helpers
+
+    /// Extract raw NV12 (YCbCr bi-planar) bytes from an ARKit pixel buffer.
+    private static func extractNV12(from pixelBuffer: CVPixelBuffer) -> Data {
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+        let planeCount = CVPixelBufferGetPlaneCount(pixelBuffer)
+        var result = Data()
+        for plane in 0..<planeCount {
+            let height = CVPixelBufferGetHeightOfPlane(pixelBuffer, plane)
+            let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, plane)
+            let width = CVPixelBufferGetWidthOfPlane(pixelBuffer, plane)
+            guard let base = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, plane) else { continue }
+
+            // Plane 0 (Y): 1 byte per pixel, Plane 1 (CbCr): 2 bytes per pixel
+            let bytesPerPixel = (plane == 0) ? 1 : 2
+            let rowBytes = width * bytesPerPixel
+
+            if rowBytes == bytesPerRow {
+                // No padding — fast path
+                result.append(base.assumingMemoryBound(to: UInt8.self), count: height * bytesPerRow)
+            } else {
+                // Copy row-by-row to strip padding
+                let ptr = base.assumingMemoryBound(to: UInt8.self)
+                for y in 0..<height {
+                    result.append(ptr + y * bytesPerRow, count: rowBytes)
+                }
+            }
+        }
+        return result
+    }
+
+    /// Compress a pixel buffer to JPEG using CIImage → UIImage pipeline.
+    private static func extractJPEG(from pixelBuffer: CVPixelBuffer, quality: CGFloat = 0.8) -> Data {
+        let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+        let context = CIContext()
+        guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
+            return Data()
+        }
+        let uiImage = UIImage(cgImage: cgImage)
+        return uiImage.jpegData(compressionQuality: quality) ?? Data()
+    }
+
+    // MARK: - H264 Encoder Lifecycle
+
+    /// Invalidate and release the H264Encoder on the encodeQueue to prevent
+    /// cross-thread access. Blocks until the encoder is fully torn down.
+    private func tearDownH264Encoder() {
+        encodeQueue.sync {
+            h264Encoder?.invalidate()
+            h264Encoder = nil
+        }
     }
 
     // MARK: - SLAM Pose Corrections

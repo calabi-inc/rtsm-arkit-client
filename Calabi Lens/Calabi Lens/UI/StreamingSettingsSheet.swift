@@ -20,11 +20,11 @@ struct StreamingSettingsSheet: View {
                             Text("\(Int(settings.captureRate)) Hz")
                                 .foregroundColor(.blue)
                                 .fontWeight(.semibold)
-                            if settings.captureRate == 10 {
+                            if settings.captureRate == 20 {
                                 defaultBadge
                             }
                         }
-                        Slider(value: $settings.captureRate, in: 5...20, step: 5)
+                        Slider(value: $settings.captureRate, in: 5...30, step: 5)
                             .disabled(isRecording)
                         HStack {
                             Text("5 Hz").font(.system(size: 10)).foregroundColor(.secondary)
@@ -34,28 +34,43 @@ struct StreamingSettingsSheet: View {
                             Text("15 Hz").font(.system(size: 10)).foregroundColor(.secondary)
                             Spacer()
                             Text("20 Hz").font(.system(size: 10)).foregroundColor(.secondary)
+                            Spacer()
+                            Text("25 Hz").font(.system(size: 10)).foregroundColor(.secondary)
+                            Spacer()
+                            Text("30 Hz").font(.system(size: 10)).foregroundColor(.secondary)
                         }
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
+                    .onAppear {
+                        // Clamp stale AppStorage values from the old 5-20 range
+                        let clamped = min(30, max(5, settings.captureRate))
+                        let rounded = (clamped / 5).rounded() * 5
+                        if settings.captureRate != rounded {
+                            settings.captureRate = rounded
+                        }
+                    }
 
                     divider
 
                     // RGB Encoding
                     sectionHeader("RGB ENCODING")
                     VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Text("Format")
-                                .foregroundColor(.primary)
-                            Spacer()
-                            Text("NV12")
-                                .foregroundColor(.blue)
-                                .fontWeight(.semibold)
+                        Picker("RGB Format", selection: $settings.rgbEncoding) {
+                            Text("H.264 \u{2605}").tag(RGBEncoding.h264)
+                            Text("NV12").tag(RGBEncoding.nv12)
+                            Text("JPEG").tag(RGBEncoding.jpeg)
                         }
+                        .pickerStyle(.segmented)
+                        .disabled(isRecording)
 
-                        Text("Raw YCbCr from ARKit \u{2014} zero encoding cost. Server decodes with cv2.cvtColor(COLOR_YUV2BGR_NV12).")
+                        Text(settings.rgbEncoding.description)
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
+
+                        if settings.rgbEncoding == .h264 {
+                            defaultBadge
+                        }
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 14)
