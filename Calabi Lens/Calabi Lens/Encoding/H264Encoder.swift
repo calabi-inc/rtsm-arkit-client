@@ -85,7 +85,15 @@ final class H264Encoder {
         // Configure session properties
         setProperty(session, key: kVTCompressionPropertyKey_RealTime, value: kCFBooleanTrue)
         setProperty(session, key: kVTCompressionPropertyKey_AllowFrameReordering, value: kCFBooleanFalse)
-        setProperty(session, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_High_AutoLevel)
+
+        // Use Constrained Baseline Profile for maximum decoder compatibility.
+        // High Profile + AutoLevel lets the encoder use up to 16 reference frames,
+        // which exceeds many decoders' default limits (PyAV/FFmpeg default max_ref_frames=10)
+        // causing "reference frames exceeds max" errors after the first few frames.
+        // Baseline Profile constrains ref frames to 1 and disables B-frames and CABAC,
+        // trading ~10-15% compression efficiency for universal decode compatibility.
+        setProperty(session, key: kVTCompressionPropertyKey_ProfileLevel, value: kVTProfileLevel_H264_Baseline_AutoLevel)
+        setProperty(session, key: kVTCompressionPropertyKey_H264EntropyMode, value: kVTH264EntropyMode_CAVLC)
         setProperty(session, key: kVTCompressionPropertyKey_MaxKeyFrameInterval, value: maxKeyFrameInterval as CFNumber)
         setProperty(session, key: kVTCompressionPropertyKey_AverageBitRate, value: bitRate as CFNumber)
 
